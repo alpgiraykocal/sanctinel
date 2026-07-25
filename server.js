@@ -113,7 +113,7 @@ function meta() {
     publicationId: snapshot.publicationId, publishedDate: snapshot.publishedDate || '',
     publications: snapshot.publications || [],
     retrievedAt: snapshot.retrievedAt,
-    count: snapshot.count, lists: snapshot.lists, programs: snapshot.programs,
+    count: snapshot.count, lists: snapshot.lists, programs: snapshot.programs, authorities: snapshot.authorities || [],
   };
 }
 
@@ -137,6 +137,7 @@ function search(params) {
   const q = (params.get('q') || '').trim().slice(0, MAX_Q);
   const listFilter = (params.get('list') || '').slice(0, MAX_FIELD);
   const programFilter = (params.get('program') || '').slice(0, MAX_FIELD);
+  const authorityFilter = (params.get('authority') || '').slice(0, MAX_FIELD);
   const threshold = Math.min(1, Math.max(0.8, parseFloat(params.get('threshold')) || 0.95));
   const yob = /^\d{4}$/.test(params.get('yob') || '') ? params.get('yob') : '';
   const country = (params.get('country') || '').trim().slice(0, MAX_FIELD);
@@ -144,7 +145,7 @@ function search(params) {
 
   if (!q) return { query: q, threshold, count: 0, results: [], snapshot: meta() };
 
-  const key = `${snapshot.publicationId}|${q}|${listFilter}|${programFilter}|${threshold}|${yob}|${country}`;
+  const key = `${snapshot.publicationId}|${q}|${listFilter}|${programFilter}|${authorityFilter}|${threshold}|${yob}|${country}`;
   const cached = queryCache.get(key);
   if (cached && Date.now() - cached.t < QCACHE_TTL) return cached.payload;
 
@@ -157,12 +158,13 @@ function search(params) {
 
   const results = [];
   for (const e of pool) {
+    if (authorityFilter && e.authority !== authorityFilter) continue;
     if (listFilter && e.list !== listFilter) continue;
     if (programFilter && !e.programs.includes(programFilter)) continue;
     const m = screenEntity(q, e, threshold, mods);
     if (!m) continue;
     results.push({
-      id: e.id, name: e.name, list: e.list, type: e.type, title: e.title,
+      id: e.id, name: e.name, authority: e.authority, list: e.list, type: e.type, title: e.title,
       programs: e.programs, sanctionsTypes: e.sanctionsTypes || (e.sanctionsType ? [e.sanctionsType] : []),
       legalAuthorities: e.legalAuthorities || [], datePublished: e.datePublished,
       names: e.names, addresses: e.addresses, idDocuments: e.idDocuments || [],

@@ -5,9 +5,11 @@ const esc = (s) => String(s == null ? '' : s).replace(/[&<>"]/g, (c) => ({ '&': 
 
 const GROUP_ORDER = ['Identity', 'Documents', 'Vessel / Aircraft', 'Digital & Contact', 'Program', 'Other'];
 
-// Action guidance keyed to list type. Triage hint, not a determination.
+// Action guidance keyed to authority + list type. Triage hint, not a determination.
 function determinationHint(r) {
   const l = r.list || '';
+  if (r.authority === 'UN') return { label: 'UN asset freeze', text: 'UN Security Council listing: member states must <strong>freeze funds and economic resources</strong> and bar their provision. Apply the implementing national/EU regulation; this is not OFAC doctrine.' };
+  if (r.authority === 'UK') return { label: 'UK asset freeze', text: 'UK OFSI designation: <strong>freeze funds/economic resources</strong> and do not make them available to or for the designated person; report to OFSI. UK regime, not OFAC.' };
   if (/CMIC/i.test(l)) return { label: 'Securities restriction', text: 'Non-SDN CMIC: restricts securities transactions — <strong>not</strong> full blocking. Do not freeze an ordinary payment on this basis alone.' };
   if (/CAPTA/i.test(l)) return { label: 'Correspondent account restriction', text: 'CAPTA: restricts or prohibits U.S. <strong>correspondent / payable-through accounts</strong> for the listed institution — not full blocking. Verify the specific restriction imposed.' };
   if (/FSE/i.test(l)) return { label: 'Foreign sanctions evader', text: 'FSE List: transactions and dealings with this party are <strong>prohibited</strong> for U.S. persons; property is not blocked. Reject rather than freeze.' };
@@ -34,6 +36,7 @@ async function loadMeta() {
 
 function applyMeta(m) {
   renderSnapshot(m);
+  if ((m.authorities || []).length > 1) fillSelect($('authority'), m.authorities, 'All authorities (' + m.authorities.join(' · ') + ')');
   fillSelect($('list'), m.lists, 'All lists');
   fillSelect($('program'), m.programs, 'All programs');
   $('refreshBtn').hidden = !m.canRefresh; // hidden unless server has admin refresh enabled
@@ -86,7 +89,7 @@ async function runSearch(e) {
   if (controller) controller.abort();
   controller = new AbortController();
 
-  const params = new URLSearchParams({ q, list: $('list').value, program: $('program').value, threshold: $('threshold').value, yob: $('yob').value.trim(), country: $('country').value.trim() });
+  const params = new URLSearchParams({ q, authority: $('authority').value, list: $('list').value, program: $('program').value, threshold: $('threshold').value, yob: $('yob').value.trim(), country: $('country').value.trim() });
   $('emptyState').hidden = true;
   $('resultSummary').hidden = true;
   $('searchBtn').disabled = true;
@@ -217,6 +220,7 @@ function card(r, i) {
     </div>
 
     <div class="rc-tags">
+      <span class="tag tag-auth auth-${esc((r.authority || 'OFAC').toLowerCase())}">${esc(r.authority || 'OFAC')}</span>
       <span class="tag tag-list">${esc(r.list)}</span>
       ${(r.programs || []).map((p) => `<span class="tag tag-prog">${esc(p)}</span>`).join('')}
       ${sanctionsTypes.map((t) => `<span class="tag tag-type">${esc(t)}</span>`).join('')}
@@ -336,6 +340,7 @@ function syncUrl(q) {
   const p = new URLSearchParams();
   if (q) p.set('q', q);
   if ($('threshold').value !== '0.95') p.set('threshold', $('threshold').value);
+  if ($('authority').value) p.set('authority', $('authority').value);
   if ($('list').value) p.set('list', $('list').value);
   if ($('program').value) p.set('program', $('program').value);
   if ($('yob').value.trim()) p.set('yob', $('yob').value.trim());
@@ -347,6 +352,7 @@ function syncUrl(q) {
 function initFromUrl() {
   const p = new URLSearchParams(location.search);
   if (p.get('threshold')) { $('threshold').value = p.get('threshold'); $('threshOut').textContent = parseFloat(p.get('threshold')).toFixed(2); }
+  if (p.get('authority')) $('authority').value = p.get('authority');
   if (p.get('list')) $('list').value = p.get('list');
   if (p.get('program')) $('program').value = p.get('program');
   if (p.get('yob')) $('yob').value = p.get('yob');
@@ -358,6 +364,7 @@ $('searchForm').addEventListener('submit', runSearch);
 $('q').addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); runSearch(); } });
 document.querySelectorAll('.chip[data-q]').forEach((c) => c.addEventListener('click', () => { $('q').value = c.dataset.q; runSearch(); }));
 $('threshold').addEventListener('input', (e) => { $('threshOut').textContent = parseFloat(e.target.value).toFixed(2); });
+$('authority').addEventListener('change', () => $('q').value.trim() && runSearch());
 $('list').addEventListener('change', () => $('q').value.trim() && runSearch());
 $('program').addEventListener('change', () => $('q').value.trim() && runSearch());
 $('refreshBtn').addEventListener('click', refreshLive);

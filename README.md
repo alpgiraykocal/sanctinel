@@ -1,7 +1,14 @@
-# OFAC Sanctions Screening
+# Sanctinel — Sanctions Screening
 
 Web app that screens a party name / entity / vessel against the U.S. Treasury
-**OFAC Sanctions List Service (SLS)**. Zero external dependencies — pure Node.js.
+**OFAC**, the **UN Security Council**, and the **UK OFSI** consolidated sanctions
+lists. Zero external dependencies — pure Node.js.
+
+Each source is fetched directly from the issuing authority (public-domain
+government data), tagged with its authority, and merged into one daily snapshot;
+the UI lets you filter by authority and shows an authority badge + regime-specific
+guidance per hit. Additional-source parsers live in `lib/sources/`. (EU is not yet
+included — its public feed lacks a stable endpoint.)
 
 ## Free deploy (GitHub + Render)
 

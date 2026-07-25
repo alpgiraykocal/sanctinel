@@ -39,13 +39,13 @@
 
   <main id="main" class="doc">
     <h1>About &amp; methodology</h1>
-    <p class="lede">Sanctinel screens names, entities, vessels and identifiers against the U.S. Treasury <abbr title="Office of Foreign Assets Control">OFAC</abbr> sanctions lists, with fuzzy matching, non-name identifier screening, and 50%-Rule ownership networks. It is an <strong>educational analysis tool</strong> — not legal advice, and not a system of record for compliance decisions.</p>
+    <p class="lede">Sanctinel screens names, entities, vessels and identifiers against the U.S. Treasury <abbr title="Office of Foreign Assets Control">OFAC</abbr>, <abbr title="United Nations Security Council">UN</abbr>, and UK <abbr title="Office of Financial Sanctions Implementation">OFSI</abbr> sanctions lists, with multilingual fuzzy matching, non-name identifier screening, and 50%-Rule ownership networks. It is an <strong>educational analysis tool</strong> — not legal advice, and not a system of record for compliance decisions.</p>
 
     <section class="doc-stats" id="stats" aria-label="Coverage summary"></section>
 
     <section>
       <h2>Data source &amp; freshness</h2>
-      <p>All data comes from OFAC's <a href="https://sanctionslistservice.ofac.treas.gov" rel="noreferrer noopener" target="_blank">Sanctions List Service</a> (U.S. Government, public domain). The full dataset is rebuilt automatically every day and versioned to OFAC's own publication id, so you always see which snapshot you're querying. The authoritative live source remains OFAC's <a href="https://sanctionssearch.ofac.treas.gov" rel="noreferrer noopener" target="_blank">Sanctions List Search</a>.</p>
+      <p>Data comes directly from the issuing authorities — OFAC's <a href="https://sanctionslistservice.ofac.treas.gov" rel="noreferrer noopener" target="_blank">Sanctions List Service</a>, the <a href="https://www.un.org/securitycouncil/content/un-sc-consolidated-list" rel="noreferrer noopener" target="_blank">UN Security Council Consolidated List</a>, and the <a href="https://www.gov.uk/government/publications/financial-sanctions-consolidated-list-of-targets" rel="noreferrer noopener" target="_blank">UK OFSI Consolidated List</a> (all government, public domain). The full dataset is rebuilt automatically every day and versioned to OFAC's publication id. Always confirm a hit against the issuing authority's own list before acting.</p>
       <h3>Recent OFAC publications</h3>
       <div id="pubs" class="pub-list">Loading…</div>
     </section>
@@ -82,7 +82,7 @@
       <h2>Limitations</h2>
       <ul class="doc-list">
         <li>A hit is a <strong>lead to verify</strong>, not a determination; absence of a hit is not a clearance.</li>
-        <li>Covers <strong>U.S. OFAC lists only</strong> — not EU, UN, UK, or other regimes, and not export-control lists (BIS Entity List, etc.).</li>
+        <li>Covers <strong>U.S. OFAC, UN Security Council, and UK OFSI</strong> sanctions lists — not the EU list yet, and not export-control lists (BIS Entity List, etc.). The 50% Rule ownership graph is OFAC-specific.</li>
         <li>The snapshot may lag OFAC by up to a day. Confirm anything material against OFAC directly.</li>
         <li>Queries are processed in memory and <strong>never stored or logged</strong>.</li>
       </ul>
