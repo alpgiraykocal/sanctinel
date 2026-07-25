@@ -78,7 +78,18 @@
       });
     }
     state.geom = { cx, cy, ringGap, depthMax, maxR };
-    return data.nodes.map((n) => ({ node: n, x: pos[n.id].x, y: pos[n.id].y, r: nodeRadius(n), ang: pos[n.id].ang }));
+    // Clamp node radius by ring crowding so dense rings (50+ siblings on a
+    // small screen) render as small separated dots instead of overlapping.
+    const ringCount = {};
+    for (const n of data.nodes) ringCount[n.hop] = (ringCount[n.hop] || 0) + 1;
+    return data.nodes.map((n) => {
+      let r = nodeRadius(n);
+      if (n.hop > 0) {
+        const spacing = (2 * Math.PI * ringGap * n.hop) / ringCount[n.hop];
+        r = Math.min(r, Math.max(3.5, spacing * 0.42));
+      }
+      return { node: n, x: pos[n.id].x, y: pos[n.id].y, r, ang: pos[n.id].ang };
+    });
   }
 
   function neighborsOf(id) {
@@ -309,7 +320,6 @@
       if (isHover) { ctx.lineWidth = 2; ctx.strokeStyle = C.ownStroke; ctx.stroke(); }
       ctx.globalAlpha = 1;
     }
-    drawLabels(ctx, layout, cx, cy, w, h, hover);
   }
 
   /* ---------- orchestrator ---------- */
@@ -336,22 +346,28 @@
 
     if (useGL && drawGL(pos, layout, edges, hover, hoverNb, w, h, dpr)) {
       mode = 'WebGL';
-      // Overlay on 2D: center halo + hover ring + culled labels + tooltip.
+      // Overlay extras the shaders don't draw: center halo + hover ring.
       const center = pos[state.centerId];
       if (center) { ctx.beginPath(); ctx.arc(center.x, center.y, center.r + 9, 0, Math.PI * 2); ctx.fillStyle = C.centerHalo; ctx.fill(); }
       if (hover && pos[hover]) { const p = pos[hover]; ctx.beginPath(); ctx.arc(p.x, p.y, p.r + 3, 0, Math.PI * 2); ctx.strokeStyle = C.ownStroke; ctx.lineWidth = 2; ctx.stroke(); }
-      const topSet = new Set([...state.data.nodes].sort((a, b) => b.weightedDegree - a.weightedDegree).slice(0, 12).map((n) => n.id));
-      const shown = layout.filter((p) => {
-        const n = p.node;
-        return n.id === state.centerId || (hover && (n.id === hover || hoverNb.has(n.id))) || (!hover && (n.hop <= 1 && layout.length < 60)) || (!hover && topSet.has(n.id));
-      });
-      drawLabels(ctx, shown, cx, cy, w, h, hover);
-      if (hover && pos[hover]) drawTooltip(ctx, pos[hover], w, h);
     } else {
       blankGL();
       draw2D(ctx, pos, layout, edges, cx, cy, w, h, hover, hoverNb);
-      if (hover && pos[hover]) drawTooltip(ctx, pos[hover], w, h);
     }
+
+    // Shared label pass with a screen-size-aware budget: a phone can carry far
+    // fewer readable labels than a desktop canvas.
+    const budget = w < 560 ? 8 : 14;
+    const showAll = layout.length <= (w < 560 ? 10 : 34);
+    const topSet = new Set([...state.data.nodes].sort((a, b) => b.weightedDegree - a.weightedDegree).slice(0, budget).map((n) => n.id));
+    const shown = layout.filter((p) => {
+      const n = p.node;
+      if (n.id === state.centerId) return true;
+      if (hover) return n.id === hover || hoverNb.has(n.id);
+      return showAll || topSet.has(n.id);
+    });
+    drawLabels(ctx, shown, cx, cy, w, h, hover);
+    if (hover && pos[hover]) drawTooltip(ctx, pos[hover], w, h);
 
     const badge = document.getElementById('graphRenderer');
     if (badge) badge.textContent = `${layout.length} entities · ${edges.length} connections`;

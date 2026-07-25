@@ -108,6 +108,19 @@ body {
 .notice-bar strong { color: var(--color-foreground); }
 .notice-bar a { color: var(--color-primary); }
 
+/* Compact single-row sticky header on phones */
+@media (max-width: 640px) {
+  .site-header { padding: 10px 14px; gap: 10px; flex-wrap: nowrap; }
+  .brand-logo svg { width: 26px; height: 26px; }
+  .brand-name { font-size: 1.05rem; }
+  .brand-tag { display: none; }
+  .status-pill { padding: 5px 10px; }
+  .status-meta { display: none; }
+  .notice-bar { margin: 10px 14px 0; padding: 8px 12px; align-items: flex-start; }
+  .notice-bar p { font-size: .72rem; line-height: 1.45; }
+  .notice-bar svg { margin-top: 2px; }
+}
+
 /* Layout */
 .layout {
   display: grid; grid-template-columns: 360px 1fr; gap: 24px;
@@ -330,6 +343,20 @@ code { font-family: var(--mono); color: var(--color-primary); }
 .graph-metrics .wd { font-family: var(--mono); color: var(--color-primary); font-weight: 500; }
 .graph-note { font-size: .72rem; color: #92400E; line-height: 1.45; padding: 10px; background: var(--color-warn-bg); border: 1px solid #FDE68A; border-radius: var(--radius-sm); }
 .graph-audit { font-size: .66rem; color: var(--color-muted-fg); font-family: var(--mono); line-height: 1.4; margin: 0; }
-@media (max-width: 720px) { .graph-body { grid-template-columns: 1fr; } .graph-panel { border-left: none; border-top: 1px solid var(--color-border); max-height: 40%; } }
+@media (max-width: 720px) {
+  /* Full-screen modal on phones */
+  .graph-dialog { width: 100vw; height: 100dvh; border-radius: 0; border: none; }
+  .graph-header { flex-wrap: wrap; padding: 12px 14px; gap: 10px; }
+  .graph-header h2 { font-size: .95rem; }
+  .graph-sub { max-width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .graph-controls { width: 100%; justify-content: space-between; }
+  .depth-toggle { flex: 1; }
+  .depth-toggle button { flex: 1; padding: 8px 6px; }
+  /* Stage must keep real height in the single-column grid (canvases are
+     position:absolute and collapse without it) */
+  .graph-body { grid-template-columns: 1fr; grid-template-rows: minmax(0, 1fr) auto; }
+  .graph-stage { min-height: 46dvh; }
+  .graph-panel { border-left: none; border-top: 1px solid var(--color-border); max-height: 38dvh; }
+}
 
 @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
