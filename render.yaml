@@ -10,3 +10,7 @@ services:
     envVars:
       - key: TRUST_PROXY
         value: "true"
+      # Bundled snapshot is rebuilt daily by the GitHub Action; only fall back
+      # to a runtime OFAC fetch if the bundled data is older than 26h.
+      - key: CACHE_TTL_MS
+        value: "93600000"

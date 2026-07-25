@@ -1,5 +1,7 @@
-# Live snapshot cache (large, regenerated at runtime)
-cache/
+# Runtime snapshot cache — plain JSON stays local; the gzipped snapshot is
+# committed (built daily by the refresh-data GitHub Action)
+cache/*
+!cache/snapshot.json.gz
 
 # Node
 node_modules/

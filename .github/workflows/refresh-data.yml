@@ -1,0 +1,34 @@
+name: Refresh OFAC data
+
+on:
+  schedule:
+    - cron: '17 6 * * *'   # daily 06:17 UTC (OFAC updates on US business days)
+  workflow_dispatch:        # manual run button
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Build fresh snapshot from OFAC SLS
+        run: node scripts/build-cache.js
+
+      - name: Commit and push if changed
+        run: |
+          git config user.name "ofac-data-bot"
+          git config user.email "actions@github.com"
+          git add cache/snapshot.json.gz
+          if git diff --cached --quiet; then
+            echo "No data change."
+          else
+            git commit -m "data: refresh OFAC snapshot ($(date -u +%Y-%m-%d))"
+            git push
+          fi
