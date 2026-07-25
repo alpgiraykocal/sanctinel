@@ -4,7 +4,7 @@ services:
     runtime: node
     plan: free
     buildCommand: ""
-    startCommand: node server.js
+    startCommand: node --max-old-space-size=400 server.js
     healthCheckPath: /healthz
     autoDeploy: true
     envVars:

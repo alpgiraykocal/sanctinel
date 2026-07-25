@@ -63,7 +63,11 @@ function startRefresh() {
   loading = true;
   queryCache.clear();
   console.log('Live refresh started in background worker…');
-  const w = new Worker(path.join(__dirname, 'lib', 'snapshot-worker.js'));
+  // Cap the worker heap so the fetch+parse GCs aggressively instead of pushing
+  // the container over its memory limit (Render free = 512MB total).
+  const w = new Worker(path.join(__dirname, 'lib', 'snapshot-worker.js'), {
+    resourceLimits: { maxOldGenerationSizeMb: 300 },
+  });
   w.on('message', (m) => {
     loading = false;
     if (m.ok) { const c = readCache(); if (c) { snapshot = c.snapshot; queryCache.clear(); console.log(`Live snapshot ready: ${m.count} entities (pub ${m.publicationId}) in ${(m.ms / 1000).toFixed(0)}s`); } }
