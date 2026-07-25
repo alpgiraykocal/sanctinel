@@ -19,16 +19,29 @@
 
   let state = { data: null, depth: 2, hover: null, layout: [], centerId: null, geom: null, glCtx: null, glFailed: false };
 
-  const C = {
+  const LIGHT_C = {
     center: '#2563EB', centerHalo: 'rgba(37,99,235,.16)', centerRing: '#1D4ED8',
     block: '#DC2626', restrict: '#D97706', ext: '#94A3B8',
     edge: '#CBD5E1', edgeOwn: '#DC2626',
     label: '#0F172A', labelDim: '#94A3B8', halo: 'rgba(248,250,252,.92)',
     nodeStroke: '#FFFFFF', guide: 'rgba(100,116,139,.16)', guideText: 'rgba(100,116,139,.55)',
-    ownStroke: '#0F172A',
+    ownStroke: '#0F172A', tipBg: 'rgba(255,255,255,.98)', tipBorder: '#CBD5E1', tipText: '#0F172A', tipDim: '#64748B',
+  };
+  const DARK_C = {
+    center: '#3B82F6', centerHalo: 'rgba(59,130,246,.22)', centerRing: '#60A5FA',
+    block: '#F87171', restrict: '#FBBF24', ext: '#64748B',
+    edge: '#3A4870', edgeOwn: '#F87171',
+    label: '#F1F5F9', labelDim: '#94A3B8', halo: 'rgba(11,18,32,.92)',
+    nodeStroke: '#0B1220', guide: 'rgba(148,163,184,.14)', guideText: 'rgba(148,163,184,.5)',
+    ownStroke: '#F1F5F9', tipBg: 'rgba(19,28,49,.98)', tipBorder: '#3A4870', tipText: '#F1F5F9', tipDim: '#94A3B8',
   };
   const hex2rgb = (h) => [parseInt(h.slice(1, 3), 16) / 255, parseInt(h.slice(3, 5), 16) / 255, parseInt(h.slice(5, 7), 16) / 255];
-  const RGB = { center: hex2rgb(C.center), block: hex2rgb(C.block), restrict: hex2rgb(C.restrict), ext: hex2rgb(C.ext), edge: hex2rgb(C.edge), own: hex2rgb(C.edgeOwn) };
+  const rgbOf = (c) => ({ center: hex2rgb(c.center), block: hex2rgb(c.block), restrict: hex2rgb(c.restrict), ext: hex2rgb(c.ext), edge: hex2rgb(c.edge), own: hex2rgb(c.edgeOwn) });
+  let C = LIGHT_C, RGB = rgbOf(LIGHT_C);
+  function applyTheme() {
+    const dark = document.documentElement.getAttribute('data-theme') === 'dark';
+    C = dark ? DARK_C : LIGHT_C; RGB = rgbOf(C);
+  }
 
   function severity(node) {
     if (!node.inSnapshot) return 'ext';
@@ -282,11 +295,11 @@
     let bx = p.x + p.r + 10, by = p.y - bh / 2;
     if (bx + bw > w) bx = p.x - p.r - 10 - bw;
     if (by < 4) by = 4; if (by + bh > h - 4) by = h - 4 - bh;
-    ctx.save(); ctx.shadowColor = 'rgba(15,23,42,.2)'; ctx.shadowBlur = 14; ctx.shadowOffsetY = 5;
-    ctx.fillStyle = 'rgba(255,255,255,.98)'; roundRect(ctx, bx, by, bw, bh, 9); ctx.fill(); ctx.restore();
-    ctx.strokeStyle = '#CBD5E1'; ctx.lineWidth = 1; roundRect(ctx, bx, by, bw, bh, 9); ctx.stroke();
+    ctx.save(); ctx.shadowColor = 'rgba(0,0,0,.28)'; ctx.shadowBlur = 14; ctx.shadowOffsetY = 5;
+    ctx.fillStyle = C.tipBg; roundRect(ctx, bx, by, bw, bh, 9); ctx.fill(); ctx.restore();
+    ctx.strokeStyle = C.tipBorder; ctx.lineWidth = 1; roundRect(ctx, bx, by, bw, bh, 9); ctx.stroke();
     ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
-    lines.forEach((l, i) => { ctx.fillStyle = i === 0 ? '#0F172A' : '#64748B'; ctx.font = `${i === 0 ? 600 : 400} 11px "IBM Plex Sans", sans-serif`; ctx.fillText(l, bx + 11, by + 18 + i * 15); });
+    lines.forEach((l, i) => { ctx.fillStyle = i === 0 ? C.tipText : C.tipDim; ctx.font = `${i === 0 ? 600 : 400} 11px "IBM Plex Sans", sans-serif`; ctx.fillText(l, bx + 11, by + 18 + i * 15); });
   }
 
   function roundRect(ctx, x, y, w, h, r) { ctx.beginPath(); ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r); ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath(); }
@@ -324,6 +337,7 @@
 
   /* ---------- orchestrator ---------- */
   function draw() {
+    applyTheme();
     const canvas = cv();
     const ctx = canvas.getContext('2d');
     const dpr = window.devicePixelRatio || 1;
@@ -427,5 +441,5 @@
   }
 
   document.addEventListener('DOMContentLoaded', wire);
-  window.OFACGraph = { open };
+  window.OFACGraph = { open, redraw: () => { if (state.data && !modal().hidden) draw(); } };
 })();

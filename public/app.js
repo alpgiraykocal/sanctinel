@@ -96,6 +96,7 @@ async function runSearch(e) {
     const data = await fetch('/api/search?' + params, { signal: controller.signal }).then((r) => r.json());
     lastResults = data.results;
     render(data);
+    syncUrl(q);
   } catch (err) {
     if (err.name !== 'AbortError') $('resultList').innerHTML = `<div class="no-hits">Search failed: ${esc(err.message)}</div>`;
   } finally {
@@ -108,6 +109,7 @@ function render(data) {
   const summary = $('resultSummary');
   const n = data.results.length;
   summary.hidden = false;
+  $('copyLinkBtn').hidden = false;
   summary.innerHTML = n
     ? `<strong>${n}</strong> potential match${n === 1 ? '' : 'es'} for <strong>“${esc(data.query)}”</strong> <span class="summary-sub">· screened against ${(data.snapshot.count || 0).toLocaleString()} sanctioned parties at threshold ${data.threshold}</span>`
     : '';
@@ -135,6 +137,11 @@ function render(data) {
       setTimeout(() => (btn.textContent = 'Copy JSON'), 1500);
     });
   }));
+  list.querySelectorAll('.rc-csv').forEach((btn) => btn.addEventListener('click', () => {
+    const r = lastResults[Number(btn.dataset.i)];
+    download(`sanctinel-${r.id}.csv`, toCsv(r), 'text/csv;charset=utf-8');
+  }));
+  list.querySelectorAll('.rc-print').forEach((btn) => btn.addEventListener('click', () => printMemo(lastResults[Number(btn.dataset.i)])));
 }
 
 function attrGroups(attributes) {
@@ -248,6 +255,8 @@ function card(r, i) {
     <div class="rc-actions">
       <button class="rc-toggle" type="button" aria-expanded="false"><span>Show full record</span></button>
       ${(r.relationships || []).length ? `<button class="rc-graph" type="button" data-id="${esc(r.id)}">View network</button>` : ''}
+      <button class="rc-print" type="button" data-i="${i}">Print / PDF</button>
+      <button class="rc-csv" type="button" data-i="${i}">CSV</button>
       <button class="rc-copy" type="button" data-i="${i}">Copy JSON</button>
     </div>
   </article>`;
@@ -264,6 +273,87 @@ async function refreshLive() {
   finally { btn.disabled = false; btn.textContent = 'Refresh live'; }
 }
 
+// ---- export helpers ----
+function download(name, text, type) {
+  const b = new Blob([text], { type });
+  const u = URL.createObjectURL(b);
+  const a = document.createElement('a');
+  a.href = u; a.download = name; document.body.appendChild(a); a.click();
+  a.remove(); URL.revokeObjectURL(u);
+}
+
+function toCsv(r) {
+  const aliases = (r.names || []).filter((n) => !n.primary).map((n) => `${n.type}: ${n.name}`).join(' | ');
+  const rows = [
+    ['Field', 'Value'],
+    ['Name', r.name], ['Type', r.type], ['OFAC entity ID', r.id], ['List', r.list],
+    ['Programs', (r.programs || []).join('; ')], ['Sanctions types', (r.sanctionsTypes || []).join('; ')],
+    ['Legal authorities', (r.legalAuthorities || []).join('; ')], ['Date published', r.datePublished || ''],
+    ['Aliases', aliases], ['Addresses', (r.addresses || []).map((a) => a.full || a).join(' | ')],
+    ['Identifiers', (r.identifiers || []).map((i) => `${i.type} ${i.value}`).join(' | ')],
+    ['Relationships', (r.relationships || []).map((x) => `${x.type} ${x.relatedName}`).join(' | ')],
+    ...(r.attributes || []).map((a) => [a.label, a.value]),
+    ['Match score', r.score], ['Match type', r.matchType], ['Matched on', `${r.matchedField}${r.explain ? ' — ' + r.explain : ''}`],
+    ['Screened at', new Date().toISOString()], ['Source', 'OFAC SLS via Sanctinel — educational, not legal advice'],
+  ];
+  return '﻿' + rows.map((row) => row.map((c) => `"${String(c == null ? '' : c).replace(/"/g, '""')}"`).join(',')).join('\r\n');
+}
+
+function memoHtml(r) {
+  const hint = determinationHint(r);
+  const list = (arr, f) => (arr || []).map(f).join('');
+  const aliases = (r.names || []).filter((n) => !n.primary);
+  return `
+    <h1>Sanctions screening record</h1>
+    <p class="memo-sub">Generated ${new Date().toLocaleString()} · Sanctinel · educational analysis, not legal advice</p>
+    <h2>${esc(r.name)}</h2>
+    <p>${esc(r.type)} · OFAC entity ID ${esc(r.id)} · <strong>${esc(r.list)}</strong></p>
+    <table>
+      <tr><th>Determination guidance</th><td><strong>${esc(hint.label)}.</strong> ${hint.text.replace(/<[^>]+>/g, '')}</td></tr>
+      <tr><th>Match</th><td>score ${r.score.toFixed(2)} (${esc(r.matchType.replace('_', ' '))}) · matched on ${esc(r.matchedField)}${r.explain ? ' — ' + esc(r.explain) : ''}</td></tr>
+      <tr><th>Programs</th><td>${esc((r.programs || []).join(', ') || '—')}</td></tr>
+      ${(r.sanctionsTypes || []).length ? `<tr><th>Sanctions type</th><td>${esc(r.sanctionsTypes.join(', '))}</td></tr>` : ''}
+      ${(r.legalAuthorities || []).length ? `<tr><th>Legal authority</th><td>${esc(r.legalAuthorities.join('; '))}</td></tr>` : ''}
+      ${r.datePublished ? `<tr><th>Date published</th><td>${esc(r.datePublished)}</td></tr>` : ''}
+      ${aliases.length ? `<tr><th>Aliases</th><td>${list(aliases, (a) => `${esc(a.type)} ${esc(a.name)}<br>`)}</td></tr>` : ''}
+      ${(r.identifiers || []).length ? `<tr><th>Identifiers</th><td>${list(r.identifiers, (i) => `${esc(i.type)}: ${esc(i.value)}<br>`)}</td></tr>` : ''}
+      ${(r.addresses || []).length ? `<tr><th>Addresses</th><td>${list(r.addresses, (a) => `${esc(a.full || a)}<br>`)}</td></tr>` : ''}
+      ${(r.relationships || []).length ? `<tr><th>Relationships</th><td>${list(r.relationships, (x) => `${esc(x.type)}: ${esc(x.relatedName)}<br>`)}</td></tr>` : ''}
+    </table>
+    <p class="memo-foot">Screening analysis only — not a determination and not legal advice. Confirm against OFAC's official Sanctions List Search (sanctionssearch.ofac.treas.gov) before any compliance decision. Apply the 50% Rule to ownership.</p>`;
+}
+
+function printMemo(r) {
+  const el = $('printArea');
+  el.innerHTML = memoHtml(r);
+  document.body.classList.add('printing');
+  window.print();
+  setTimeout(() => document.body.classList.remove('printing'), 500);
+}
+
+// ---- shareable URL ----
+function syncUrl(q) {
+  const p = new URLSearchParams();
+  if (q) p.set('q', q);
+  if ($('threshold').value !== '0.95') p.set('threshold', $('threshold').value);
+  if ($('list').value) p.set('list', $('list').value);
+  if ($('program').value) p.set('program', $('program').value);
+  if ($('yob').value.trim()) p.set('yob', $('yob').value.trim());
+  if ($('country').value.trim()) p.set('country', $('country').value.trim());
+  const qs = p.toString();
+  history.replaceState(null, '', qs ? '?' + qs : location.pathname);
+}
+
+function initFromUrl() {
+  const p = new URLSearchParams(location.search);
+  if (p.get('threshold')) { $('threshold').value = p.get('threshold'); $('threshOut').textContent = parseFloat(p.get('threshold')).toFixed(2); }
+  if (p.get('list')) $('list').value = p.get('list');
+  if (p.get('program')) $('program').value = p.get('program');
+  if (p.get('yob')) $('yob').value = p.get('yob');
+  if (p.get('country')) $('country').value = p.get('country');
+  if (p.get('q')) { $('q').value = p.get('q'); runSearch(); }
+}
+
 $('searchForm').addEventListener('submit', runSearch);
 $('q').addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); runSearch(); } });
 document.querySelectorAll('.chip[data-q]').forEach((c) => c.addEventListener('click', () => { $('q').value = c.dataset.q; runSearch(); }));
@@ -271,4 +361,9 @@ $('threshold').addEventListener('input', (e) => { $('threshOut').textContent = p
 $('list').addEventListener('change', () => $('q').value.trim() && runSearch());
 $('program').addEventListener('change', () => $('q').value.trim() && runSearch());
 $('refreshBtn').addEventListener('click', refreshLive);
-loadMeta();
+$('copyLinkBtn').addEventListener('click', () => {
+  navigator.clipboard.writeText(location.href).then(() => {
+    const b = $('copyLinkBtn'); b.textContent = 'Link copied'; setTimeout(() => (b.textContent = 'Copy link'), 1500);
+  });
+});
+loadMeta().then(initFromUrl);
