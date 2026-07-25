@@ -2,7 +2,7 @@ name: Refresh OFAC data
 
 on:
   schedule:
-    - cron: '17 6 * * *'   # daily 06:17 UTC (OFAC updates on US business days)
+    - cron: '0 23 * * *'   # 23:00 UTC = 01:00 Stockholm (CEST); 00:00 in winter (CET)
   workflow_dispatch:        # manual run button
 
 permissions:
