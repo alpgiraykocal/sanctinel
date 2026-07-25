@@ -1,0 +1,3862 @@
+org_symbols:
+  # This file contains a list of common descriptors used in company and organization names. It is
+  # partially derived from OpenSanctions name data. The idea is to provide mappings between different
+  # spellings, languages and other variations of the same term. This can be used as a matching
+  # mechanism that circumvents the need for fuzzy matching or other complex algorithms.
+  co:
+    - company
+    - сompany # Homoglyph, first letter is Cyrillic
+    - cомpany
+    - corporation
+    - corp
+    - compagnie
+    - компания
+    - kompani
+    - kompania
+    - komaniya
+    - kompaniy
+    - kampaniia
+    - kompaniia
+    - kompaniya
+    - kompānija
+    - kampaniya
+    - kompanii
+    - vállalat
+    - къмпани
+    - компани
+    - компания
+    - коспания
+    - компаний
+    - компана
+    - компані
+    - co
+    - coy # Australian government equivelent of company
+    - comp
+    - компанія
+    - شركة
+    - compañía
+    - compania
+    - companie
+    - companhia
+    - kampani
+    - kompanija
+    - kongsi
+    - kaisha
+    - gongsi
+    - shirkat
+    - חברה
+    - società
+    - société
+    - sociedad
+    - gesellschaft
+    - vennootschap
+    - bendrovė
+    - întreprinderea
+    - ettevõte
+    - firma
+    - firm
+    - Εταιρεία
+    - Etaireia
+    - společnost
+    - şirket
+    - yhtiö
+    - 公司
+    - 企業
+    - ファーム
+    - 企业
+    - कंपनी
+    - 회사
+  org:
+    - organization
+    - organisation
+    - organisations
+    - org
+    - организація
+    - orhanizatsiia
+    - orhanizatsiya
+    - organisasjon
+    - organisasjonen
+    - organisatie
+    - organzation
+    - orhanizatsiino
+    - organizatsiya
+    - organizacion
+    - organizacja
+    - organizácie
+    - organizácia
+    - organizaciju
+    - organizace
+    - organizacije
+    - organizacija
+    - organizaci
+    - organizatia
+    - органищация
+    - организациями
+    - организация
+    - организации
+    - organizatsii
+    - organizația
+    - organización
+    - organisaatio
+    - Οργανισμός
+    - Organismos
+    - ОБЩЕСТВО
+    - OBSHCHESTVO
+    - ファーム
+    - 団体
+    - 協会
+  corp:
+    - corporation
+    - corporaton
+    - corporate
+    - сorporation
+    - corp
+    - korp
+    - корпорация
+    - корпорація
+    - مؤسسة
+    - corporación
+    - koroporatsiya
+    - korporatsiyi
+    - corporația
+    - corporaciia
+    - korporatsiia
+    - korporatsiya
+    - korporacija
+    - corporations
+    - corporacion
+    - Corporación
+    - Corporatie
+    - Corporação
+    - Korporation
+    - Corporatn
+    - Corprtn
+    - Corpo
+    - корпорации
+    - корпарация
+    - корпорації
+    - корпораций
+    - societatea
+    - sociedade
+    - società
+    - Εταιρικός Όμιλος
+    - 協力的な
+    - 生活協同組合
+    - 合作社
+  coop:
+    - co-op
+    - coop
+    - co-operation
+    - cooperation
+    - co-operative
+    - cooperative
+    - co-operative society
+    - coop society
+    - co-op society
+    - koperasi
+    - cooperative society
+    - coopératif
+    - kooperatif
+    - kooperativa
+    - kooperattiva
+    - coopération
+    - cooperativă
+    - coopérative
+    - kooperatsia
+    - cooperatieve
+    - cooperatives
+    - cooperativo
+    - cooperativa
+    - corporativo
+    - corporativos
+    - sociedad cooperativa
+    - spółdzielni
+    - spoldzielczy
+    - кооперация
+    - Συνεταιρισμός
+    - Synetairismos
+  assoc:
+    - association
+    - associations
+    - ассоциация
+    - объединение
+    - асоціація
+    - об'єднання
+    - ASSOTSIATSIYA # transliteration of ассоциация
+    - ASSOCIACIYA # alternative transliteration
+    - ASSOTSIACIJA # ISO 9 transliteration
+    - OBYEDINENIYE # transliteration of объединение
+    - OBYEDINENIE # variant transliteration
+    - OB'YEDNANNYA # transliteration of об'єднання
+    - OBYEDNANNYA # without apostrophe
+    - ASOTSIATSIIA # Ukrainian transliteration
+    - Associazione
+    - Association
+    - Assoc.
+    - Asociación
+    - Asociacion
+    - Associação
+    - Associacao
+    - Associazione
+    - Stowarzyszenie
+    - Związek
+    - Zwiazek # without diacritic
+  ngo:
+    - ngo
+    - n.g.o.
+    - НКО
+    - non-governmental organization
+    - non governmental organization
+    - non-governmental organisation
+    - non governmental organisation
+    - non-profit organization
+    - non profit organization
+    - non-profit organisation
+    - non profit organisation
+    - ОБЩЕСТВЕННАЯ ОРГАНИЗАЦИЯ # NGO
+    - ОБЩЕСТВЕННОЕ ОБЪЕДИНЕНИЕ
+    - OBSHCHESTVENNOYE OBYEDINENIYE
+    - OBŠČESTVENNOE OB'EDINENIE
+    - OBSCHESTVENNOE OBYEDINENIE
+    - ОБЩЕСТВЕННАЯ ОРГАНИЗАЦИЯ
+    - OBSHCHESTVENNAYA ORGANIZATSIYA
+    - OBSCHESTVENNAYA ORGANIZATSIYA
+    - OBŠČESTVENNAJA ORGANIZACIJA
+    - НЕКОММЕРЧЕСКАЯ ОРГАНИЗАЦИЯ # NON-COMMERCIAL ORGANIZATION
+    - NEKOMMERCHESKAYA ORGANIZATSIYA FOND
+    - NEKOMMERCHESKAYA ORGANIZATSIYA
+    - НЕКОММЕРЧЕСКАЯ ОРГАНИЗАЦИЯ ФОНД
+    - НЕКОММЕРЧЕСКАЯ ОРГАНИЗАЦИЯ
+    - NEKOMMERCHESKAYA ORGANIZACIYA # alternative transliteration with 'c'
+    - NEKOMMERCESKAYA ORGANIZATSIYA # variant with single 'ch'
+    - NEKOMMERCESKAJA ORGANIZACIJA # scholarly/ISO 9 transliteration
+    - БФ
+    - БЛАГОТВОРИТЕЛЬНЫЙ ФОНД # CHARITABLE FOUNDATION
+    - BLAGOTVORITELNYY FOND
+    - BLAGOTVORITELNY FOND
+    - BLAGOTVORITELNAYA ORGANIZATSIYA
+    - BLAGOTVORITEL'NYJ FOND
+    - БЛАГОДІЙНИЙ ФОНД
+    - BLAHODIYNYY FOND
+    - BLAHODІJNYJ FOND
+    - БЛАГОТВОРИТЕЛЬНЫЙ ФОНД # CHARITABLE FOUNDATION
+    - БЛАГОТВОРИТЕЛЬНЫЙ ФОНД
+    - BLAGOTVORITELNYY FOND
+    - BLAGOTVORITELNY FOND
+    - БЛАГОТВОРИТЕЛЬНАЯ ОРГАНИЗАЦИЯ # CHARITABLE ORGANIZATION
+    - БО
+    - БЛАГОДІЙНА ОРГАНІЗАЦІЯ
+    - BLAHODIYNA ORHANIZATSIYA
+    - БЛАГОТВОРИТЕЛЬНАЯ ОРГАНИЗАЦИЯ
+    - BLAGOTVORITELNAYA ORGANIZATSIYA
+    - BLAGOTVORITEL'NAJA ORGANIZACIJA
+    - БЛАГОДІЙНА ОРГАНІЗАЦІЯ
+    - BLAHODIYNA ORHANIZATSIYA
+    - BLAHODІJNA ORHANІZACІJA
+    - НЕДЗЯРЖАЎНАЯ АРГАНІЗАЦЫЯ
+    - NEDZIARZHAUNAYA ARHANIZATSYYA
+    - NEDZ'ARŽAŬNAJA ARHANIZACYJA
+    - NEDZJARZHAUNAJA ARHANIZACYJA
+    - niegovorni organizaciji
+    - nevladine organizacije
+    - nevladina organizacija
+    - CHARITY
+    - CHARITABLE ORGANIZATION
+    - CHARITABLE ORGANISATION
+    - CHARITABLE FUND
+    - CHARITY FUND
+    - Nichtregierungsorganisation # German
+    - ONG # Organisation non gouvernementale # French
+    - Organisation non gouvernementale # French
+    - Organización no gubernamental # Spanish
+    - Organização não governamental # Portuguese
+    - Organizzazione non governativa # Italian
+    - CSO # Civil Society Organization
+    - Civil Society Organization # CSO
+    - Civil Society Organisation # CSO
+    - Organizația societății civile # Romanian
+    - Organizația societatii civile # Romanian (without diacritics)
+    - Organizația neguvernamentală # Romanian
+    - Organizația neguvernamentala # Romanian (without diacritics)
+    - Niet-gouvernementele organisatie
+    - Organizacja pozarządowa
+    - Organizacja pozarzadowa # without diacritics
+    - Nevládní organizace
+    - Nevladni organizace # without diacritics
+    - Mimovládna organizácia # Slovak
+    - Mimovladna organizacia # without diacritics
+  partner:
+    - partner
+    - partners
+    - партнер
+    - партнеры
+    - партнёр
+    - партнери
+    - спільник
+    - спільники
+    - الشركاء
+    - 合伙人
+    - 合夥人
+    - 伙伴
+    - 共同経営者
+    - 組合員
+  bros:
+    - brothers
+    - bros
+    - fratelli
+    - hermanos
+    - frères
+    - irmãos
+  center:
+    - центр
+    - tsentr
+    - cntr
+    - center
+    - centre
+    - centras
+    - Centro
+    - Centrum
+    - centr
+    - centro
+    - tsentrov
+    - центров
+    - مركز
+  holding:
+    - holding
+    - holdings
+    - проведение
+    - холдинг
+    - холдинг
+    - хлдинг
+    - xoлдиhг
+    - kholdyng
+    - kholding
+    - القابضة
+    - Συμμετοχών
+    - Symmetochon
+    - Συμμετοχές
+    - Symmetoches
+    - 集体
+    - 保持
+    - 保有資産
+    - кооперація
+    - кооператив
+    - кооперативне
+    - кооперативна
+    - кооперативи
+    - кооперативу
+    - кооперативів
+    - споживче товариство
+    - споживча кооперація
+  business:
+    - business
+    - businesses
+    - бизнес
+    - бізнес
+    - أعمال
+    - деловой
+    - деловая
+    - Επιχείρηση
+    - Μπίζνες
+    - 商业
+    - 商
+  nominee:
+    - nominees
+    - nominee
+    - номинальный
+    - номинальная
+    - номінальний
+    - номінальна
+    - довірена особа
+  concern:
+    - kontsern
+    - concern
+    - konzern
+    - концерн
+    - مجموعة
+    - consorcio
+    - consórcio
+    - group of companies
+  consortium:
+    - consortium
+    - consorcio
+    - consórcio
+    - consortum
+    - konsortsium
+    - consortile
+    - консорциум
+    - консорціум
+  service:
+    - service
+    - services
+    - servicio
+    - servicios
+    - servico
+    - servicos
+    - serviço
+    - serviços
+    - servis
+    - servizio
+    - servizi
+    - службы
+    - служба
+    - сервис
+    - сервіс
+    - услуг
+    - обслуживания
+  dept:
+    - department
+    - dept.
+    - département
+    - departament
+    - departamento
+    - departamentul
+    - dipartimento
+    - Abteilung
+    - afdeling
+    - afdelingen
+    - отдел
+  special:
+    - Specjalnych
+    - specială
+    - special
+    - speciale
+    - Speciaal
+    - Specijalni
+    - Специальный
+    - специальная
+    - специальное
+    - спеціальний
+    - спеціальна
+    - спеціальне
+  spv:
+    - spv
+    - special purpose vehicle
+    - vehículo de propósito especial
+    - специальное проектное предприятие
+    - компания специального назначения
+    - спеціальна проектна компанія
+  agency:
+    - agency
+    - agence
+    - agentur
+    - agencia
+    - agencja
+    - agência
+    - agentschap
+    - agenzia
+    - ajans
+    - агентства
+    - агентстве
+    - агентство
+    - एजेंसी
+    - وكالة
+  fund:
+    - fund
+    - funds
+    - fond
+    - fondo
+    - fonds
+    - fundo
+    - fondovy
+    - фонд
+    - صندوق
+  intl:
+    - intl
+    - int'l
+    - international
+    - internațional
+    - internantional
+    - internatsionale
+    - internationales
+    - internasional
+    - интернациональный
+    - интернациональная
+    - интернациональные
+    - internationale
+    - internacional
+    - internacionais
+    - internacionales
+    - інтернейшнл
+    - internazionale
+    - internazionali
+    - 国際的
+    - 国際
+    - 国际的
+    - 国际
+  grp:
+    - group
+    - группа
+    - групп
+    - группы
+    - груп
+    - グループ
+    - groupement
+    - groupe
+    - Grupa
+    - grupė
+    - grupo
+    - grupp
+    - gruppo
+    - Grupul
+    - Grúpa
+    - Csoport
+    - Gruppo di società
+    - Group of Companies
+    - Όμιλος Εταιρειών
+    - группа компаний
+    - Groupe d'entreprise
+    - grupo de empresas
+    - Group Company
+    - grup
+    - Όμιλος
+    - Ομάδα
+    - Skupina
+    - hrupa
+    - Grupa
+    - 团体
+    - 团
+    - 集体
+  mgmt:
+    - management
+    - мanagement
+    - gestion
+    - gestión
+    - gerenciamento
+    - менеджмент
+    - упрвлению
+    - менеджмента
+    - менеджменту
+    - إدارة
+    - управление
+    - управления
+    - ўпраўлення
+    - упарвлению
+    - упарвления
+    - управлениe
+    - управлению
+    - gestión
+    - Διαχείριση
+    - Epicheirisi
+    - 管理
+    - 辖
+  fed:
+    - federal
+    - федеральное
+    - федеральноая
+    - федеpальное
+    - федералное
+    - федеоальная
+    - федерельная
+    - федералльная
+    - фдеральная
+    - федеральной
+    - федерпальное
+    - федеарльная
+    - федералная
+    - федеральне
+    - феднральная
+    - федеральные
+    - фeдеральное
+    - федеральными
+    - федеральных
+    - федеральному
+    - федеральна
+    - федральное
+    - федеральний
+    - федерального
+    - федеральный
+    - федеральная
+    - глсударственное
+    - федеральным
+    - федеральних
+    - федеральном
+    - федеральної
+    - federalnyy
+    - federatsyy
+    - федерации
+    - federální
+    - federálny
+    - federalny
+    - federatsiyi
+    - federalna
+    - federāla
+  natl:
+    - national
+    - национальный
+    - национальная
+    - национальные
+    - национального
+    - национальной
+    - национальных
+    - национальнoе
+    - национальнaя
+    - национальнoй
+    - национальнoго
+    - национальнoе
+    - национальнoй
+    - nationalnyy
+    - nacionalnyy
+    - nacionalna
+    - nazionale
+    - nacional
+    - nationell
+    - nasjonale
+    - ulusal
+    - narodowy
+    - národní
+    - landelijk
+    - valstybinis
+    - 国立
+    - 国家的
+  allrussian:
+    - ВСЕРОССИЙСКИЙ
+    - all-russian
+    - national
+  repu:
+    - republic
+    - republics
+    - республика
+    - республиканский
+    - республиканская
+    - республиканские
+    - республиканского
+    - республиканской
+    - республики
+    - республик
+    - республике
+    - république
+    - respublikos
+    - respubliky
+    - republik
+    - repubblica
+    - republika
+    - república
+    - 共和国
+    - cumhuriyet
+    - جمهورية
+    - respublika
+    - respublik
+  institute:
+    - institute
+    - insitute
+    - institut
+    - inštitút
+    - школа
+    - институт
+    - інститут
+    - Ινστιτούτο
+    - institutu
+    - instituta
+    - instituto
+    - instituti
+    - inštitut
+    - instituição
+    - ynstytut
+    - institiut
+    - institūts
+    - instytutu
+    - instituut
+    - instytut
+    - istituto
+    - institutas
+    - institutul
+    - instituutti
+    - industite
+    - instituutin
+    - inštituta
+    - institutului
+    - 研究所
+    - 学院
+  club:
+    - club
+    - clube
+    - circolo
+    - klub
+    - kulüp
+    - клуб
+    - 俱乐部
+    - クラブ
+  institution:
+    - учреждение
+    - institution
+    - institucija
+    - instituția
+    - учраждение
+    - учреджение
+    - учреждениение
+  fdn:
+    - foundation
+    - foudation
+    - фонд
+    - fundacja
+    - fundacion
+    - fondation
+    - fundație
+    - fundacija
+    - Foundation
+    - Fondacion
+    - Fondacioni
+    - Fundación
+    - fundația
+    - Stiftung
+    - Stichting
+    - Ίδρυμα
+    - fdn
+    - 財団
+    - 基金
+    - 設立
+  private:
+    - private
+    - privat
+    - privato
+    - privati
+    - privatiy
+    - приватный
+    - приватная
+    - приватное
+    - приватные
+  public:
+    - public
+    - publiczny
+    - publiczna
+    - publiczne
+    - общественный
+    - общественная
+    - общественные
+    - общественных
+    - общественного
+    - общественной
+    - 公共的
+    - 公共的な
+  industry:
+    - industry
+    - industries
+    - indastris
+    - industrial
+    - industriyi
+    - industriilor
+    - industrialnyi
+    - indastri
+    - индустрия
+    - индустрии
+    - индустриальный
+    - индустральный
+    - промышленности
+    - industrijo
+    - industria
+    - industriia
+    - industriala
+    - industriji
+    - industrji
+    - industrije
+    - industriya
+    - industriei
+    - industriju
+    - industriales
+    - indastrial
+    - industriel
+    - industriale
+    - industrială
+    - industrialny
+    - industrie
+    - industra
+    - industrier
+    - indústrias
+    - industriële
+    - industriële
+    - industriell
+    - industrija
+    - industrias
+    - industrialna
+    - industriais
+    - indústria
+    - endustriyel
+    - endüstri
+    - sanayi
+    - 業界
+  associates:
+    - associates
+    - ассоциированные
+  network:
+    - network
+    - networks
+    - netzwerk
+    - сетевой
+    - сетевые
+    - сетевое
+  dev:
+    - development
+    - dev
+    - devt
+    - devt.
+    - ανάπτυξη
+    - развитие
+    - развития
+    - развитию
+    - ανάπτυξης
+  enterprise:
+    - enterprise
+    - enterprises
+    - entreprise
+    - enterprises
+    - enterpraizes
+    - entreprises
+    - empreendimento
+    - empreendimentos
+    - interprise
+    - предприятие
+    - пpедпpиятие
+    - предприиятие
+    - предприятия
+    - предпрятие
+    - предприятий
+    - predpriyatie
+    - empresa
+    - impresa
+    - предприемство
+    - підприємство
+    - 기업
+    - प्रतिष्ठान
+    - yritys
+  committee:
+    - committee
+    - committees
+    - комитет
+    - комитета
+    - комитеты
+    - комітет
+    - комітети
+    - комитету
+  kombinat:
+    - kombinat
+    - комбинат
+    - Kombinatas
+    - комбинированного
+  central:
+    - central
+    - centrala
+    - centrale
+    - centralele
+    - centrali
+    - центральный
+    - центральная
+    - центральные
+    - центрального
+    - центральной
+    - централизованная
+  general:
+    - general
+    - generale
+    - генеральный
+    - генеральная
+    - генеральные
+    - генерального
+    - генеральной
+    - генеральных
+  base:
+    - base
+    - bases
+    - baza
+    - база
+  global:
+    - global
+    - weltweit
+    - mondial
+    - mondiale
+    - globální
+    - globalny
+    - küresel
+    - глобальный
+    - глобальная
+    - глобальные
+    - глобального
+    - глобальной
+    - глобальных
+    - глобально
+  world:
+    - world
+    - welt
+    - worldwide
+    - mundo
+    - monde
+    - мир
+    - 世界
+  system:
+    - system
+    - systems
+    - systeme
+    - система
+    - системы
+    - sistema
+    - sistemas
+    - système
+    - systèmes
+    - sistemy
+    - システム
+    - システムズ
+  association:
+    - association
+    - associations
+    - associação
+    - asociaciones
+    - ассоциация
+    - ассоциации
+  venture:
+    - venture
+    - ventures
+    - венчурный
+    - венчурная
+    - венчурные
+    - венчурных
+    - венчурного
+    - венчурной
+    - венчурное
+    - empreendimentos
+  commerce:
+    - commerce
+    - commercial
+    - коммерция
+    - коммерческая
+    - коммерческие
+    - коммерческих
+    - коммерческого
+    - коммерческой
+    - комерційний
+  commercial:
+    - commercial
+    - коммерческий
+    - коммерческая
+    - коммерческое
+    - коммерческой
+    - коммерческих
+    - коммерческого
+    - комерческий
+    - comercial
+    - commerciale
+    - commerciaux
+    - commercieel
+    - commerciale
+    - comerciale
+    - commerciële
+    - kommercial
+    - commerical
+    - comercială
+    - εμπορική
+    - 商業
+    - commerciell
+    - קומרציאלי
+    - 상업적
+    - kommersiel
+    - 商业的
+  municipal:
+    - municipal
+    - municipality
+    - муниципальный
+    - муниципальная
+    - муниципальные
+    - муниципального
+    - муниципальной
+    - муниципальных
+    - муніципальний
+    - муніципальна
+    - муніципальні
+    - муніципального
+    - муніципальної
+    - муніципальних
+    - munisipalitas
+    - munisipaliteti
+    - munisipalitetet
+    - муниципальное
+  city:
+    - city
+    - cities
+    - city of
+    - city of the
+    - city council
+    - city government
+    - municipalité
+    - municipale
+    - municipals
+    - municipale
+    - municipale de
+    - municipale du
+    - municipale des
+    - муниципалитет
+    - муниципалитеты
+    - муниципалитета
+    - муниципалитетам
+    - городская
+    - городского
+    - городские
+    - городских
+    - города
+  office:
+    - office
+    - offices
+    - оффис
+    - офис
+    - офисы
+    - офиса
+    - офиса
+    - офіс
+    - офіси
+    - oficina
+    - oficinas
+    - bureau
+    - bureaux
+  bureau:
+    - bureau
+    - бюро
+    - бюро
+    - бюрo
+    - bürö
+    - bürö
+    - büro
+    - büron
+    - büron
+    - büronü
+    - büronü
+  gov:
+    - gov
+    - govmnt
+    - government
+    - government of
+    - government of the
+    - governmental
+    - regierung
+    - regierung von
+    - regierung der
+    - staat
+    - staatlich
+    - staatliche
+    - staatliches
+    - 政府
+    - 辖
+    - state
+    - state of
+    - правительство
+    - gouvernement
+    - gouvernement de
+    - gouvernementale
+    - государственное
+    - государственная
+    - государственный
+    - государственне
+    - государственноый
+    - госудаственным
+    - гомударственной
+    - государсвенным
+    - государствнный
+    - госудаpственное
+    - государсовенный
+    - госудрарственное
+    - государственном
+    - государственно
+    - государственного
+    - государственной
+    - государственным
+    - государственные
+    - государственных
+    - правительсто
+    - госпредприятие # soe
+    - казенное
+    - gobierno
+    - gobierno de
+    - κυβερνηση
+    - κυβερνητική
+  region:
+    - области
+    - област
+    - областное
+    - областная
+    - областные
+    - района
+    - район
+    - районов
+    - region
+    - regions
+    - regional
+    - regionalny
+    - regionala
+    - regionali
+    - regionales
+  named:
+    - im
+    - имени
+    - імені
+    - им
+    - imeni
+    - named after
+    - named for
+    - named in honor of
+    - named in memory of
+  socalled:
+    # EU slang
+    - SO-CALLED
+    - Self-proclaimed
+    - the so-called
+    - Așa-numita
+    - Den såkaldte
+    - Takozvana
+    - Sogenannte
+    - L-hekk imsejħa
+    - soi-disant
+    - Soi-disant
+    - Javni pokret
+    - mar a ghairtear de
+    - Tā sauktā
+    - Samhällsrörelsen
+    - népi mozgalom
+    - Tzv.
+    - Т.нар.
+  ministry:
+    - ministry
+    - ministries
+    - мinistry
+    - ministère
+    - ministeru
+    - ministero
+    - ministerio
+    - ministerul
+    - ministerium
+    - ministerie
+    - ministrerio
+    - ministerstvo
+    - ministerului
+    - ministerij
+    - министерства
+    - министерство
+    - министерства
+  export:
+    - export
+    - exports
+    - eksportu
+    - eksporty
+    - экспорт
+    - экспорты
+    - експорту
+    - експорти
+    - экспорта
+    - експорту
+    - экспорти
+    - экспорте
+    - экспорты
+    - экспортив
+    - экспортиве
+    - экспортиву
+    - экспортивы
+    - экспортивом
+  import:
+    - import
+    - imports
+    - импорт
+    - импорты
+    - импорта
+    - импортный
+    - импортная
+    - импортные
+    - импортных
+    - импортного
+    - импортной
+  trade:
+    - trade
+    - trading
+    - торговля
+    - торгівля
+    - торговьй
+    - торговый
+    - торгово
+    - торговая
+    - торговые
+    - торговых
+    - trэid
+    - торговы
+    - comercio
+    - comercio
+    - commercio
+    - comércio
+    - impex
+    - imp. exp.
+    - usaha dagang
+    - sanayi ve ticaret
+    - ticaret
+    - san.tic
+    - san. tic.
+    - san.ve
+    - San. ve Tic.
+    - sanayi ve ticaret
+    - sanayi ticaret
+    - SANAYI VE TICARET
+    - tes.tek.dis
+    - tes.tek.dış
+    - Diş Ticaret
+    - Dis Ticaret
+    - Foreign Trade
+    - tejarat
+    - Зовнішньоторговельна
+    - Zovnishnotorhovelna
+    - Tesisler Teknoloji Dış
+    - Tesisler Teknoloji Dış Ticaret
+    - Εμπορική
+    - 贸易
+    - 行业
+    - 商业
+    - 商行
+    - 贸易公司
+  solution:
+    - solution
+    - solutions
+    - λύση
+    - λύσεις
+    - λύσεων
+    - решение
+    - решения
+    - решению
+    - решении
+    - решениеи
+    - soluzioni
+    - solutii
+    - soluções
+    - soluciones
+    - solusi
+  project:
+    - project
+    - projects
+    - projetos
+    - проект
+    - проекты
+    - проекта
+    - проектов
+    - проекту
+    - проектно
+    - проектный
+    - проекты
+    - projekat
+    - projekt
+    - projektas
+    - projektas
+    - projekti
+    - projektių
+    - projekto
+    - projektų
+    - projektoje
+    - projektųje
+    - projektoje
+  product:
+    - product
+    - products
+    - продукция
+    - продукціі
+    - продукцією
+    - produkt
+    - produtos
+    - prodotto
+    - prodotti
+    - προϊόν
+    - προϊόντα
+    - ürün
+    - ürünler
+  alliance:
+    - alliance
+    - aliança
+    - allians
+    - allianz # also a brand name
+    - alianza
+    - alleanza
+    - alliantie
+    - alianţă
+    - ittifak
+    - sojusz
+    - альянс
+    - تحالف
+    - गठबंधन
+    - 同盟
+    - 동맹
+  capital:
+    - capital
+    - κεφάλαιο
+    - κεφαλαιακή
+    - капитал
+    - kapital
+    - capitale
+    - капитала
+    - capitalul
+    - capitals
+  credit:
+    - credit
+    - kredit
+    - credits
+    - КРЕДИТНАЯ
+    - кредитная
+    - кредитный
+    - кредитное
+    - кредит
+    - кредиты
+    - кредитний
+    - кредитна
+    - кредитне
+  asset:
+    - asset
+    - assets
+    - активы
+    - актив
+    - активов
+    - активи
+    - активів
+  trust:
+    - trust
+    - trusts
+    - фонд
+    - траст
+    - трест
+    - трастовий
+    - трастова
+    - трастові
+    - трастової
+    - трастового
+    - фондовий
+    - фондова
+    - фондові
+  union:
+    - union
+    - союз
+    - союза
+    - unión
+    - União
+    - ユニオン
+    - 組合
+    - 联盟
+    - zveza
+    - związek
+    - savez
+    - szakszervezet
+    - обєднання
+    - об'єднання
+  authority:
+    - authority
+    - autoridad
+    - autoridade
+    - autorità
+    - autoritat
+    - autorität
+    - autoritate
+    - autoritāte
+    - autorité
+    - autoriteet
+    - autoriteit
+    - autoritet
+    - autoritetas
+    - autorytet
+    - avtoritet
+    - avtoriteta
+    - awtoridad
+    - awtorità
+    - behörde
+    - hatóság
+    - otoritas
+    - otorite
+    - údarás
+    - viranomainen
+    - авторитет
+    - аўтарытэт
+    - ავტორიტეტი
+    - רשות
+    - السلطة
+    - अधिकार
+    - 权威
+    - 権限
+  party:
+    - party
+    - páirtí
+    - partai
+    - partei
+    - parti
+    - partia
+    - partid
+    - partido
+    - partij
+    - partija
+    - strana
+    - stranka
+    - па́ртия
+    - κόμμα
+    - حزب
+    - दल
+    - দল
+    - 政黨
+    - 党
+  liquidation:
+    - in liqu. # de (abbreviation)
+    - in liquidation # de, en
+    - in liquidazione # it
+    - en liquidacion # es
+    - en liquidation # fr
+    - 清算中 # zh
+    - "/in liquidation/" # used by certain Bulgarian companies
+  repoff:
+    - Representative Office
+    - Rep. Office
+    - Representative Off.
+    - Rep Off
+    - Repr. Office
+  branch:
+    - branch
+    - branch of
+    - филиал
+    - filiale
+    - zweigstelle
+    - Branch Office
+    - Br. Office
+    - Branch Off.
+    - Br Off
+    - Subsidiary Branch
+    - Sub. Branch
+
+# Domains are a sibling category to symbols: common term groups with translations, abbreviations, and variations.
+# While symbols describe extremely common and non-meaningful words (like "company" or "group"), domains are
+# meaningful as to the entity's identity, and will be weighted more heavily in matches.
+org_domains:
+  house:
+    - housing
+    - house
+    - maison
+    - haus
+    - huis
+    - hus
+    - casa
+    - dom
+    - дом
+    - ev # Turkish
+    - konut # Turkish
+    - 房屋 # Chinese (simplified)
+    - 住宅 # Chinese (simplified & traditional)
+  supply:
+    - supply
+    - supplies
+    - supplier
+    - поставщик
+    - постачальник
+    - tedarik # Turkish
+    - tedarikçi # Turkish
+    - suministro # Spanish
+    - suministros # Spanish
+    - proveedor # Spanish
+    - 供应 # Chinese (simplified)
+    - 供給 # Chinese (traditional)
+    - 供应商 # Chinese (simplified)
+  culture:
+    - culture
+    - kultura
+    - культура
+    - культурний
+    - культурна
+    - культурне
+    - kültür # Turkish
+    - cultura # Spanish
+    - cultural # Spanish
+    - 文化 # Chinese (simplified & traditional)
+  defence:
+    - defence
+    - defense
+    - défense
+    - defensie
+    - defensiv
+    - defesa
+    - difesa
+    - försvar
+    - Verteidigung
+    - verdediging
+    - protecția
+    - försvar
+    - defensa
+    - оборонный
+    - оборон
+    - savunma # Turkish
+    - defensa # Spanish (already present)
+    - 防務 # Chinese (traditional)
+    - 防务 # Chinese (simplified)
+    - 国防 # Chinese (simplified & traditional)
+  skb:
+    - skb
+    - special design bureau
+    - Особое Конструкторское Бюро
+    - ОСОБОЕ КОНСТРУКТОРСКОЕ БЮРО
+    - Osoblyve konstruktorske biuro
+    - OKB
+  instrmak:
+    - Priborostroeniya
+    - instrument-making
+    - INSTRUMENT ENGINEERING
+    - fabrication d’instruments
+    - приборостроительный
+    - ПРИБОРОСТРОИТЕЛЬНЫЙ
+    - приладобудівний
+    - приладобудування
+    - приладобудівна
+    - приладобудівне
+  tech:
+    - technology
+    - technical
+    - технология
+    - технологии
+    - техника
+    - тэхники
+    - тэхніка
+    - технікал
+    - технологія
+    - технології
+    - тэхналогіі
+    - тэхналогій
+    - технологій
+    - технологий
+    - технический
+    - технической
+    - технолоджі
+    - технолоджи
+    - технологиями
+    - технологічне
+    - technalohiy
+    - tekhnolohiia
+    - technológiai
+    - tehnologiei
+    - tehnologică
+    - technologickou
+    - technological
+    - technologique
+    - tekhnichnyi
+    - tehnološko
+    - tecnologies
+    - tecnologia
+    - technológií
+    - tehnologie
+    - tehnologiju
+    - tekhnology
+    - tekhnologi
+    - teknologiya
+    - tehnološki
+    - teknoloġija
+    - tehnologia
+    - technologická
+    - technik
+    - teknologii
+    - tekhnolohiyi
+    - tekhnologii
+    - technologií
+    - tecnología
+    - tehnologii
+    - tekhnologiya
+    - tekhnologiy
+    - technológiák
+    - technologie
+    - technologia
+    - technologies
+    - technologijų
+    - technologii
+    - tecnologias
+    - tekhnolohii
+    - 技术
+    - 工艺学
+    - τεχνολογία
+    - τεχνολογίες
+    - τεχνολογίας
+    - технологический
+    - технологическая
+    - технического
+    - teknoloji # Turkish
+    - teknik # Turkish
+    - tecnológica # Spanish - adjective
+    - 科技 # Chinese (simplified & traditional)
+    - 技術 # Chinese (traditional)
+  insurance:
+    - insurance
+    - insurans
+    - insurance company
+    - insurer
+    - versicherung
+    - versicherungen
+    - versicherungsgesellschaft
+    - verzekeringsmaatschappij
+    - verzekeringsmaatschappijen
+    - страхового
+    - страховая
+    - sigorta # Turkish
+    - sigortacılık # Turkish
+    - seguro # Spanish
+    - seguros # Spanish
+    - aseguradora # Spanish
+    - 保险 # Chinese (simplified)
+    - 保險 # Chinese (traditional)
+    - 保险公司 # Chinese (simplified)
+  intel:
+    - intel # en (abbreviation)
+    - intelligence # en
+    - inteligencia # es
+    - inteligência # pt
+    - intelijen # id
+    - inteligjenca # sq
+    - inteligjencës # sq
+    - wywiadu # pl
+    - разведывательное # ru
+    - istihbarat # Turkish
+    - istihbaratı # Turkish
+    - 情报 # Chinese (simplified)
+    - 情報 # Chinese (traditional)
+  property:
+    - property
+    - properties
+    - собственность
+    - собственностью
+    - собственностью
+    - собственностью
+    - собственностью
+    - собственностью
+    - собственностью
+    - собственности
+    - mülk # Turkish
+    - gayrimenkul # Turkish
+    - propiedad # Spanish
+    - propiedades # Spanish
+    - inmueble # Spanish
+    - 物业 # Chinese (simplified)
+    - 物業 # Chinese (traditional)
+    - 房地产 # Chinese (simplified)
+    - 房地產 # Chinese (traditional)
+    # - 财产 # Chinese (simplified) - too generic, means "property/assets" broadly
+    # - 財產 # Chinese (traditional) - too generic
+  realty:
+    - realty
+    - realtor
+    - real estate
+    - immobilier
+    - immobilien
+    - imobiliare
+    - imobiliária
+    - inmobiliaria
+    - недвижимость
+    - недвижимостью
+    - недвижимостями
+    - недвижимостях
+    - недвижимостью
+    - emlak # Turkish
+    - emlakçı # Turkish
+    - bienes raíces # Spanish
+    - inmobiliario # Spanish
+    - 房地产 # Chinese (simplified)
+    - 房地產 # Chinese (traditional)
+    - 不动产 # Chinese (simplified)
+    - 不動產 # Chinese (traditional)
+  jail:
+    # may want to combine with prison below
+    - jail
+    - jailhouse
+    - gaol
+    - gaolhouse
+    - maison d'arrêt
+    - cárcel
+    - untersuchungshaftanstalt
+    - tutkintavankila
+    - СИЗО
+    - 看守所
+  prison:
+    # may want to combine with jail above
+    - prison
+    - penitentiary
+    - centre de détention
+    - maison centrale
+    - prisión
+    - príosún
+    - vankila
+    - gefängnis
+    - тюрьма
+    - исправительная колония
+    - سجن
+    - 监狱
+  royal:
+    - royal
+    - royale
+    - königlich
+    - kunglig
+    - королевский
+    - королевская
+    - королевское
+    - королівський
+    - королівська
+    - королівське
+  tv:
+    - tv
+    - television
+    - telly
+    - télévision
+    - télé
+    - televisión
+    - tele
+    - televisioon
+    - тв
+    - televize
+    - televisio
+    - televisão
+    - televisi
+    - televisione
+    - televisjon
+    - telewizja
+    - televisheni
+    - televízia
+    - televizija
+    - televizyon
+    - televizor
+    - Fernsehen
+    - телеба́чення
+    - телевидение
+    - टेलीविज़न
+    - تلفاز
+    - تِلْفِزْيُون
+    - 텔레비전
+    - 텔레비죤
+    - 電視
+    - 电视
+    - テレビ
+    - টেলিভিশন
+    - দূরদর্শন
+  equipment:
+    - equipment
+    - equipement
+    - equipamento
+    - equipamentos
+    - equipo
+    - equipos
+    - équipement
+    - Ausrüstung
+    - оборудование
+    - обрудование
+    - обрудования
+    - обрудованиями
+    - обрудованиях
+    - обрудованиям
+    - обрудованиями
+    - обрудовании
+    - оборудованиe
+    - оборудованию
+    - ekipman # Turkish
+    - teçhizat # Turkish
+    - 设备 # Chinese (simplified)
+    - 設備 # Chinese (traditional)
+    - 装备 # Chinese (simplified) - military connotation, less common in civilian entity names
+    - 裝備 # Chinese (traditional) - military connotation
+  hardware:
+    - hardware
+    - hardwares
+    - donanım # Turkish - more often means "hardware" in IT contex
+  innovation:
+    - innovation
+    - innovations
+    - innovative
+    - innovativo
+    - innovativa
+    - innovazione
+    - innovazioni
+    - innováció
+    - innovație
+    - innovatsioon
+    - innovasjon
+    - innovasjonar
+    - innovasiyon
+    - innovações
+    - innovaçőes
+    - innovații
+    - innovațiii
+    - innovațiilor
+    - innovației
+    - innovatsiya
+    - инновационное
+    - инновационная
+    - inovasyon # Turkish
+    - yenilik # Turkish
+    - innovación # Spanish
+    - innovaciones # Spanish
+    - 创新 # Chinese (simplified)
+    - 創新 # Chinese (traditional)
+  university:
+    - university
+    - университет
+    - університет
+    - унивирситет
+    - университнт
+    - университи
+    - университета
+    - universidad
+    - université
+    - universtiy
+    - universitet
+    - universität
+    - universytet
+    - univ
+    - uni
+    - univ.
+    - univ. of
+    - univ. of the
+    - üniversite # Turkish
+    - üniversitesi # Turkish
+    - 大学 # Chinese (simplified)
+    - 大學 # Chinese (traditional)
+  military:
+    - военный
+    - military
+    - militare
+    - militsii
+    - askeri # Turkish
+    - askeriye # Turkish
+    - militar # Spanish - adjective
+    - militares # Spanish - adjective plural
+    - عسكري
+    - عسكري
+    - 军事 # Chinese (simplified)
+    - 軍事 # Chinese (traditional)
+    - 军队 # Chinese (simplified)
+    - 軍隊 # Chinese (traditional)
+  army:
+    - army
+    - armee
+    - armée
+    - armeen
+    - armée de terre
+    - армия
+    - армія
+    - армейский
+    - армейская
+    - армейские
+    - армейских
+    - армейского
+    - армейской
+    - ejército
+    - ordu # Turkish
+    - kara kuvvetleri # Turkish - full phrase "land forces", too specific
+    - 陆军 # Chinese (simplified)
+    - 陸軍 # Chinese (traditional)
+    - 军队 # Chinese (simplified)
+    - 軍隊 # Chinese (traditional)
+    - عسكر
+  aviation:
+    - aviation
+    - aviación
+    - aerospace
+    - luftfahrt
+    - авиация
+    - авиационный
+    - авиационная
+    - авиационные
+    - havacılık # Turkish
+    - havacılığı # Turkish
+    - 航空 # Chinese (simplified & traditional)
+    - 航空业 # Chinese (simplified) - means "aviation industry", too generic
+    - 航空業 # Chinese (traditional) - means "aviation industry", too generic
+  aircraft:
+    - aircraft
+    - airplane
+    - airplanes
+    - aeroplane
+    - aeroplanes
+    - plane
+    - planes
+    - flugzeug
+    - flugzeuge
+    - самолет
+    - аэроплан
+    - самолеты
+    - aeroplanë
+    - aeroplani
+    - aereo
+    - aerei
+    - avion
+    - aviones
+    - avions
+    - avión
+    - avião
+    - aviões
+    - ndege
+    - 비행기
+    - 비행기들
+    - طائرة
+    - طائرات
+    - हवाई जहाज़
+    - 飞机
+    - 飛行機
+  airline:
+    - airline
+    - airlines
+    - авиакомпания
+    - авиакомпании
+    - авиакомпаний
+    - авиакомпанию
+    - авиаперевозчик
+    - авиаперевозчики
+    - авиаперевозчика
+    - авиаперевозчиках
+    - авиаперевозчикам
+  airport:
+    - airport
+    - airports
+    - аэропорт
+    - aerodrome
+    - aerodromes
+    - flughafen
+    - flughäfen
+    - lufthaven
+    - aéroport
+    - aéroports
+    - aérodrome
+    - aérodromes
+    - aeropuerto
+    - aeropuertos
+    - aeródromo
+    - aeródromos
+    - aeroporto
+    - aeroporti
+    - aerodromo
+    - aerodromi
+    - aeroporto
+    - aeroportos
+    - aeródromo
+    - aeródromos
+    - luchthaven
+    - luchthavens
+    - аэропорт
+    - аэропорты
+    - аэропорта
+    - аэропортов
+    - летное поле
+    - авиапорт
+    - аеропорт
+    - аеропорти
+    - летовище
+    - lotnisko
+    - lotniska
+    - port lotniczy
+    - letiště
+    - letiští
+    - letištní
+    - аеродром
+    - аеродроми
+    - aerodrom
+    - havaalanı
+    - 机场
+    - 航空港
+    - 飞机场
+    - 機場
+    - 航空港
+    - 飛機場
+    - 空港
+    - エアポート
+    - 飛行場
+    - 공항
+    - 비행장
+    - 항공항
+  brigade:
+    - brigade
+    - brigada
+    - briqada
+    - brigáda
+    - brigaad
+    - brigata
+    - brygada
+    - brigadă
+    - brigedi
+    - brigad
+    - брига́да
+    - لواء
+    - 旅
+    - ब्रिगेड
+  flight:
+    - flight
+    - flights
+    - полет
+    - полеты
+    - полетах
+    - полетам
+    - полетами
+    - полете
+    - полетов
+    - рейс
+    - рейсы
+    - рейсов
+  maritime:
+    - maritime
+    - maritim
+    - морская
+    - морской
+    - морские
+    - морских
+    - морского
+    - marine
+    - denizcilik
+  naval:
+    - naval
+    - navy
+    - военно-морской
+    - военно-морская
+    - военно-морские
+  railway:
+    - railway
+    - railways
+    - railway company
+    - железной
+    - железнодорожной
+    - железнодорожный
+  auto:
+    - auto
+    - automobile
+    - automotive
+    - car
+    - vehicle
+    - vehicular
+    - автомобиль
+    - automobiles
+    - automóviles
+    - automobily
+    - automobilii
+    - automobilyi
+    - automobilya
+    - automobiliai
+    - automobilis
+    - automobilov
+    - automobilu
+    - automobilei
+    - automobilele
+    - automobilelor
+    - automobilů
+    - automobilův
+  nuclear:
+    - nuclear # en, es, pt
+    - branduolinis # lt (masculine)
+    - branduolinė # lt (feminine)
+    - jądrowy # pl
+    - kjernefysisk # no
+    - niwclear # cy
+    - nucleair # nl
+    - nucleare # it
+    - nucleares # pt (plural)
+    - nucléaire # fr singular
+    - nucléaires # fr plural
+    - nukleaarinen # fi
+    - nukleaarne # et
+    - nuklear # de
+    - nukleare # da
+    - nukleáris # hu
+    - nukleär # sv
+    - nükleer # tr
+    - nyuklia # sw
+    - nuklearny # pl (masculine)
+    - nuklearna # pl (f)
+    - nuklearne # pl (neuter)
+    - πυρηνικός # el (masculine)
+    - πυρηνική # el (feminine)
+    - πυρηνικό # el (neuter)
+    - ядерный # ru (masculine)
+    - ядерная # ru (feminine)
+    - ядерное # ru (neuter)
+    - ядерные # ru (plural)
+    - ядерний # uk (masculine)
+    - ядерна # uk (feminine)
+    - ядерне # uk (neuter)
+    - ядерні # uk (plural)
+    - نووي # ar
+    - नाभिकीय # hi
+    - 핵 # ko
+    - 核 # ja, zh
+    - 核能 # zh
+  uranium:
+    - uranium # en, fr
+    - uraan # et, af, nl
+    - uraani # fi
+    - uran # cs, de, sv, pl
+    - urán # hu, sk
+    - urani # sq, ca, vi
+    - urāns # lv
+    - uranas # lt
+    - uranio # es, it
+    - urânio # pt
+    - uranyum # tr
+    - ουράνιο # el
+    - Уран # ru, uk, bg
+    - اليورانيوم # ar
+    - यूरेनियम # hi
+    - 우라늄 # ko
+    - ウラン # ja
+    - 铀 # zh
+  oil:
+    - oil
+    - petroleum
+    - petrochemical
+    - aceite
+    - huile
+    - olje
+    - нефтепереработка
+    - neft
+    - нефть
+    - татнефть
+    - нефтяная
+    - нефтяной
+    - زيت
+    - 石油
+    - petrol # Turkish
+    - petrokimya # Turkish
+    - petróleo # Spanish
+    - petrolero # Spanish
+  steel:
+    - steel
+    - metal
+    - steelworks
+    - metallurgical
+    - metallurgy
+    - металлургический
+    - сталь
+    - çelik # Turkish
+    - metalurji # Turkish
+    - acero # Spanish
+    - metalúrgico # Spanish - adjective
+    - metalúrgica # Spanish - adjective
+    - siderúrgico # Spanish - adjective
+    - 钢铁 # Chinese (simplified)
+    - 鋼鐵 # Chinese (traditional)
+    - 金属 # Chinese (simplified & traditional)
+    - 冶金 # Chinese (simplified & traditional)
+  diamond:
+    - diamond # en
+    - diamonds # en
+    - brylant # pl
+    - brylanty # pl
+    - deimantai # lt
+    - deimantas # lt
+    - diamant # da, de, fr, nl, no, sv
+    - diamantar # no
+    - diamante # es, pt
+    - diamanten # de, nl
+    - diamanter # da, no, sv
+    - diamantes # es, pt
+    - diamants # fr
+    - diament # pl
+    - diamenty # pl
+    - elmas # tr
+    - elmaslar # tr
+    - gyémánt # hu
+    - gyémántok # hu
+    - teemandid # et
+    - teemant # et
+    - timantteja # fi
+    - timantti # fi
+    - pırlanta # tr
+    - pırlantalar # tr
+    - алмаз # ru, uk
+    - алмазы # ru
+    - алмази # uk
+    - бриллиант # ru
+    - бриллианты # ru
+    - діамант # uk
+    - діаманти # uk
+    - الماس # ar
+    - ألماس # ar
+    - डायमंड # hi
+    - हीरे # hi
+    - हीरा # hi
+    - 다이아 # ko
+    - 다이아몬드 # ko
+    - ダイヤ # ja
+    - ダイヤモンド # ja
+    - 金刚石 # zh
+    - 金剛石 # zh
+    - 钻石 # zh
+    - 鑽石 # zh
+  jewelry:
+    - jewelry # en-US
+    - jewellery # en-GB
+    - bijoux # fr
+    - biżuteria # pl
+    - ehted # et
+    - ékszerek # hu
+    - gioielli # it
+    - jóias # pt
+    - joyas # es
+    - joyería # es (jewelry shop/craft of making jewelry)
+    - juwelen # nl
+    - korut # fi
+    - mücevher # tr
+    - papuošalai # lt
+    - schmuck # de
+    - sieraden # nl
+    - smycke # sv
+    - smykker # da, no
+    - šperky # cs, sk
+    - takı # tr
+    - κοσμήματα # el
+    - украшения # ru
+    - ювелирные изделия # ru
+    - прикраси # uk
+    - ювелірні вироби # uk
+    - مجوهرات # ar
+    - आभूषण # hi
+    - 보석류 # ko
+    - 주얼리 # ko
+    - 宝飾品 # ja
+    - ジュエリー # ja
+    - 首饰 # zh
+    - 珠宝 # zh
+  mining:
+    - mining
+    - mines
+    - bergbau
+    - горнодобывающая
+    - madencilik # Turkish
+    - maden # Turkish
+    - minería # Spanish
+    # - minero # Spanish - adjective or means "miner" (person)
+    - minera # Spanish
+    # - 采矿 # Chinese (simplified) - verb "to mine"
+    # - 採礦 # Chinese (traditional) - verb "to mine"
+    - 矿业 # Chinese (simplified)
+    - 礦業 # Chinese (traditional)
+  factory:
+    - factory
+    - factories
+    - фабрика
+    - fabrika
+    - rasteniye
+    - растение
+    - usine
+    - werk
+    - werke
+    - zavod
+    - závod
+    - завод
+    - fabriek
+    - fabrik
+    - fabrique
+    - fabbriche
+    - fabbrica
+    - 工厂
+    - 厂
+    - 厂家
+    - 厂子
+    - plant
+  lab:
+    - laboratory # en (singular)
+    - laboratories # en (plural)
+    - lab # en (short form singular)
+    - labs # en (short form plural)
+    - labor # de,et (singular)
+    - laboratoire # fr (singular)
+    - laboratoires # fr (plural)
+    - laboratoria # nl, pl, (plural)
+    - laboratorien # de (plural, technical)
+    - laboratorier # da, no, sv (plural)
+    - laboratorija # lt (singular)
+    - laboratorijos # lt (plural)
+    - laboratorio # es, fi (singular)
+    - laboratório # pt (singular)
+    - laboratorios # es (plural)
+    - laboratórios # pt (plural)
+    - laboratoriot # fi (plural)
+    - laboratorium # da, nl, no, pl, sv (singular)
+    - laboratórium # hu (singular)
+    - laboratóriumok # hu (plural)
+    - laboratuvar # tr (singular)
+    - laboratuvarlar # tr (plural)
+    - labore # de (plural, non-technical)
+    - laborid # et (plural)
+    - лаборатории # ru (plural)
+    - лаборатория # ru (singular)
+    - лабораторії # uk (plural)
+    - лабораторія # uk (singular)
+    - المختبر # ar (singular)
+    - المختبرات # ar (plural)
+    - معمل # ar (singular)
+    - معامل # ar (plural)
+    - प्रयोगशाला # hi (singular)
+    - प्रयोगशालाएं # hi (plural)
+    - 실험실 # ko
+    - 实验室 # zh
+    - 実験室 # ja (experiment room)
+    - 研究室 # ja (research room)
+  invfund:
+    - investment fund
+    - fondo de inversión
+    - investmentfonds
+    - fondo di investimento
+    - fundo de investimento
+    - инвестиционный фонд
+    - инвестиционный фондов
+    - инвестиционных фондов
+    - инвестиционных фонд
+    - investitsionnyy fond
+    - investycyjny fundusz
+    - investicinis fondas
+    - investicijų fondas
+    - investicinis fondas
+    - investicijų fondas
+    - investicijų fondų
+    - investicinių fondų
+    - investicinių fondas
+    - fi
+    - mutual fund
+  academy:
+    - academy
+    - academie
+    - akademie
+    - akademija
+    - akademiia
+    - akademiya
+    - akademi
+    - akadēmija
+    - akadēmijas
+    - akadēmijā
+    - akadēmijai
+    - akadēmijām
+    - akademii
+    - akademiia
+    - akademiya
+    - akademiia
+    - академия
+    - академии
+    - академиии
+    - академиию
+  adviser:
+    - adviser
+    - advisor
+    - advisers
+    - advisors
+    - советник
+    - советники
+    - консультант
+    - консультанты
+    - радник
+    - радники
+    - консультант
+    - консультанти
+  eng:
+    - engineering
+    - инженерия
+    - инжиниринг
+    - иинжиниринг
+    - иинженерно
+    - инжинириум
+    - engineering
+    - ingenierie
+    - ingegneri
+    - ingeniérie
+    - ingeniería
+    - inženýrství
+    - inženiring
+    - inzhiniring
+    - engineers
+    - инженерный
+    - 工学
+    - エンジニアリング
+  scientific:
+    - scientific
+    - science
+    - sciences
+    - science and technology
+    - научный
+    - научная
+    - научные
+    - научных
+    - научного
+    - научной
+    - научно-исследовательский
+    - научное
+  health:
+    - health
+    - healthcare
+    - здравоохранения
+    - здравоохранение
+    - охорона здоров'я
+    - здоров'я
+  pharmacy:
+    - pharmacy
+    - фармацевтический
+    - apotheke
+    - фармацевтическая
+    - фармацевтические
+    - фармация
+    - аптека
+    - фармацевтичний
+    - фармацевтична
+    - фармацевтичні
+    - фармація
+  machine:
+    - machine
+    - machines
+    - machining
+    - machinery
+    - машиностроение
+    - машиностроительный
+    - машиностроительная
+    - машиностроительные
+    - машиностроительных
+    - машиностроительного
+    - машиностроительной
+    - машиностроения
+  investment:
+    - investment
+    - investmet
+    - invest
+    - investments
+    - инвестиции
+    - инвестиционный
+    - инвестиционная
+    - инвестиционные
+    - инвестиционных
+    - иинвестиционный
+    - инвестиционной
+    - інвестиционный
+    - инвестиционного
+    - investicni
+    - investitsiy
+    - investimenti
+    - investimento
+    - investeringen
+    - investimentos
+    - inversión
+    - inversiones
+    - investissement
+    - investitorii
+    - 투자
+    - 投資
+    - השקעה
+    - investasi
+    - investice
+    - investicija
+    - invesment
+    - invesmenti
+  casino:
+    - casino
+    - cazinou
+    - kasino
+    - kasíno
+    - kasiino
+    - kaszinó
+    - kasyno
+    - kazino
+    - казино
+  leasing:
+    - leasing
+    - lease
+    - лизинг
+    - лизинговая
+    - лизинговые
+  education:
+    - education
+    - educational
+    - образования
+    - лаборатория
+    - образовательное
+    - образовательная
+    - общеобразовательное
+  islamic:
+    - islamic
+    - исламский
+    - исламская
+    - исламские
+    - исламских
+    - исламского
+    - исламской
+    - islamitische
+    - islamique
+    - islamske
+    - islamiya
+    - islamiyah
+    - islamskiej
+    - islámských
+    - islamských
+    - islamiske
+    - islam
+    - islami
+    - islamo
+    - islâmico
+  reinsurance:
+    - reinsurance
+    - re-assurance
+    - re # reasonably common abbreviation in entity names e.g. Swiss Re
+    - reinsurer
+    - reinsurance company
+    - réassurance
+    - reaseguro
+    - riassicurazione
+    - resseguro
+    - rückversicherung
+    - перестрахование
+    - 재보험
+  research:
+    - research
+    - recherche
+    - исследование
+    - исследовательский
+    - изучение
+    - forschung
+  resources:
+    - resources
+    - resource
+    - ressource
+    - ressources
+    - recurso
+    - recursos
+    - ресурсы
+    - ресурс
+    - ресурсов
+    - ресурси
+    - ресурсів
+  shipping:
+    - shipping
+    - shipping company
+    - shipping line
+    - shipping lines
+    - schiffahrt
+    - судоходство
+    - NAKLİYE
+    - SHPG
+    - шиппинг
+    - судоходная
+    - судоходные
+    - судоходных
+    - судоходного
+    - судоходной
+    - судоходства
+    - судноплавство
+    - судноплавная
+    - судноплавные
+    - судноплавных
+    - судноплавного
+    - судноплавной
+    - судноплавства
+  agriculture:
+    - agriculture
+    - agricultural
+    - agricola
+    - agricole
+    - agricoltura
+    - agricultura
+    - agrikultura
+    - агрикультура
+    - "agrícola" # es, pt (adjective)
+    - сельское хозяйство # ru (noun)
+    - сельскохозяйственный # ru (adjective)
+    - сільське господарство # uk (noun)
+    - сільськогосподарський # uk (adjective)
+    - сельскохозяйственных # ru (adjective)
+    - сельскохозяйственного # ru (adjective)
+    - сельскохозяйственная # ru (adjective)
+  shipbuilding:
+    - shipbuilding
+    - shipyard
+    - shipyards
+    - судостроение
+    - судостроительный
+    - судостроительная
+    - судостроительные
+    - судостроительных
+    - судостроительного
+    - судостроительной
+  production:
+    - production
+    - productions
+    - proizvodstvennoe
+    - производственное
+    - производственно
+  construction:
+    - construction
+    - строительство
+    - construtora
+    - construcoes
+    - construções
+    - construcao
+    - construção
+    - строительный
+    - строительное
+    - строительства
+    - строительная
+    - inşaat # Turkish
+    - construcción # Spanish
+    - constructora # Spanish
+    - 建设 # Chinese (simplified)
+    - 建設 # Chinese (traditional)
+    - 建筑 # Chinese (simplified)
+    - 建築 # Chinese (traditional)
+  building:
+    - building
+    - buildings
+    - edificio
+    - edificios
+    - bâtiment
+    - bâtiments
+    - gebäude
+    - gebaude
+    - zgrada
+    - zgrade
+    - здание
+    - здания
+    - 건물
+    - 建筑物 # Chinese (simplified)
+    - 建築物 # Chinese (traditional)
+    - yapı # Turkish
+  consulting:
+    - consulting
+    - консалтинг
+    - konsulting
+    - consultancy
+    - consultants
+    - constultants
+    - консалтинговая
+    - consult
+    - konsult
+    - consulenza
+    - conseils
+    - beratung
+    - コンサルティング
+    - danışmanlık # Turkish
+    - danışman # Turkish
+    - consultoría # Spanish
+    - consultora # Spanish
+    - asesoría # Spanish
+    - 咨询 # Chinese (simplified)
+    - 諮詢 # Chinese (traditional)
+    - 顾问 # Chinese (simplified)
+    - 顧問 # Chinese (traditional)
+  design:
+    - design
+    - designer
+    - designers
+    - designing
+    - diseño
+    - diseñador
+    - dizayn
+    - progettazione
+    - デザイン
+    - проектирование
+    - проектировщик
+    - проектировщики
+    - проектировщица
+    - проектировщицы
+    - проектировщиц
+    - tasarım # Turkish
+    - tasarımcı # Turkish
+    - 设计 # Chinese (simplified)
+    - 設計 # Chinese (traditional)
+    - 设计师 # Chinese (simplified)
+    - 設計師 # Chinese (traditional)
+  hotel:
+    - hotel
+    - hotell
+    - hôtel
+    - albergo
+    - otel
+    - отель
+    - 호텔
+    - ホテル
+    - 酒店
+  restaurant:
+    - restaurant
+    - restoran
+    - restaurante
+    - restauranteza
+    - restauracja
+    - restaurace
+    - restauracja
+    - 饭店 # Chinese (simplified)
+    - 飯店 # Chinese (traditional)
+  wine:
+    - wine
+    - şarap
+    - viini
+    - vin
+    - vinho
+    - vino
+    - wein
+    - wijn
+    - wino
+    - κρασί
+    - вино
+    - 와인
+    - ワイン
+    - 葡萄酒
+    - خمر
+    - نبيذ
+  revolutionary:
+    - revolutionary
+    - revolutsioonilise
+    - revolutsionny
+    - rewolucji
+    - révolution
+    - revolucio
+    - revolution
+    - revolučných
+    - revolučních
+    - revoliucijos
+    - revolucionarne
+    - revolucionāro
+    - rivoluzionarie
+    - revolutionaire
+    - революционный
+    - революционная
+    - революционные
+    - революционных
+  theater:
+    - theater
+    - theatre
+    - divadlo
+    - teater
+    - teatteri
+    - théâtre
+    - teatro
+    - teatr
+    - tiyatro
+    - θέατρο
+    - театр
+    - театър
+    - थिएटर
+    - नाट्यशाला
+    - रंगमंच
+    - 극장
+    - مسرح
+    - 剧院
+    - 劇場
+  professional:
+    - professional
+    - professionel
+    - professionalnyi
+    - профессионального
+    - профессионольного
+    - профессиональоного
+    - профессонального
+    - профессиональная
+    - профессиональное
+    - профессионально
+    - профессиональных
+  operations:
+    - operations
+    - operation
+    - operating
+    - операциях
+    - операции
+    - operaciones
+    - operações
+    - opérations
+    - operativos
+    - operativa
+    - operazioni
+    - operasional
+    - operativní
+    - operationeel
+    - operasyonel
+    - operacyjne
+    - オペレーション
+    - 运营
+  mechanical:
+    - mechanical
+    - механический
+    - механическая
+    - механические
+    - механического
+    - механической
+    - механических
+    - Механический
+    - механика
+    - mechanický
+    - mecanique
+    - mécanique
+    - МЕХАНИЧЕСКИЙ
+    - Mekhanicheskiy
+    - Mecánica
+  transport:
+    - transport
+    - transportation
+    - transporte
+    - transportes
+    - trasporto
+    - transpor
+    - vervoer
+    - транспорт
+    - транспортный
+    - транспортная
+    - транспортные
+    - транспортировке
+    - транспортировок
+    - транспортного
+    - ulaşım # Turkish
+    - taşımacılık # Turkish
+    - nakliye # Turkish
+    - 运输 # Chinese (simplified)
+    - 運輸 # Chinese (traditional)
+    - 交通 # Chinese (simplified & traditional)
+    - 运输公司 # Chinese (simplified)
+  financial:
+    - financial
+    - finance
+    - finances
+    - finans
+    - финансирование
+    - финансирования
+    - финансовый
+    - финансовая
+    - финансовые
+    - финансовых
+    - финансового
+    - финансовой
+    - finansal # Turkish
+    - finans # Turkish
+    - mali # Turkish
+    - financiero # Spanish
+    - financiera # Spanish
+    - finanzas # Spanish
+    - 金融 # Chinese (simplified & traditional)
+    - 财务 # Chinese (simplified)
+    - 財務 # Chinese (traditional)
+    - 财政 # Chinese (simplified)
+    - 財政 # Chinese (traditional)
+  comms:
+    - communications
+    - communication
+    - kommunikation
+    - comms
+    - коммюникации
+    - коммуникация
+    - коммуникации
+    - коммуникаций
+    - связи
+    - связь
+    - iletişim # Turkish
+    - haberleşme # Turkish
+    - comunicación # Spanish
+    - comunicaciones # Spanish
+    - 通信 # Chinese (simplified & traditional)
+    - 通讯 # Chinese (simplified)
+    - 通訊 # Chinese (traditional)
+    - 传播 # Chinese (simplified)
+    - 傳播 # Chinese (traditional)
+  information:
+    - information
+    - info
+    - information
+    - informatics
+    - informatyka
+    - informatica
+    - informatyki
+    - информация
+    - информациями
+    - информацией
+    - информационное
+    - информационные
+    - информационных
+    - bilgi # Turkish
+    - enformasyon # Turkish
+    - información # Spanish
+    - informática # Spanish
+    - 信息 # Chinese (simplified)
+    - 資訊 # Chinese (traditional)
+    - 情报 # Chinese (simplified)
+    - 情報 # Chinese (traditional)
+  electronic:
+    - electronic
+    - electronics
+    - electronical
+    - elektronisch
+    - elektronische
+    - électronique
+    - elettronico
+    - elettronica
+    - electrónico
+    - electrónica
+    - elektronisk
+    - електронний
+    - електронна
+    - електронски
+    - электронный
+    - электронная
+    - электронные
+    - электронных
+    - электроника
+    - электроники
+    - 电子
+    - 電子
+    - 電子の
+    - 전자
+    - 전자의
+    - elektronik # Turkish
+    - elektronikçi # Turkish
+  electric:
+    - electric
+    - electrical
+    - electrically
+    - electricity
+    - электрический
+    - электрическая
+    - электрические
+    - электрических
+    - электрического
+    - электрической
+    - elektrik # Turkish
+    - elektrikli # Turkish
+    - eléctrico # Spanish
+    - eléctrica # Spanish
+    - electricidad # Spanish
+    - 电气 # Chinese (simplified)
+    - 電氣 # Chinese (traditional)
+    - 电力 # Chinese (simplified)
+    - 電力 # Chinese (traditional)
+  energy:
+    - energy
+    - energies
+    - energie
+    - energia
+    - energía
+    - énergie
+    - énergies
+    - energias
+    - energieën
+    - energi
+    - energier
+    - energií
+    - energije
+    - energija
+    - enerji
+    - энергия
+    - энергии
+    - енергія
+    - енергії
+    - енергија
+    - енергије
+    - 能源
+    - 能量
+    - 能源
+    - エネルギー
+    - 에너지
+  police:
+    - police
+    - police force
+    - constabulary
+    - póilíní
+    - policia
+    - policía
+    - policie
+    - policija
+    - policja
+    - poliisi
+    - polis
+    - polisi
+    - polisie
+    - politi
+    - politie
+    - poliție
+    - politsei
+    - polizei
+    - αστυνομία
+    - полі́ція
+    - полиция
+    - 경찰
+    - पुलिस
+    - شرطة
+    - পুলিশ
+    - ตำรวจ
+    - 警察
+  power:
+    - power
+    - powers
+    - энергия
+    - энергетика
+    - энергетический
+    - энергетическая
+    - енергія
+    - енергетика
+    - енергетичний
+    - енергетична
+    - güç # Turkish
+    - enerji # Turkish
+    - potencia # Spanish
+    - poder # Spanish
+    - 电力 # Chinese (simplified)
+    - 電力 # Chinese (traditional)
+    - 动力 # Chinese (simplified)
+    - 動力 # Chinese (traditional)
+  chemical:
+    - chemical
+    - chemicals
+    - химический
+    - химическая
+    - химические
+    - химических
+    - химического
+    - химической
+    - kimya # Turkish
+    - kimyasal # Turkish
+    - kimyevi # Turkish
+    - químico # Spanish
+    - química # Spanish
+    - 化学 # Chinese (simplified)
+    - 化學 # Chinese (traditional)
+    - 化工 # Chinese (simplified & traditional)
+  museum:
+    - museum
+    - museums
+    - музей
+    - музея
+    - музеях
+    - музеям
+    - музеями
+    - museu
+    - museos
+    - musée
+    - musei
+    - muzej
+    - muzeum
+    - muzeji
+    - müze # Turkish
+    - müzesi # Turkish
+    - museo # Spanish
+    - 博物馆 # Chinese (simplified)
+    - 博物館 # Chinese (traditional)
+  security:
+    - security
+    - seguridad
+    - securities
+    - sécurité
+    - güvenlik
+    - безопасности
+    - emniyet # Turkish
+    - securidad # Spanish (alternative)
+    - 安全 # Chinese (simplified & traditional)
+    - 保安 # Chinese (simplified & traditional)
+    - 安保 # Chinese (simplified & traditional)
+  logistics:
+    - logistic
+    - logistics
+    - логистика
+    - логистики
+    - логистическая
+    - логистической
+    - логистических
+    - логистическому
+    - логистическому
+    - логистической
+    - ЛОГИСТИКС
+    - lojistik # Turkish
+    - logística # Spanish
+    - 物流 # Chinese (simplified & traditional)
+    - 后勤 # Chinese (simplified)
+    - 後勤 # Chinese (traditional)
+  marketing:
+    - marketing
+    - маркетинг
+    - маркетинговый
+    - маркетинговая
+    - маркетинговые
+    - маркетинговых
+    - marketingu
+    - markedsføring
+    - marketingová
+    - marketingové
+    - marketingových
+    - marketingo
+    - marketinga
+    - pazarlama # Turkish
+    - mercadeo # Spanish
+    - mercadotecnia # Spanish
+    - 营销 # Chinese (simplified)
+    - 營銷 # Chinese (traditional)
+    - 市场营销 # Chinese (simplified)
+    - 市場營銷 # Chinese (traditional)
+  bank:
+    - bank
+    - banking
+    - investment bank
+    - investment banking
+    - commercial bank
+    - trade bank
+    - merchant bank
+    - clearing bank
+    - savings and loan
+    - savings bank
+    - savings and loan association
+    - handelsbank
+    - Kreditanstalt
+    - handelsbanken
+    - банка
+    - banka
+    - банк
+    - инвестиционный банк
+    - коммерческий банк
+    - муниципально-коммерческий банк
+    - банківська
+    - банківська установа
+    - τράπεζα
+    - banque
+    - banca
+    - banco
+    - bankası
+    - banki
+    - 銀行
+    - बैंक
+    - 은행
+    - مصرف
+    - bankacılık # Turkish
+    - 银行 # Chinese (simplified)
+  motor:
+    - motor
+    - motors
+    - motoren
+    - motoru
+    - motorları
+    - motorlar
+    - motorlu
+    - мотор
+    - моторы
+    - моторный
+    - моторная
+    - моторные
+    - 发动机 # Chinese (simplified)
+    - 發動機 # Chinese (traditional)
+  offshore:
+    - offshore
+    - ofshor
+    - оффшор
+    - оффшорный
+    - оффшорная
+    - оффшорные
+    - оффшорной
+    - оффшорного
+    - offshores
+    - オフショア
+  distrib:
+    - distributors
+    - distributor
+    - distribution
+    - distribuidora
+    - дистрибьютор
+    - дистрибуция
+    - дистрибутора
+    - дистрибуции
+  budget:
+    - budget
+    - budgetary
+    - бюджет
+    - бюджетный
+    - бюджетная
+    - бюджетные
+    - бюджетное
+    - бюджетного
+    - бюджетной
+    - бюджетний
+    - бюджетна
+    - бюджетні
+    - бюджетного
+    - бюджетної
+    - бюджетних
+  stockexch:
+    - stock exchange
+    - stock market
+    - securities exchange
+    - bourse
+    - börse
+    - bolsa de valores
+    - borsa valori
+    - bursă de valori
+    - bursa efek
+    - effectenbeurs
+    - beurs
+    - aandelebeurs
+    - aktiemarknad
+    - giełda papierów wartościowych
+    - giełda
+    - pörssi
+    - χρηματιστήριο
+    - Фондовый рынок
+    - Фондовая биржа
+    - शेयर बाज़ार
+    - 证券交易所
+    - 証券取引所
+    - سوق الأوراق المالية
+    - 증권거래소
+  united:
+    - united
+    - unita
+    - uniti
+    - unidas
+    - unifié
+    - unificato
+    - unificata
+    - unificati
+    - unificadas
+    - объединенный
+    - объединенная
+    - объединенные
+    - объединенных
+    - об'єднаний
+    - об'єднана
+    - об'єднані
+  exchange:
+    - exchange
+    - exchanges
+    - биржа
+    - биржи
+    - биржевой
+    - биржевое
+  tactical:
+    - tactical
+    - tactics
+    - taktik
+    - taktische
+    - taktički
+    - тактический
+    - тактическая
+    - тактические
+    - тактических
+    - тактического
+    - тактической
+    - тактична
+    - тактичні
+    - тактичного
+    - тактичной
+  manufacturing:
+    - manufacturing
+    - manufakturynh
+    - manufacturies
+    - mfg.
+    - производство
+    - production
+    - производственный
+    - производственная
+  medical:
+    - medical
+    - medicine
+    - медичний
+    - медична
+    - медичні
+    - медичних
+    - медицинский
+    - медицинская
+    - медицинские
+    - медицинского
+    - медицинской
+    - tıbbi # Turkish
+    - tıp # Turkish
+    - sağlık # Turkish
+    - médico # Spanish
+    - médica # Spanish
+    - medicina # Spanish
+    - 医疗 # Chinese (simplified)
+    - 醫療 # Chinese (traditional)
+    - 医学 # Chinese (simplified)
+    - 醫學 # Chinese (traditional)
+  hospital:
+    - hospital
+    - hospitals
+    - госпиталь
+    - госпиталя
+    - госпиталях
+    - госпиталям
+    - госпиталями
+    - госпитале
+    - больница
+    - больницы
+    - больницах
+    - больницам
+    - hastane # Turkish
+    - hastanesi # Turkish
+    - 医院 # Chinese (simplified)
+    - 醫院 # Chinese (traditional)
+  cartel:
+    - cartel # en, es, pt
+    - cartels # en (plural)
+    - dto
+    - Drug Trafficking Organization
+    - kartell # de
+    - cartello # it
+    - cartel # fr
+    - cartéis # pt (plural)
+    - cárteles # es (plural)
+    - cartelli # it (plural)
+    - картель # ru
+    - картели # ru (plural)
+    - картель # uk
+    - картелі # uk (plural)
+    - كارتل # ar
+    - 卡特尔 # zh
+    - カルテル # ja
+    - 카르텔 # ko
+    - kartel # nl, tr
+    - kartele # nl (plural)
+    - karteller # tr (plural)
+    - karteli # fi
+    - kartellit # fi (plural)
+    - kartell # no, da, sv
+    - kartel # lt
+    - karteliai # lt (plural)
+    - kartell # et
+    - kartellid # et (plural)
+    - kartell # hu
+    - kartellek # hu (plural)
+    - kartel # pl
+    - kartele # pl (plural)
+  social:
+    - social
+    - социальный
+    - социальная
+    - социальные
+    - социального
+    - социальной
+    - социальных
+    - socialnyy
+    - socjalny
+    - socjalna
+    - socjalne
+    - socjalnych
+    - sosyal
+  media:
+    - media # en, it, nl
+    - medios # es
+    - médias # pt, fr
+    - médios # pt (alternative)
+    - medien # de
+    - massmedia # sv
+    - massmedier # no, da
+    - tiedotusvälineet # fi
+    - meedia # et
+    - žiniasklaida # lt
+    - média # hu
+    - środki masowego przekazu # pl
+    - mediji # lt (alternative)
+    - medya # tr
+    - медиа # ru
+    - медіа # uk
+    - ЗМІ # uk (abbreviation)
+    - СМИ # ru (abbreviation)
+    - وسائل الإعلام # ar
+    - 媒体 # zh
+    - メディア # ja
+    - 미디어 # ko
+    - 媒體 # Chinese (traditional)
+    - 传媒 # Chinese (simplified)
+    - 傳媒 # Chinese (traditional)
+  school:
+    - school
+    - école
+    - escola
+    - escuela
+    - Schule
+    - scuola
+    - skola
+    - szkoła
+    - šola
+    - школа
+    - okul # Turkish
+    - colegio # Spanish
+    - 学校 # Chinese (simplified)
+    - 學校 # Chinese (traditional)
+  crypto:
+    - crypto # en, fr, nl (short form)
+    - cryptocurrency # en (long form)
+    - cryptocurrencies # en (long form plural)
+    - cripto # es, pt (short form)
+    - criptomoeda # pt (long form)
+    - criptomoedas # pt (long form plural)
+    - criptomoneda # es (long form)
+    - criptomonedas # es (long form plural)
+    - crypto-monnaies # fr (long form plural)
+    - cryptomonnaies # fr (long form plural, without the hyphen)
+    - cryptomonnaie # fr (long form)
+    - cryptovaluta's # nl (long form plural)
+    - cryptovaluta # nl (long form)
+    - kripto # hu, tr (short form)
+    - kripto para birimi # tr (long form)
+    - kripto para birimleri # tr (long form plural)
+    - kriptovaliuta # lt (long form singular)
+    - kriptovaliutos # lt (long form plural)
+    - kriptovaluta # hu (long form)
+    - kriptovaluták # hu (long form plural)
+    - krüpto # et (short form)
+    - krüptovaluuta # et (long form)
+    - krüptovaluutad # et (long form plural)
+    - krypto # da, de, fi, no, pl, sv (short form)
+    - kryptovaluta # da, no, sv (long form)
+    - kryptovalutaer # da, no (long form plural)
+    - kryptovalutor # sv (long form plural)
+    - kryptovaluutat # fi (long form plural)
+    - kryptovaluutta # fi (long form)
+    - kryptowährung # de (long form)
+    - kryptowährungen # de (long form plural)
+    - kryptowaluta # pl (long form)
+    - kryptowaluty # pl (long form plural)
+    - крипто # ru, uk (short form)
+    - криптовалюта # ru, uk (long form)
+    - криптовалюти # uk (long form plural)
+    - криптовалюты # ru (long form plural)
+    - العملات المشفرة # ar (long form plural)
+    - العملة المشفرة # ar (long form)
+    - क्रिप्टो # hi (short form)
+    - क्रिप्टोकरेंसी # hi (long form)
+    - 암호화폐 # ko
+    - 加密货币 # zh (long form)
+    - 暗号資産 # ja (long form)
+    - クリプト # ja (loan word)
+  tpb:
+    - corporația de rachete balistice tactice
+    - društvo za taktičke projektile
+    - tactical missile company
+    - tactical missiles company
+    - tactical missile corporation
+    - tactical missiles corporation
+    - takticheskoe raketnoe vooruzhenie
+    - тактическое ракетное вооружение
+    - тактичне ракетне озброєння
+  npp:
+    - research and production association
+    - npp
+    - НПП
+    - research and production enterprise
+    - research and production corporation
+    - research & production corporation
+    - research & production
+    - research and production
+    - research and production company
+    - research & production association
+    - Naukovo-vyrobnyche pidpryiemstvo
+    - NAUCHNO-PROIZVODSTVENNOE PREDPRIYATIE
+    - ENGINEERING AND CONSTRUCTION
+    - Kutató- és Termelővállalat
+    - Întreprinderea de cercetare și producție
+    - Corporația de cercetare și producție
+    - Scientific and Production Enterprise
+    - Scientific Production Enterprise
+    - spe
+    - Scientific and Production
+    - Научно-производственное предприятие
+    - Научно-производственное
+    - Науково-виробниче підприємство
+    - Науково-виробниче
+  snco:
+    - Settlement Non-banking Credit Institution
+    - Settlement non-banking credit organization
+    - SNCO
+    - некредитная организация по расчетам
+    - некредитна організація з розрахунків
+    - некредитна організація по розрахунках
+  nbco:
+    - Non-bank credit organization
+    - Non-banking credit organization
+    - Non-bank credit institution
+    - Non-banking credit institution
+    - NBCO
+    - NCO
+    - некредитная организация
+    - некредитна організація
+  alqaeda:
+    - al-qaeda
+    - qaeda
+    - Al-Qa'ida
+    - Qa'ida
+    - Al Qaida
+    - Al-Kaida
+    - القاعدة
+    - QA'IDA OF JIHAD ORGANIZATION
+    - AL-QA'IDA ORGANIZATION
+    - Al-Qaida Organization
+    - Al Qaida/Islamic Army
+    - Al Qa’ida/Islamic Army
+    - Al-Qa'ida/Islamic Army
+    - Al-Kaida/Islamic Army
+  hezbollah:
+    - Hezbollah
+    - Hizbollah
+    - Hezballah
+    - Hizballah
+    - Hizbullah
+    - حزب الله
+    - حزب‌الله
+    - حزب اللّه
+    - حزب اللّه
+    - حزب‌الله
+  irgc:
+    - IRGC
+    - Islamic Revolutionary Guard Corps
+    - Islamic Revolutionary Guards Corps # variant with an extra "S"
+    - Iranian Islamic Revolutionary Guard Corps
+    - Army of the Guardians of the Islamic Revolution
+    - Sepah-e Pasdaran-e Enqelab-e Eslami
+    - Pasdaran
+    - Corps des gardiens de la révolution islamique
+    - پاسداران
+    - سپاه پاسداران انقلاب اسلامی
+  pla:
+    - PLA
+    - PLA China
+    - People's Liberation Army
+    - People’s Liberation Army
+    - Peoples Liberation Army
+    - Chinese People's Liberation Army
+    - China People's Liberation Army
+    - Chinese PLA
+    - 中国人民解放军
+    - 中国人民解放軍
+  ccp:
+    - CCP
+    - Chinese Communist Party
+    - 中国共产党
+    - Communist Party of China
+  cia:
+    - CIA
+    - Central Intelligence Agency
+    - ЦРУ
+    - Центральное разведывательное управление
+person_symbols:
+  jr:
+    - "Jr"
+    - "Junior"
+    - mladší
+  sr:
+    - "Sr"
+    - "Snr"
+    - "Senior"
+  esq:
+    - "Esq"
+    - "Esquire"
+  dr:
+    - "Dr"
+    - "Doctor"
+    - "Doktor"
+    - "Doktorin"
+  prof:
+    - "Prof"
+    - "Professor"
+  md:
+    - "MD"
+    - "Doctor of Medicine"
+  dds:
+    - "DDS"
+    - "Doctor of Dental Surgery"
+  dvm:
+    - "DVM"
+    - "Doctor of Veterinary Medicine"
+  phd:
+    - "PhD"
+    - "Doctor of Philosophy"
+  cpa:
+    - "CPA"
+    - "Certified Public Accountant"
+  cfa:
+    - "CFA"
+    - "Chartered Financial Analyst"
+  cma:
+    - "CMA"
+    - "Certified Management Accountant"
+  csa:
+    - "CSA"
+    - "Certified Senior Advisor"
+    - "Certified Senior Associate"
+
+  # MENA name parts:
+  bin:
+    - "ben"
+    - "bin"
+    - "ibn"
+    - "ibn al"
+    - "ibn ul"
+    - בן # Hebrew "ben" (son)
+    - בר # Aramaic "bar" (son)
+    - بن # Arabic "bin/ben" (son)
+    - ابن # Arabic "ibn" (son)
+    - ابن ال # Arabic "ibn al" (son of the)
+  bint:
+    - "bint"
+    - "bint al"
+    - "ult" # North African variant of bint
+    - "mint" # Mauritanian variant of bint
+    - "bat" # Hebrew daughter
+    - בת # Hebrew "bat" (daughter)
+    - بنت # Arabic "bint" (daughter)
+    - بنت ال # Arabic "bint al" (daughter of the)
+  ould:
+    - "ould"
+    - "wuld"
+    - "wald"
+    - ولد # Arabic/Mauritanian "wald/ould" (son)
+  abu:
+    - "Abu"
+    - "Abu al"
+    - أبو
+  abul:
+    - "Abul"
+    - "Abu al"
+    - "Abu-l"
+    - أبو ال
+  abdul:
+    - "Abdul"
+    - "Abd al"
+    - "Abd-al"
+    - عبد ال
+  umm:
+    - "Umm"
+    - "Umm al"
+    - "Ummul"
+
+  # German:
+  von:
+    - von
+    - von und zu
+    - von der
+
+  van:
+    - van
+    - van und zu
+    - van der
+    - van de
+
+  saint:
+    - "san"
+    - "santa"
+    - "santo"
+    - "são"
+    - "saint"
+    - "st"
+    - "st."
+    - "ste"
+
+  haji:
+    - "haji"
+    - "hajji"
+    - "hajj"
+    - "el haj"
+    - "al hajj"
+    - "حاج" # Arabic "hajj"
+    - "حاجي" # Arabic "haji"
+
+  sheikh:
+    - "sheikh"
+    - "shaikh"
+    - "shaykh"
+    - "شيخ" # Arabic "sheikh"
+    - "شيخة" # Arabic "sheikha"
+
+person_nick:
+  # We could get these en masse from Wikidata, but I want to keep the nickname
+  # thing at bay until we have collected some more data about how this works into
+  # matching.
+  bob:
+    - "Bob"
+    - "Robert"
+  rob:
+    - "Rob"
+    - "Robert"
+  robbie:
+    - "Robbie"
+    - "Robert"
+  dick:
+    - Dick
+    - Richard
+  rick:
+    - Rick
+    - Richard
+  will:
+    - will
+    - william
+  bill:
+    - "Bill"
+    - "William"
+  tim:
+    - "Tim"
+    - "Timothy"
+  ted:
+    - "Edward"
+    - "Ted"
+  ted2:
+    - "Ted"
+    - "Theodore"
+  theo:
+    - "Theo"
+    - "Theodore"
+  doug:
+    - "Doug"
+    - "Douglas"
+  drew:
+    - Drew
+    - Andrew
+  sam:
+    - "Sam"
+    - "Samuel"
+  sama:
+    - "Sam"
+    - "Samantha"
+  alex:
+    - "Alex"
+    - "Alexander"
+  alexa:
+    - "Alex"
+    - "Alexandra"
+  ray:
+    - "Ray"
+    - "Raymond"
+  ken:
+    - "Ken"
+    - "Kenneth"
+  kenny:
+    - "Kenny"
+    - "Kenneth"
+  ben:
+    - "Ben"
+    - "Benjamin"
+  bend:
+    - "Ben"
+    - "Benedict"
+  greg:
+    - "Greg"
+    - "Gregory"
+  larry:
+    - "Larry"
+    - "Lawrence"
+  ron:
+    - "Ron"
+    - "Ronald"
+  ed:
+    - "Ed"
+    - "Edward"
+  tony:
+    - "Tony"
+    - "Anthony"
+  josh:
+    - "Josh"
+    - "Joshua"
+  andy:
+    - "Andy"
+    - "Andrew"
+  beccy:
+    - "Beccy"
+    - "Rebecca"
+  chris:
+    - "Chris"
+    - "Christopher"
+  chris2:
+    - "Chris"
+    - "Christoph"
+  chuck:
+    - "Chuck"
+    - "Charles"
+  dan:
+    - "Dan"
+    - "Daniel"
+  danny:
+    - "Danny"
+    - "Daniel"
+  dave:
+    - "Dave"
+    - "David"
+  debbie:
+    - "Debbie"
+    - "Deborah"
+  ellie:
+    - "Ellie"
+    - "Eleanor"
+  fred:
+    - "Fred"
+    - "Frederick"
+  jess:
+    - "Jess"
+    - "Jessica"
+  jack:
+    - "Jack"
+    - "John"
+  jim:
+    - "Jim"
+    - "James"
+  jon:
+    - "Jon"
+    - "Jonathan"
+  liz:
+    - "Liz"
+    - "Elizabeth"
+  maggie:
+    - "Maggie"
+    - "Margaret"
+  matt:
+    - "Matt"
+    - "Mathew"
+    - "Matthew"
+  max:
+    - "Maximilian"
+  mike:
+    - "Mike"
+    - "Michael"
+  nick:
+    - "Nick"
+    - "Nicholas"
+  paddy:
+    - "Paddy"
+    - "Patrick"
+  pete:
+    - "Pete"
+    - "Peter"
+  sammy:
+    - "Sammy"
+    - "Samuel"
+  steve:
+    - "Steve"
+    - "Stephen"
+    - "Steven"
+  sue:
+    - "Sue"
+    - "Susan"
+  tom:
+    - "Tom"
+    - "Thomas"
+  wes:
+    - "Wes"
+    - "Wesley"
+
+person_name_parts:
+  # Big guy gets a special kind of love
+  khuylo:
+    - putin
+    - poetin
+    - poutine
+    - putinas
+    - putins
+    - putyin
+    - pútín
+    - путин
+    - путін
+    - пуцін
+    - путин
+    - putyín
+    - პუტინი
+    - Պուտին
+    - پوتن
+    - פוטין
+    - بوتين
+    - プーチン
+    - 普京
+    - 普丁
+    - 푸틴
+    - ปูติน
+    - पुतिन
+    - πούτιν
+    - putinová
+    - putina
+    - poutina
+    - pútina
+    - プーチナ
+    - 普京娜
+
+  qdfi:
+    - "GADDAFI"
+    - "Ghaddafi"
+    - ELKADDAFI
+    - QADDAFI
+    - Kaddafi
+    - el Gadafi
+    - al-Kaddafi
+    - القذافي
+    - Каддафі
+    - Каддафи
+    - ал-Қазофӣ
+    - əl-Qəzzafi
+    - Gheddafi
+    - al-Qadhafi
+    - GHATHAFI
+    - Kadaffi
+    - Khadafy
+    - Qadhdhafi

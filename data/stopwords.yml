@@ -1,0 +1,233 @@
+# Each prefix will match either as-is, or with a trailing dot (Mr, Mr.)
+PERSON_NAME_PREFIXES:
+  # Regular titles
+  - "Mr"
+  - "Mister"
+  # "Master" is also a male given name and so not currently included here
+  - "Mrs"
+  - "Misses"
+  - "Missis"
+  - "Missus"
+  - "Mistress"
+  - "Miss"
+  - "Ms"
+  - "Mx"
+  - "Mixter"
+  - "Madam"
+  - "Madame"
+  - "Mme"
+  - "Mmme"
+  - "Monsieur"
+  - "Fräulein"
+  - "Frau"
+  - "Fr"
+  - "Senor"
+  - "Senorita"
+  - "Herr"
+  - "Hr"
+  # Academic and professional titles
+  - "Dr"
+  - "Doctor"
+  - "Prof"
+  - "Prof. Dr"
+  - "Professor Dr"
+  - "Professor"
+  - "Associate Professor" # used in Singapore
+  - "Dott"
+  - "Dottore"
+  - "Dott.ssa"
+  - "Dottor"
+  - "Dott.sr"
+  - "Dott.sra"
+  - "Dott.ssa"
+  - "Dott.sr"
+  - "Dott.sra"
+  - "Dott.ssa"
+  # Presidents
+  - "President"
+  - "Präsident"
+  # Diplomatic titles
+  - "Ambassador"
+  - "Amb"
+  # Military titles
+  - "Field Marshal"
+  - "Admiral"
+  - "General"
+  - "Lieutenant General"
+  - "Lieutenant Colonel"
+  - "Brigadier"
+  - "Colonel"
+  # - "Col."
+  - "Commodore"
+  - "Captain"
+  - "Capt."
+  # "Major" is also a male given name and so not currently included here
+  # - "Maj."
+  - "Rear-Admiral"
+  - "Rear Admiral"
+  - "Private"
+  - "Pvt."
+  # Corporate offices and executive job titles
+  - "Chair"
+  - "Chairman"
+  - "Chairwoman"
+  - "Ex-Chair"
+  - "Ex-Chairman"
+  - "Ex-Chairwoman"
+  - "Director"
+  - "Ex-Director"
+  - "Managing Director"
+  - "Ex-Managing Director"
+  - "Company Secretary"
+  - "Ex-Company Secretary"
+  # Royal titles
+  - "Emperor"
+  - "Empress"
+  # "King" is also a male given name and so not currently included here
+  - "Queen"
+  # "Sheik" is also a male given name and so not currently included here
+  # "Sheikh" is also a male given name and so not currently included here
+  # "Shaikh" is also a male given name and so not currently included here
+  # "Sultan" is also a male given name and so not currently included here
+  # "Sultana" is also a female given name and so not currently included here
+  # "Emir" is also a male given name and so not currently included here
+  # "Emira" is also a female given name and so not currently included here
+  # "Prince" is also a male given name and so not currently included here
+  # "Princess" is also a female given name and so not currently included here
+  - "The Prince"
+  - "The Princess"
+  - "The Princess Royal"
+  - "Grand Duke"
+  - "Grand Duchess"
+  - "His Majesty"
+  - "Her Majesty"
+  - "His Excellency"
+  - "Her Excellency"
+  - "His Royal Higness"
+  - "Her Royal Higness"
+  - "HRH"
+  - "His Higness"
+  - "Her Higness"
+  # Aristocratic titles
+  - "Lord"
+  - "Lady"
+  - "Laird"
+  - "Dame"
+  # "Baron" is also a male given name and so not currently included here
+  - "Baroness"
+  - "Baronet"
+  - "Baronetess"
+  - "Count"
+  - "Countess"
+  # "Duke" is also a male given name and so not currently included here
+  - "Duchess"
+  # "Earl" is also a male given name and so not currently included here
+  - "Marchioness"
+  - "Marquess"
+  - "Seigneur"
+  - "Sr"
+  - "Sir"
+  # Religious titles
+  - "The Reverend"
+  - "Reverend"
+  # The definite article
+  - "The"
+  # Titles based around the word "honour" or "honor"
+  - "Honourable"
+  - "Honorable"
+  - "Hon"
+  - "His Honour"
+  - "Her Honour"
+  - "His Honor"
+  - "Her Honor"
+  - "The Honourable"
+  - "The Honorable"
+  - "The Hon"
+  - "The Honble"
+  - "The Honourable Lady"
+  - "The Honorable Lady"
+  - "Right Honourable"
+  - "Right Honorable"
+  - "The Right Honourable"
+  - "The Right Honorable"
+  - "Rt Hon"
+  - "Rt. Hon."
+  - "The Most Honourable"
+  - "The Most Honorable"
+  - "The Most Hon"
+  - "The Most Hon."
+  - "The Most Honble"
+  - "The Much Honoured"
+  - "The Much Honored"
+  - "The Much Hon"
+  - "The Much Hon."
+    # Other/unsorted
+  - "The Most Noble"
+  - "His Grace"
+  - "Her Grace"
+  - "The Worshipful"
+  - "Worshipful"
+  - "His Excellency"
+  - "Her Excellency"
+  - "Excellency"
+ORG_NAME_PREFIXES:
+  - The
+  - Le
+  - La
+OBJ_NAME_PREFIXES:
+  - The
+  - MV
+  - M/V
+# Terms used to indicate the need for splitting a name, e.g. when multiple names are in a single string.
+NAME_SPLIT_PHRASES:
+  # aliases/alternative names including old names
+  - "also known as"
+  - "a.k.a"
+  - "a.k.a."
+  - "A.K.A"
+  - "a/k/a"
+  - "A/K/A"
+  - "dba"
+  - "d/b/a"
+  - "aka/dba"
+  - "doing business as"
+  - "earlier known as"
+  - "formerly known as"
+  - "f/k/a"
+  - "F/K/A"
+  - "former"
+  - "formerly"
+  - "presently known as"
+  - "previously known as"
+  - "trading as"
+# These are names that often occur as full names of people and may need to be moved to an `alias` or `weakAlias` field during data cleaning.
+GENERIC_PERSON_NAMES:
+  - abu anas
+  - abu omar
+  - abu musab
+  - abu abdullah
+  - أبو عبد الله
+  - abu bakr
+  - abu aisha
+  - أبو عائشة
+  - abu muhammad
+  - abu ismail
+  - abu khattab
+  - abu hajar
+  - abu ali
+  - abu hamza
+  - abdul samad
+  - abdul rahman
+  - abdul rehman
+  - abdul haq
+  - abu jihad
+  # - ivan ivanov
+  - hassan
+  - muhammad
+  - mohammed
+  - mohammad
+  - abu ubaidah
+  - abdul aziz
+  - abu akram
+  - abdullah
+  - bilal
