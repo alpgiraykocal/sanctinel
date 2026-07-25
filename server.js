@@ -122,7 +122,7 @@ function search(params) {
   const q = (params.get('q') || '').trim().slice(0, MAX_Q);
   const listFilter = (params.get('list') || '').slice(0, MAX_FIELD);
   const programFilter = (params.get('program') || '').slice(0, MAX_FIELD);
-  const threshold = Math.min(1, Math.max(0.5, parseFloat(params.get('threshold')) || 0.85));
+  const threshold = Math.min(1, Math.max(0.8, parseFloat(params.get('threshold')) || 0.95));
   const yob = /^\d{4}$/.test(params.get('yob') || '') ? params.get('yob') : '';
   const country = (params.get('country') || '').trim().slice(0, MAX_FIELD);
   const mods = (yob || country) ? { yob, country } : null;
