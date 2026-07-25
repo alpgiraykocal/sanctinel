@@ -388,7 +388,11 @@
   function wire() {
     const m = modal();
     m.querySelectorAll('[data-close]').forEach((el) => el.addEventListener('click', close));
-    m.querySelectorAll('.depth-toggle button').forEach((b) => b.addEventListener('click', () => { setDepthButtons(Number(b.dataset.depth)); load(state.centerId, Number(b.dataset.depth)); }));
+    m.querySelectorAll('.depth-toggle button').forEach((b) => b.addEventListener('click', () => {
+      if (!state.centerId) return; // first load still in flight
+      setDepthButtons(Number(b.dataset.depth));
+      load(state.centerId, Number(b.dataset.depth));
+    }));
     const canvas = cv();
     canvas.addEventListener('mousemove', (e) => {
       const rect = canvas.getBoundingClientRect();
