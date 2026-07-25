@@ -18,7 +18,7 @@ const { buildLiveSnapshot, CACHE_GZ_PATH } = require('../lib/ingest');
   const t = Date.now();
   const s = await buildLiveSnapshot();
   const payload = {
-    meta: { source: s.source, publicationId: s.publicationId, retrievedAt: s.retrievedAt, isLive: true },
+    meta: { source: s.source, publicationId: s.publicationId, publishedDate: s.publishedDate, publications: s.publications, retrievedAt: s.retrievedAt, isLive: true },
     entities: s.entities,
   };
   fs.mkdirSync(path.dirname(CACHE_GZ_PATH), { recursive: true });

@@ -71,7 +71,10 @@ function renderSnapshot(m) {
   const label = m.loading ? 'Updating…' : m.isLive ? 'Live' : 'Sample data';
   $('snapSource').textContent = label;
   const parties = `${(m.count || 0).toLocaleString()} parties`;
-  $('snapMeta').textContent = m.isLive ? `${parties} · updated ${relTime(m.retrievedAt)}` : parties;
+  const pub = m.publicationId && m.publicationId !== 'unknown' ? ` · OFAC pub ${m.publicationId}` : '';
+  $('snapMeta').textContent = m.isLive ? `${parties}${pub}` : parties;
+  const pill = $('statusPill');
+  if (pill) pill.title = m.isLive ? `OFAC publication ${m.publicationId}${m.publishedDate ? ' (' + new Date(m.publishedDate).toLocaleDateString() + ')' : ''} · retrieved ${relTime(m.retrievedAt)}` : '';
 }
 
 let controller = null;
@@ -212,6 +215,8 @@ function card(r, i) {
       ${sanctionsTypes.map((t) => `<span class="tag tag-type">${esc(t)}</span>`).join('')}
       ${owns.length ? '<span class="tag tag-own">50% Rule</span>' : ''}
     </div>
+
+    ${r.explain ? `<p class="rc-explain"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm1 15h-2v-6h2v6Zm0-8h-2V7h2v2Z"/></svg> Matched on ${esc(r.explain)}</p>` : ''}
 
     <div class="determination"><strong>${esc(hint.label)}:</strong> ${hint.text}</div>
 

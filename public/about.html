@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>About & Methodology — Sanctinel</title>
+  <meta name="description" content="How Sanctinel screens against the U.S. OFAC sanctions lists: data source, refresh cadence, the matching algorithms, coverage, and limitations." />
+  <meta name="referrer" content="no-referrer" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header">
+    <a class="brand" href="/" aria-label="Sanctinel home">
+      <span class="brand-logo" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="34" height="34">
+          <rect width="24" height="24" rx="7" fill="url(#lg)"/>
+          <defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3B82F6"/><stop offset="1" stop-color="#4F46E5"/></linearGradient></defs>
+          <path fill="#fff" d="M12 4 6 6.6v4.6c0 3.5 2.5 6 6 7.1 3.5-1.1 6-3.6 6-7.1V6.6L12 4Zm0 1.9 4.3 1.85V11.2c0 2.7-1.8 4.7-4.3 5.6-2.5-.9-4.3-2.9-4.3-5.6V7.75L12 5.9Z"/>
+          <path fill="#fff" d="m11 12.6-1.4-1.4-1.1 1.1 2.5 2.5 4-4-1.1-1.1L11 12.6Z"/>
+        </svg>
+      </span>
+      <span class="wordmark">
+        <span class="brand-name">Sanctinel</span>
+        <span class="brand-tag">Sanctions screening &amp; ownership intelligence</span>
+      </span>
+    </a>
+    <a class="btn-ghost" href="/">← Back to screening</a>
+  </header>
+
+  <main id="main" class="doc">
+    <h1>About &amp; methodology</h1>
+    <p class="lede">Sanctinel screens names, entities, vessels and identifiers against the U.S. Treasury <abbr title="Office of Foreign Assets Control">OFAC</abbr> sanctions lists, with fuzzy matching, non-name identifier screening, and 50%-Rule ownership networks. It is an <strong>educational analysis tool</strong> — not legal advice, and not a system of record for compliance decisions.</p>
+
+    <section class="doc-stats" id="stats" aria-label="Coverage summary"></section>
+
+    <section>
+      <h2>Data source &amp; freshness</h2>
+      <p>All data comes from OFAC's <a href="https://sanctionslistservice.ofac.treas.gov" rel="noreferrer noopener" target="_blank">Sanctions List Service</a> (U.S. Government, public domain). The full dataset is rebuilt automatically every day and versioned to OFAC's own publication id, so you always see which snapshot you're querying. The authoritative live source remains OFAC's <a href="https://sanctionssearch.ofac.treas.gov" rel="noreferrer noopener" target="_blank">Sanctions List Search</a>.</p>
+      <h3>Recent OFAC publications</h3>
+      <div id="pubs" class="pub-list">Loading…</div>
+    </section>
+
+    <section>
+      <h2>How matching works</h2>
+      <p>Every query is compared against each entity's primary name <em>and</em> every alias, plus its structured identifiers. Names are normalized (case, accents, corporate suffixes) and scored by an ensemble — the best signal across all of these wins:</p>
+      <ul class="doc-list">
+        <li><strong>Jaro-Winkler</strong> — typo and prefix similarity.</li>
+        <li><strong>Damerau-Levenshtein</strong> — edit distance that counts adjacent letter swaps as one edit.</li>
+        <li><strong>Sørensen-Dice &amp; trigram Jaccard</strong> — character n-gram overlap, robust to insertions and reordering.</li>
+        <li><strong>Metaphone phonetic</strong> — collapses sound-alike spellings (Mohammed / Muhammad, Smith / Smyth, Philip / Filip).</li>
+        <li><strong>Transliteration folding</strong> — links romanization variants (Kadyrov / Kadirov).</li>
+        <li><strong>Acronym &amp; initials</strong> — “CML” ↔ Caspian Maritime Logistics; “J.” ↔ John.</li>
+        <li><strong>IDF term weighting</strong> — a match on a rare, distinctive surname counts far more than one on a common word like “Company” or “Mohammed”.</li>
+      </ul>
+      <p>Tokens are assigned one-to-one and order-independently, so “Mohammed Ali” matches “Ali Ali Mohammed”. Optional <strong>year-of-birth</strong> and <strong>country</strong> inputs act as corroboration modifiers — raising a hit they confirm, lowering one they contradict. Each result shows exactly which tokens matched and by which method.</p>
+    </section>
+
+    <section>
+      <h2>Identifiers &amp; ownership</h2>
+      <p>Beyond names, an exact match on a <strong>passport, national / tax / registration id, IMO, MMSI, call sign, aircraft tail, or digital-currency address</strong> is flagged directly. Relationship data drives an ownership graph implementing OFAC's <strong>50 Percent Rule</strong>: entities owned 50%+ by a blocked party are themselves blocked even when unlisted — the network view traces those chains.</p>
+    </section>
+
+    <section>
+      <h2>Coverage</h2>
+      <div class="two-col">
+        <div><h3>Lists</h3><ul id="listCov" class="doc-list"></ul></div>
+        <div><h3>Programs</h3><p id="progCov" class="prog-cov"></p></div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Limitations</h2>
+      <ul class="doc-list">
+        <li>A hit is a <strong>lead to verify</strong>, not a determination; absence of a hit is not a clearance.</li>
+        <li>Covers <strong>U.S. OFAC lists only</strong> — not EU, UN, UK, or other regimes, and not export-control lists (BIS Entity List, etc.).</li>
+        <li>The snapshot may lag OFAC by up to a day. Confirm anything material against OFAC directly.</li>
+        <li>Queries are processed in memory and <strong>never stored or logged</strong>.</li>
+      </ul>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="foot-brand"><strong>Sanctinel</strong><span>Sanctions screening &amp; ownership intelligence</span></div>
+    <div class="foot-meta">
+      <span>Data: U.S. Treasury OFAC — public domain, refreshed daily.</span>
+      <span>Educational analysis tool · not legal advice · <a href="/">screening tool</a></span>
+    </div>
+  </footer>
+
+  <script src="/about.js"></script>
+</body>
+</html>

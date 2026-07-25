@@ -32,6 +32,7 @@ const { screenEntity } = require('./lib/matcher');
 const { finalizeSnapshot, readCache } = require('./lib/ingest');
 const { egoNetwork } = require('./lib/graph');
 const { createLimiter } = require('./lib/ratelimit');
+const searchIndex = require('./lib/searchindex');
 
 // ---- config (env-overridable) ----
 const PORT = Number(process.env.PORT) || 3000;
@@ -109,14 +110,28 @@ function meta() {
   return {
     source: snapshot.source, isLive: !!snapshot.isLive, loading,
     canRefresh: !!ADMIN_TOKEN && !DEMO_ONLY,
-    publicationId: snapshot.publicationId, retrievedAt: snapshot.retrievedAt,
+    publicationId: snapshot.publicationId, publishedDate: snapshot.publishedDate || '',
+    publications: snapshot.publications || [],
+    retrievedAt: snapshot.retrievedAt,
     count: snapshot.count, lists: snapshot.lists, programs: snapshot.programs,
   };
 }
 
-// ---- search (with a short result cache) ----
+// ---- search (with a short result cache + bigram candidate prefilter) ----
 const queryCache = new Map(); // key -> { t, payload }
 const QCACHE_TTL = 60000, QCACHE_MAX = 300;
+
+// Bigram index, rebuilt lazily whenever the snapshot object changes.
+let index = null, indexedSnapshot = null;
+function ensureIndex() {
+  if (indexedSnapshot !== snapshot) {
+    const t = Date.now();
+    index = searchIndex.build(snapshot.entities);
+    indexedSnapshot = snapshot;
+    console.log(`Search index built: ${snapshot.count} entities in ${Date.now() - t}ms`);
+  }
+  return index;
+}
 
 function search(params) {
   const q = (params.get('q') || '').trim().slice(0, MAX_Q);
@@ -133,8 +148,15 @@ function search(params) {
   const cached = queryCache.get(key);
   if (cached && Date.now() - cached.t < QCACHE_TTL) return cached.payload;
 
+  // The bigram prefilter is provably lossless at the default threshold (near-
+  // identical matches share their trigrams); for broader low-threshold sweeps we
+  // scan the full list so no fuzzy hit is ever silently dropped.
+  ensureIndex();
+  const cand = threshold >= 0.95 ? searchIndex.candidates(index, q) : null;
+  const pool = cand ? cand.map((i) => snapshot.entities[i]) : snapshot.entities;
+
   const results = [];
-  for (const e of snapshot.entities) {
+  for (const e of pool) {
     if (listFilter && e.list !== listFilter) continue;
     if (programFilter && !e.programs.includes(programFilter)) continue;
     const m = screenEntity(q, e, threshold, mods);
@@ -146,7 +168,7 @@ function search(params) {
       names: e.names, addresses: e.addresses, idDocuments: e.idDocuments || [],
       relationships: e.relationships || [], attributes: e.attributes, identifiers: e.identifiers, remarks: e.remarks,
       score: m.score, matchType: m.matchType, matchedName: m.matchedName, matchedField: m.matchedField,
-      corroborated: !!m.corroborated, conflict: !!m.conflict,
+      explain: m.explain || '', corroborated: !!m.corroborated, conflict: !!m.conflict,
     });
   }
   results.sort((a, b) => b.score - a.score);
