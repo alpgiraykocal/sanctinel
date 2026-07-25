@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>About & Methodology — Sanctinel</title>
-  <meta name="description" content="How Sanctinel screens against the U.S. OFAC sanctions lists: data source, refresh cadence, the matching algorithms, coverage, and limitations." />
+  <meta name="description" content="How Sanctinel screens against the U.S. OFAC, UN Security Council and UK OFSI sanctions lists: data sources, refresh cadence, the matching algorithms, coverage, and limitations." />
   <meta name="referrer" content="no-referrer" />
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
   <script src="/theme.js"></script>
@@ -46,7 +46,7 @@
     <section>
       <h2>Data source &amp; freshness</h2>
       <p>Data comes directly from the issuing authorities — OFAC's <a href="https://sanctionslistservice.ofac.treas.gov" rel="noreferrer noopener" target="_blank">Sanctions List Service</a>, the <a href="https://www.un.org/securitycouncil/content/un-sc-consolidated-list" rel="noreferrer noopener" target="_blank">UN Security Council Consolidated List</a>, and the <a href="https://www.gov.uk/government/publications/financial-sanctions-consolidated-list-of-targets" rel="noreferrer noopener" target="_blank">UK OFSI Consolidated List</a> (all government, public domain). The full dataset is rebuilt automatically every day and versioned to OFAC's publication id. Always confirm a hit against the issuing authority's own list before acting.</p>
-      <h3>Recent OFAC publications</h3>
+      <h3>Recent OFAC publications <span class="h3-note">(snapshot version marker)</span></h3>
       <div id="pubs" class="pub-list">Loading…</div>
     </section>
 
@@ -61,6 +61,8 @@
         <li><strong>Transliteration folding</strong> — links romanization variants (Kadyrov / Kadirov).</li>
         <li><strong>Acronym &amp; initials</strong> — “CML” ↔ Caspian Maritime Logistics; “J.” ↔ John.</li>
         <li><strong>IDF term weighting</strong> — a match on a rare, distinctive surname counts far more than one on a common word like “Company” or “Mohammed”.</li>
+        <li><strong>Multilingual legal-form handling</strong> — company and legal-form descriptors are recognised across languages (GmbH, OOO, ТОВ, Kompaniya, Sh.p.k., Sdn Bhd …) so the same entity matches whichever form its name is written in.</li>
+        <li><strong>Homoglyph defence</strong> — Cyrillic look-alike characters are folded to their Latin twins, so a disguised “Gazprоm” screens identically to “Gazprom”.</li>
       </ul>
       <p>Tokens are assigned one-to-one and order-independently, so “Mohammed Ali” matches “Ali Ali Mohammed”. Optional <strong>year-of-birth</strong> and <strong>country</strong> inputs act as corroboration modifiers — raising a hit they confirm, lowering one they contradict. Each result shows exactly which tokens matched and by which method.</p>
     </section>
@@ -72,9 +74,11 @@
 
     <section>
       <h2>Coverage</h2>
+      <h3>Issuing authorities</h3>
+      <p id="authCov" class="prog-cov"></p>
       <div class="two-col">
         <div><h3>Lists</h3><ul id="listCov" class="doc-list"></ul></div>
-        <div><h3>Programs</h3><p id="progCov" class="prog-cov"></p></div>
+        <div><h3>Programs / regimes</h3><p id="progCov" class="prog-cov"></p></div>
       </div>
     </section>
 
@@ -83,7 +87,8 @@
       <ul class="doc-list">
         <li>A hit is a <strong>lead to verify</strong>, not a determination; absence of a hit is not a clearance.</li>
         <li>Covers <strong>U.S. OFAC, UN Security Council, and UK OFSI</strong> sanctions lists — not the EU list yet, and not export-control lists (BIS Entity List, etc.). The 50% Rule ownership graph is OFAC-specific.</li>
-        <li>The snapshot may lag OFAC by up to a day. Confirm anything material against OFAC directly.</li>
+        <li>The snapshot may lag an authority by up to a day. Confirm anything material against the issuing authority directly.</li>
+        <li>Regimes differ: an OFAC blocking designation, a UN asset freeze and a UK OFSI designation carry <strong>different legal obligations</strong>. Each result states which authority listed the party — do not apply OFAC doctrine to a UN or UK hit.</li>
         <li>Queries are processed in memory and <strong>never stored or logged</strong>.</li>
       </ul>
     </section>
@@ -92,7 +97,7 @@
   <footer class="site-footer">
     <div class="foot-brand"><strong>Sanctinel</strong><span>Sanctions screening &amp; ownership intelligence</span></div>
     <div class="foot-meta">
-      <span>Data: U.S. Treasury OFAC — public domain, refreshed daily.</span>
+      <span>Data: U.S. OFAC · UN Security Council · UK OFSI — public domain, refreshed daily.</span>
       <span>Educational analysis tool · not legal advice · <a href="/">screening tool</a></span>
     </div>
   </footer>

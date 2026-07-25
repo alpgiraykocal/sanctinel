@@ -58,10 +58,12 @@ Health check: `GET /healthz`. Scaling note: screening is CPU-bound and single-th
 demo; for heavy traffic run multiple instances behind the proxy (each keeps its own
 cache) or move matching to a worker pool.
 
-**Data & legal.** OFAC list data is U.S. Government public-domain; the authoritative
-source is OFAC's Sanctions List Search. This app is an **educational/analysis tool, not
-legal advice**, and its snapshot may lag OFAC — the UI says so. Do not present it as a
-system of record for compliance decisions.
+**Data & legal.** All list data (OFAC, UN Security Council, UK OFSI) is government
+public-domain; the authoritative source for each hit is the issuing authority's own
+list. This app is an **educational/analysis tool, not legal advice**, and its snapshot
+may lag an authority by up to a day — the UI says so. Regimes carry different legal
+obligations, so each result is tagged with the authority that listed it. Do not present
+it as a system of record for compliance decisions.
 
 ## Run
 
@@ -178,14 +180,18 @@ Any hit with relationships shows a **View network** button that opens a radial e
 
 - Ships with **fictional demo data** (`sample-data/sample.json`) so the UI runs offline
   with every field type populated. The header shows an amber **DEMO** dot.
-- `Refresh live` (or `--live`) pulls real OFAC data. A green **LIVE** dot + the source
-  (`advanced /entities` or `flat files`) and publication id appear on success.
+- Live snapshots merge **OFAC + UN + UK** (~25.8k parties). A green **LIVE** dot shows
+  the merged source and OFAC publication id; the **Authority** filter and per-result
+  badge tell you which regime listed a party.
 
 ## Compliance boundary
 
 This tool produces **screening analysis, not legal advice or a determination**. A name
-hit is a lead. Blocking vs. rejecting, the 50% Rule on ownership, and license analysis
-must be confirmed against a live snapshot and routed to sanctions compliance.
+hit is a lead. The obligations differ by regime — an OFAC blocking designation, a UN
+asset freeze and a UK OFSI designation are not interchangeable — so each result states
+its authority. Blocking vs. rejecting, the 50% Rule on ownership (OFAC-specific), and
+license analysis must be confirmed against the issuing authority and routed to
+sanctions compliance.
 
 ## Files
 

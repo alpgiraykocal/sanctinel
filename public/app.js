@@ -5,6 +5,13 @@ const esc = (s) => String(s == null ? '' : s).replace(/[&<>"]/g, (c) => ({ '&': 
 
 const GROUP_ORDER = ['Identity', 'Documents', 'Vessel / Aircraft', 'Digital & Contact', 'Program', 'Other'];
 
+// Where a user must verify a hit, per issuing authority.
+const AUTHORITY_SOURCE = {
+  OFAC: 'OFAC Sanctions List Search (sanctionssearch.ofac.treas.gov)',
+  UN: 'the UN Security Council Consolidated List (un.org/securitycouncil)',
+  UK: 'the UK OFSI Consolidated List (gov.uk/government/publications/financial-sanctions-consolidated-list-of-targets)',
+};
+
 // Action guidance keyed to authority + list type. Triage hint, not a determination.
 function determinationHint(r) {
   const l = r.list || '';
@@ -77,7 +84,12 @@ function renderSnapshot(m) {
   const pub = m.publicationId && m.publicationId !== 'unknown' ? ` · OFAC pub ${m.publicationId}` : '';
   $('snapMeta').textContent = m.isLive ? `${parties}${pub}` : parties;
   const pill = $('statusPill');
-  if (pill) pill.title = m.isLive ? `OFAC publication ${m.publicationId}${m.publishedDate ? ' (' + new Date(m.publishedDate).toLocaleDateString() + ')' : ''} · retrieved ${relTime(m.retrievedAt)}` : '';
+  if (pill) {
+    const auth = (m.authorities || []).length ? `Authorities: ${m.authorities.join(', ')}\n` : '';
+    pill.title = m.isLive
+      ? `${auth}OFAC publication ${m.publicationId}${m.publishedDate ? ' (' + new Date(m.publishedDate).toLocaleDateString() + ')' : ''}\nRetrieved ${relTime(m.retrievedAt)}`
+      : '';
+  }
 }
 
 let controller = null;
@@ -118,7 +130,8 @@ function render(data) {
     : '';
 
   if (!n) {
-    list.innerHTML = `<div class="no-hits clear"><strong>No match</strong> for “${esc(data.query)}” at threshold ${data.threshold}.<br>Absence of a hit is not a clearance — confirm the snapshot is current and consider lowering the threshold for a below-the-line check.</div>`;
+    const scope = $('authority').value ? `the ${esc($('authority').value)} list` : 'the OFAC, UN and UK lists';
+    list.innerHTML = `<div class="no-hits clear"><strong>No match</strong> for “${esc(data.query)}” in ${scope} at threshold ${data.threshold}.<br>Absence of a hit is not a clearance — these lists do not cover every regime (EU and others are not included), so confirm the snapshot is current and consider lowering the threshold for a below-the-line check.</div>`;
     return;
   }
 
@@ -290,7 +303,7 @@ function toCsv(r) {
   const aliases = (r.names || []).filter((n) => !n.primary).map((n) => `${n.type}: ${n.name}`).join(' | ');
   const rows = [
     ['Field', 'Value'],
-    ['Name', r.name], ['Type', r.type], ['OFAC entity ID', r.id], ['List', r.list],
+    ['Name', r.name], ['Type', r.type], ['Authority', r.authority || 'OFAC'], ['Entity ID', r.id], ['List', r.list],
     ['Programs', (r.programs || []).join('; ')], ['Sanctions types', (r.sanctionsTypes || []).join('; ')],
     ['Legal authorities', (r.legalAuthorities || []).join('; ')], ['Date published', r.datePublished || ''],
     ['Aliases', aliases], ['Addresses', (r.addresses || []).map((a) => a.full || a).join(' | ')],
@@ -298,7 +311,8 @@ function toCsv(r) {
     ['Relationships', (r.relationships || []).map((x) => `${x.type} ${x.relatedName}`).join(' | ')],
     ...(r.attributes || []).map((a) => [a.label, a.value]),
     ['Match score', r.score], ['Match type', r.matchType], ['Matched on', `${r.matchedField}${r.explain ? ' — ' + r.explain : ''}`],
-    ['Screened at', new Date().toISOString()], ['Source', 'OFAC SLS via Sanctinel — educational, not legal advice'],
+    ['Screened at', new Date().toISOString()],
+    ['Source', `${r.authority || 'OFAC'} official list via Sanctinel — educational analysis, not legal advice`],
   ];
   return '﻿' + rows.map((row) => row.map((c) => `"${String(c == null ? '' : c).replace(/"/g, '""')}"`).join(',')).join('\r\n');
 }
@@ -311,7 +325,7 @@ function memoHtml(r) {
     <h1>Sanctions screening record</h1>
     <p class="memo-sub">Generated ${new Date().toLocaleString()} · Sanctinel · educational analysis, not legal advice</p>
     <h2>${esc(r.name)}</h2>
-    <p>${esc(r.type)} · OFAC entity ID ${esc(r.id)} · <strong>${esc(r.list)}</strong></p>
+    <p>${esc(r.type)} · ${esc(r.authority || 'OFAC')} entity ID ${esc(r.id)} · <strong>${esc(r.list)}</strong></p>
     <table>
       <tr><th>Determination guidance</th><td><strong>${esc(hint.label)}.</strong> ${hint.text.replace(/<[^>]+>/g, '')}</td></tr>
       <tr><th>Match</th><td>score ${r.score.toFixed(2)} (${esc(r.matchType.replace('_', ' '))}) · matched on ${esc(r.matchedField)}${r.explain ? ' — ' + esc(r.explain) : ''}</td></tr>
@@ -324,7 +338,7 @@ function memoHtml(r) {
       ${(r.addresses || []).length ? `<tr><th>Addresses</th><td>${list(r.addresses, (a) => `${esc(a.full || a)}<br>`)}</td></tr>` : ''}
       ${(r.relationships || []).length ? `<tr><th>Relationships</th><td>${list(r.relationships, (x) => `${esc(x.type)}: ${esc(x.relatedName)}<br>`)}</td></tr>` : ''}
     </table>
-    <p class="memo-foot">Screening analysis only — not a determination and not legal advice. Confirm against OFAC's official Sanctions List Search (sanctionssearch.ofac.treas.gov) before any compliance decision. Apply the 50% Rule to ownership.</p>`;
+    <p class="memo-foot">Screening analysis only — not a determination and not legal advice. Confirm against the issuing authority's own list before any compliance decision: ${esc(AUTHORITY_SOURCE[r.authority] || AUTHORITY_SOURCE.OFAC)}. For OFAC designations, apply the 50% Rule to ownership.</p>`;
 }
 
 function printMemo(r) {

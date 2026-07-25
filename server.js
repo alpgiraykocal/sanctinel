@@ -1,7 +1,7 @@
 'use strict';
 
 /*
- * OFAC screening server — zero external dependencies (Node built-ins only).
+ * Sanctions screening server (OFAC + UN + UK) — zero external dependencies.
  *
  *   node server.js            → live by default: serve cache instantly, refresh in background
  *   node server.js --demo     → offline: serve the fictional demo sample only
@@ -9,7 +9,7 @@
  * Endpoints:
  *   GET  /healthz                        liveness + snapshot summary
  *   GET  /api/meta                       snapshot provenance + lists/programs + loading
- *   GET  /api/search?q=&list=&program=&threshold=&yob=&country=   screening
+ *   GET  /api/search?q=&authority=&list=&program=&threshold=&yob=&country=  screening
  *   GET  /api/graph/ego-network?id=&depth=   relationship ego-network
  *   POST /api/refresh                    trigger a background live refresh (admin-gated)
  *
@@ -54,7 +54,7 @@ let loading = false;
 function loadSampleSnapshot() {
   const raw = JSON.parse(fs.readFileSync(path.join(__dirname, 'sample-data', 'sample.json'), 'utf8'));
   return finalizeSnapshot(raw.entities, {
-    source: 'DEMO / OFFLINE SAMPLE — fictional, not real OFAC data',
+    source: 'DEMO / OFFLINE SAMPLE — fictional, not real sanctions data',
     publicationId: 'demo', retrievedAt: new Date().toISOString(), isLive: false,
   });
 }
@@ -287,7 +287,7 @@ process.on('SIGINT', () => shutdown('SIGINT'));
 server.listen(PORT, HOST, () => {
   const cached = DEMO_ONLY ? null : readCache();
   if (cached) { snapshot = cached.snapshot; console.log(`Loaded cached snapshot: ${snapshot.source} (${snapshot.count} entities)`); }
-  console.log(`OFAC screening on http://${HOST}:${PORT}  (live=${!DEMO_ONLY}, admin-refresh=${ADMIN_TOKEN ? 'on' : 'off'})`);
+  console.log(`Sanctions screening on http://${HOST}:${PORT}  (live=${!DEMO_ONLY}, admin-refresh=${ADMIN_TOKEN ? 'on' : 'off'})`);
   console.log(`Snapshot: ${snapshot.source} (${snapshot.count} entities)`);
   if (!DEMO_ONLY) {
     const stale = !cached || cached.ageMs > TTL_MS;

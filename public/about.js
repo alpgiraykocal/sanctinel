@@ -11,9 +11,12 @@ const fmtDate = (iso) => { const t = Date.parse(iso); return t ? new Date(t).toL
   const stat = (n, l) => `<div class="stat"><span class="stat-num">${n}</span><span class="stat-lbl">${l}</span></div>`;
   document.getElementById('stats').innerHTML =
     stat((m.count || 0).toLocaleString(), 'sanctioned parties') +
-    stat((m.lists || []).length, 'OFAC lists') +
-    stat((m.programs || []).length, 'sanctions programs') +
-    stat(m.publicationId && m.publicationId !== 'unknown' ? m.publicationId : '—', 'current publication');
+    stat((m.authorities || []).length || 1, 'issuing authorities') +
+    stat((m.lists || []).length, 'sanctions lists') +
+    stat((m.programs || []).length, 'sanctions programs');
+
+  const authEl = document.getElementById('authCov');
+  if (authEl) authEl.innerHTML = (m.authorities || []).map((a) => `<span class="prog-chip">${esc(a)}</span>`).join(' ');
 
   const pubs = m.publications || [];
   document.getElementById('pubs').innerHTML = pubs.length

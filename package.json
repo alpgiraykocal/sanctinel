@@ -1,7 +1,7 @@
 {
   "name": "sanctinel",
   "version": "1.0.0",
-  "description": "OFAC sanctions screening & ownership intelligence — zero-dependency Node.js",
+  "description": "Sanctions screening & ownership intelligence (OFAC, UN, UK) — zero-dependency Node.js",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
