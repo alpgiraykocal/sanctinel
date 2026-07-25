@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: sanctinel
+    runtime: node
+    plan: free
+    buildCommand: ""
+    startCommand: node server.js
+    healthCheckPath: /healthz
+    autoDeploy: true
+    envVars:
+      - key: TRUST_PROXY
+        value: "true"

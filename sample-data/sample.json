@@ -1,0 +1,319 @@
+{
+  "_notice": "FICTIONAL DEMO DATA — NOT real OFAC designations. For UI/offline testing only. Never use for a compliance decision. Real screening must run against a live OFAC SLS snapshot.",
+  "entities": [
+    {
+      "id": "90001", "list": "SDN List", "type": "Individual",
+      "name": "IVANOV, Dmitri Sergeyevich", "title": "Director",
+      "programs": ["RUSSIA-EO14024"], "sanctionsTypes": ["Block"],
+      "legalAuthorities": ["Executive Order 14024", "31 CFR part 587"], "datePublished": "2023-02-24",
+      "names": [
+        { "name": "IVANOV, Dmitri Sergeyevich", "type": "Primary", "primary": true, "lowQuality": false, "script": "Latin", "native": "ИВАНОВ, Дмитрий Сергеевич", "parts": ["First Name: Dmitri", "Last Name: IVANOV", "Patronymic: Sergeyevich"] },
+        { "name": "IVANOV, Dmitry", "type": "A.K.A.", "primary": false, "lowQuality": false, "script": "Latin", "native": "", "parts": [] },
+        { "name": "IVANOFF, D. S.", "type": "A.K.A.", "primary": false, "lowQuality": true, "script": "Latin", "native": "", "parts": [] }
+      ],
+      "addresses": [{ "full": "Tverskaya St 7, Apt 12, Moscow, 125009, Russia", "country": "Russia" }],
+      "idDocuments": [
+        { "type": "Passport", "number": "751234567", "issuingCountry": "Russia", "issueDate": "2018-05-02", "expirationDate": "2028-05-01" },
+        { "type": "National ID", "number": "4509112233", "issuingCountry": "Russia", "issueDate": "", "expirationDate": "" }
+      ],
+      "relationships": [
+        { "type": "Owner of (50%+)", "relatedName": "NORTHERN STAR TRADING LLC", "relatedId": "90002" }
+      ],
+      "attributes": [
+        { "group": "Identity", "label": "Date of Birth", "value": "12 Mar 1968" },
+        { "group": "Identity", "label": "Place of Birth", "value": "Leningrad, USSR" },
+        { "group": "Identity", "label": "Nationality", "value": "Russia" },
+        { "group": "Identity", "label": "Citizenship", "value": "Russia" },
+        { "group": "Identity", "label": "Gender", "value": "Male" },
+        { "group": "Digital & Contact", "label": "Digital Currency (XBT)", "value": "1DemoBtcAddr9xYzAbc000000000000000" },
+        { "group": "Digital & Contact", "label": "Email", "value": "d.ivanov@example.ru" },
+        { "group": "Digital & Contact", "label": "Phone", "value": "+7 495 000 0000" },
+        { "group": "Program", "label": "Secondary Sanctions Risk", "value": "Ukraine-/Russia-Related Sanctions Regulations" }
+      ],
+      "identifiers": [
+        { "type": "Passport", "value": "751234567" },
+        { "type": "National ID", "value": "4509112233" },
+        { "type": "Crypto XBT", "value": "1DemoBtcAddr9xYzAbc000000000000000" },
+        { "type": "Email", "value": "d.ivanov@example.ru" }
+      ],
+      "remarks": ""
+    },
+    {
+      "id": "90002", "list": "SDN List", "type": "Entity",
+      "name": "NORTHERN STAR TRADING LLC", "title": "",
+      "programs": ["RUSSIA-EO14024", "IRAN"], "sanctionsTypes": ["Block"],
+      "legalAuthorities": ["Executive Order 14024"], "datePublished": "2023-05-19",
+      "names": [
+        { "name": "NORTHERN STAR TRADING LLC", "type": "Primary", "primary": true, "lowQuality": false, "script": "Latin", "native": "СЕВЕРНАЯ ЗВЕЗДА ООО", "parts": [] },
+        { "name": "NORTH STAR TRADING", "type": "A.K.A.", "primary": false, "lowQuality": false, "script": "Latin", "native": "", "parts": [] },
+        { "name": "SEVERNAYA ZVEZDA OOO", "type": "A.K.A.", "primary": false, "lowQuality": false, "script": "Latin", "native": "", "parts": [] }
+      ],
+      "addresses": [{ "full": "Bldg 4, Industrial Zone, St Petersburg, 190000, Russia", "country": "Russia" }],
+      "idDocuments": [
+        { "type": "Registration Number", "number": "1234567890", "issuingCountry": "Russia", "issueDate": "2015-06-14", "expirationDate": "" }
+      ],
+      "relationships": [
+        { "type": "Owned 50%+ by", "relatedName": "IVANOV, Dmitri Sergeyevich", "relatedId": "90001" },
+        { "type": "Linked to", "relatedName": "CASPIAN MARITIME LOGISTICS JSC", "relatedId": "90005" }
+      ],
+      "attributes": [
+        { "group": "Documents", "label": "Tax ID", "value": "7801234567 (Russia)" },
+        { "group": "Documents", "label": "Legal Entity Identifier (LEI)", "value": "5493000DEMO0LEI00001" },
+        { "group": "Digital & Contact", "label": "SWIFT/BIC", "value": "NSTRRUMMXXX" },
+        { "group": "Digital & Contact", "label": "Website", "value": "northstar-trd.example" },
+        { "group": "Identity", "label": "Organization Established Date", "value": "14 Jun 2015" },
+        { "group": "Identity", "label": "Organization Type", "value": "Wholesale trade" }
+      ],
+      "identifiers": [
+        { "type": "Registration", "value": "1234567890" },
+        { "type": "Tax ID", "value": "7801234567" },
+        { "type": "LEI", "value": "5493000DEMO0LEI00001" },
+        { "type": "SWIFT/BIC", "value": "NSTRRUMMXXX" }
+      ],
+      "remarks": ""
+    },
+    {
+      "id": "90003", "list": "SDN List", "type": "Vessel",
+      "name": "MV CRIMSON HORIZON", "title": "",
+      "programs": ["DPRK"], "sanctionsTypes": ["Block"],
+      "legalAuthorities": ["Executive Order 13810"], "datePublished": "2022-11-08",
+      "names": [
+        { "name": "MV CRIMSON HORIZON", "type": "Primary", "primary": true, "lowQuality": false, "script": "Latin", "native": "", "parts": [] },
+        { "name": "CRIMSON HORIZON", "type": "A.K.A.", "primary": false, "lowQuality": false, "script": "Latin", "native": "", "parts": [] },
+        { "name": "HONG DI", "type": "F.K.A.", "primary": false, "lowQuality": false, "script": "Latin", "native": "红帝", "parts": [] }
+      ],
+      "addresses": [],
+      "idDocuments": [],
+      "relationships": [
+        { "type": "Operated by", "relatedName": "NORTHERN STAR TRADING LLC", "relatedId": "90002" }
+      ],
+      "attributes": [
+        { "group": "Vessel / Aircraft", "label": "IMO", "value": "9345678" },
+        { "group": "Vessel / Aircraft", "label": "MMSI", "value": "371234000" },
+        { "group": "Vessel / Aircraft", "label": "Call Sign", "value": "H3XY" },
+        { "group": "Vessel / Aircraft", "label": "Vessel Type", "value": "Crude Oil Tanker" },
+        { "group": "Vessel / Aircraft", "label": "Vessel Flag", "value": "Panama" },
+        { "group": "Vessel / Aircraft", "label": "Former Vessel Flag", "value": "Palau" },
+        { "group": "Vessel / Aircraft", "label": "Gross Registered Tonnage", "value": "81000" },
+        { "group": "Vessel / Aircraft", "label": "Vessel Owner", "value": "NORTHERN STAR TRADING LLC" }
+      ],
+      "identifiers": [
+        { "type": "IMO", "value": "9345678" },
+        { "type": "MMSI", "value": "371234000" },
+        { "type": "Call Sign", "value": "H3XY" }
+      ],
+      "remarks": ""
+    },
+    {
+      "id": "90004", "list": "SDN List", "type": "Individual",
+      "name": "AL-SAMAHI, Alaa Ali Mohammed", "title": "",
+      "programs": ["SDGT"], "sanctionsTypes": ["Block"],
+      "legalAuthorities": ["Executive Order 13224"], "datePublished": "2021-09-30",
+      "names": [
+        { "name": "AL-SAMAHI, Alaa Ali Mohammed", "type": "Primary", "primary": true, "lowQuality": false, "script": "Latin", "native": "علاء علي محمد السماحي", "parts": ["First Name: Alaa", "Middle Name: Ali Ali Mohammed", "Last Name: AL-SAMAHI"] },
+        { "name": "AL-SAMAHY, Allaa", "type": "A.K.A.", "primary": false, "lowQuality": false, "script": "Latin", "native": "", "parts": [] },
+        { "name": "ABU MOHAMMED", "type": "A.K.A.", "primary": false, "lowQuality": true, "script": "Latin", "native": "", "parts": [] }
+      ],
+      "addresses": [
+        { "full": "Sana'a, Yemen", "country": "Yemen" },
+        { "full": "Fatih, Istanbul, Turkey", "country": "Turkey" }
+      ],
+      "idDocuments": [
+        { "type": "Passport", "number": "03456789", "issuingCountry": "Yemen", "issueDate": "2016-01-10", "expirationDate": "2026-01-09" }
+      ],
+      "relationships": [],
+      "attributes": [
+        { "group": "Identity", "label": "Date of Birth", "value": "08 Sep 1976" },
+        { "group": "Identity", "label": "Date of Birth (alt)", "value": "approx. 1981 (range 1981-01-01–1981-12-31)" },
+        { "group": "Identity", "label": "Place of Birth", "value": "Sana'a, Yemen" },
+        { "group": "Identity", "label": "Nationality", "value": "Yemen" },
+        { "group": "Identity", "label": "Gender", "value": "Male" }
+      ],
+      "identifiers": [{ "type": "Passport", "value": "03456789" }],
+      "remarks": ""
+    },
+    {
+      "id": "90005", "list": "Consolidated List", "type": "Entity",
+      "name": "CASPIAN MARITIME LOGISTICS JSC", "title": "",
+      "programs": ["IRAN"], "sanctionsTypes": ["Block"],
+      "legalAuthorities": ["Executive Order 13846"], "datePublished": "2024-01-11",
+      "names": [
+        { "name": "CASPIAN MARITIME LOGISTICS JSC", "type": "Primary", "primary": true, "lowQuality": false, "script": "Latin", "native": "کاسپین ماریتایم", "parts": [] },
+        { "name": "CASPIAN MARITIME", "type": "A.K.A.", "primary": false, "lowQuality": false, "script": "Latin", "native": "", "parts": [] },
+        { "name": "CML JSC", "type": "A.K.A.", "primary": false, "lowQuality": false, "script": "Latin", "native": "", "parts": [] }
+      ],
+      "addresses": [{ "full": "Bandar Abbas, Hormozgan, Iran", "country": "Iran" }],
+      "idDocuments": [
+        { "type": "Commercial Registry Number", "number": "IR-77219", "issuingCountry": "Iran", "issueDate": "", "expirationDate": "" }
+      ],
+      "relationships": [
+        { "type": "Linked to", "relatedName": "NORTHERN STAR TRADING LLC", "relatedId": "90002" }
+      ],
+      "attributes": [
+        { "group": "Digital & Contact", "label": "Website", "value": "caspian-mar.example" },
+        { "group": "Digital & Contact", "label": "Email", "value": "ops@caspian-mar.example" }
+      ],
+      "identifiers": [
+        { "type": "Registration", "value": "IR-77219" },
+        { "type": "Email", "value": "ops@caspian-mar.example" }
+      ],
+      "remarks": ""
+    },
+    {
+      "id": "90006", "list": "SDN List", "type": "Individual",
+      "name": "GONZALEZ RAMIREZ, Carlos Eduardo", "title": "",
+      "programs": ["SDNTK"], "sanctionsTypes": ["Block"],
+      "legalAuthorities": ["Foreign Narcotics Kingpin Designation Act"], "datePublished": "2020-06-02",
+      "names": [
+        { "name": "GONZALEZ RAMIREZ, Carlos Eduardo", "type": "Primary", "primary": true, "lowQuality": false, "script": "Latin", "native": "", "parts": ["First Name: Carlos Eduardo", "Last Name: GONZALEZ RAMIREZ"] },
+        { "name": "GONZALEZ, Carlos", "type": "A.K.A.", "primary": false, "lowQuality": false, "script": "Latin", "native": "", "parts": [] },
+        { "name": "EL PROFE", "type": "A.K.A.", "primary": false, "lowQuality": false, "script": "Latin", "native": "", "parts": [] }
+      ],
+      "addresses": [{ "full": "El Poblado, Medellin, Colombia", "country": "Colombia" }],
+      "idDocuments": [
+        { "type": "Cedula", "number": "79123456", "issuingCountry": "Colombia", "issueDate": "", "expirationDate": "" }
+      ],
+      "relationships": [],
+      "attributes": [
+        { "group": "Identity", "label": "Date of Birth", "value": "1971" },
+        { "group": "Identity", "label": "Nationality", "value": "Colombia" },
+        { "group": "Identity", "label": "Gender", "value": "Male" }
+      ],
+      "identifiers": [{ "type": "Cedula", "value": "79123456" }],
+      "remarks": ""
+    },
+    {
+      "id": "90007", "list": "Non-SDN CMIC List", "type": "Entity",
+      "name": "REDWALL SEMICONDUCTOR HOLDINGS LTD", "title": "",
+      "programs": ["CMIC-EO13959"], "sanctionsTypes": ["Securities transaction restriction"],
+      "legalAuthorities": ["Executive Order 13959"], "datePublished": "2023-08-01",
+      "names": [
+        { "name": "REDWALL SEMICONDUCTOR HOLDINGS LTD", "type": "Primary", "primary": true, "lowQuality": false, "script": "Latin", "native": "红墙半导体", "parts": [] },
+        { "name": "REDWALL SEMI", "type": "A.K.A.", "primary": false, "lowQuality": false, "script": "Latin", "native": "", "parts": [] },
+        { "name": "RED WALL CHIP", "type": "A.K.A.", "primary": false, "lowQuality": true, "script": "Latin", "native": "", "parts": [] }
+      ],
+      "addresses": [{ "full": "Nanshan District, Shenzhen, Guangdong, China", "country": "China" }],
+      "idDocuments": [
+        { "type": "Unified Social Credit Code", "number": "91440300MA5XXXX", "issuingCountry": "China", "issueDate": "", "expirationDate": "" }
+      ],
+      "relationships": [
+        { "type": "Subsidiary of", "relatedName": "REDWALL GROUP CO LTD", "relatedId": "" }
+      ],
+      "attributes": [
+        { "group": "Digital & Contact", "label": "Website", "value": "redwall-semi.example" },
+        { "group": "Program", "label": "Note", "value": "Securities transaction restrictions apply (NOT full blocking)" }
+      ],
+      "identifiers": [{ "type": "Registration", "value": "91440300MA5XXXX" }],
+      "remarks": ""
+    },
+    {
+      "id": "90008", "list": "Sectoral Sanctions Identifications List", "type": "Entity",
+      "name": "VOLGA ENERGY BANK PAO", "title": "",
+      "programs": ["UKRAINE-EO13662"], "sanctionsTypes": ["Directive 1 (debt/equity restriction)"],
+      "legalAuthorities": ["Executive Order 13662, Directive 1"], "datePublished": "2022-03-01",
+      "names": [
+        { "name": "VOLGA ENERGY BANK PAO", "type": "Primary", "primary": true, "lowQuality": false, "script": "Latin", "native": "ВОЛГА ЭНЕРГО БАНК ПАО", "parts": [] },
+        { "name": "VOLGA BANK", "type": "A.K.A.", "primary": false, "lowQuality": false, "script": "Latin", "native": "", "parts": [] },
+        { "name": "VOLGA ENERGY PJSC", "type": "A.K.A.", "primary": false, "lowQuality": false, "script": "Latin", "native": "", "parts": [] }
+      ],
+      "addresses": [{ "full": "Presnenskaya Nab 10, Moscow, Russia", "country": "Russia" }],
+      "idDocuments": [],
+      "relationships": [],
+      "attributes": [
+        { "group": "Documents", "label": "Tax ID", "value": "7700001111 (Russia)" },
+        { "group": "Digital & Contact", "label": "SWIFT/BIC", "value": "VOLGRUMMXXX" },
+        { "group": "Digital & Contact", "label": "Website", "value": "volga-energy-bank.example" },
+        { "group": "Program", "label": "Note", "value": "Directive 1 debt/equity tenor restrictions; NOT blocked" }
+      ],
+      "identifiers": [
+        { "type": "Tax ID", "value": "7700001111" },
+        { "type": "SWIFT/BIC", "value": "VOLGRUMMXXX" }
+      ],
+      "remarks": ""
+    },
+    {
+      "id": "90009", "list": "SDN List", "type": "Individual",
+      "name": "KHAN, Muhammad Ali", "title": "",
+      "programs": ["SDGT"], "sanctionsTypes": ["Block"],
+      "legalAuthorities": ["Executive Order 13224"], "datePublished": "2019-12-10",
+      "names": [
+        { "name": "KHAN, Muhammad Ali", "type": "Primary", "primary": true, "lowQuality": false, "script": "Latin", "native": "محمد علی خان", "parts": [] },
+        { "name": "KHAN, Mohammad", "type": "A.K.A.", "primary": false, "lowQuality": true, "script": "Latin", "native": "", "parts": [] }
+      ],
+      "addresses": [{ "full": "Karachi, Sindh, Pakistan", "country": "Pakistan" }],
+      "idDocuments": [],
+      "relationships": [],
+      "attributes": [
+        { "group": "Identity", "label": "Date of Birth", "value": "approx. 1985" },
+        { "group": "Identity", "label": "Nationality", "value": "Pakistan" },
+        { "group": "Identity", "label": "Gender", "value": "Male" }
+      ],
+      "identifiers": [],
+      "remarks": ""
+    },
+    {
+      "id": "90010", "list": "SDN List", "type": "Entity",
+      "name": "KAVE COFFEE S.A.", "title": "",
+      "programs": ["CUBA"], "sanctionsTypes": ["Block"],
+      "legalAuthorities": ["Cuban Assets Control Regulations (CACR)"], "datePublished": "2020-12-21",
+      "names": [
+        { "name": "KAVE COFFEE S.A.", "type": "Primary", "primary": true, "lowQuality": false, "script": "Latin", "native": "", "parts": [] },
+        { "name": "KAVE COFFEE", "type": "A.K.A.", "primary": false, "lowQuality": false, "script": "Latin", "native": "", "parts": [] },
+        { "name": "CAFE KAVE", "type": "A.K.A.", "primary": false, "lowQuality": false, "script": "Latin", "native": "", "parts": [] }
+      ],
+      "addresses": [{ "full": "Vedado, Havana, Cuba", "country": "Cuba" }],
+      "idDocuments": [
+        { "type": "Registration Number", "number": "CU-2020-556", "issuingCountry": "Cuba", "issueDate": "", "expirationDate": "" }
+      ],
+      "relationships": [],
+      "attributes": [],
+      "identifiers": [{ "type": "Registration", "value": "CU-2020-556" }],
+      "remarks": ""
+    },
+    {
+      "id": "90011", "list": "SDN List", "type": "Aircraft",
+      "name": "AIR TITAN CHARTER — TAIL EX-45012", "title": "",
+      "programs": ["IRAN"], "sanctionsTypes": ["Block"],
+      "legalAuthorities": ["Executive Order 13224"], "datePublished": "2023-10-05",
+      "names": [
+        { "name": "AIR TITAN CHARTER — TAIL EX-45012", "type": "Primary", "primary": true, "lowQuality": false, "script": "Latin", "native": "", "parts": [] },
+        { "name": "TITAN AIR", "type": "A.K.A.", "primary": false, "lowQuality": false, "script": "Latin", "native": "", "parts": [] }
+      ],
+      "addresses": [{ "full": "Mehrabad Airport, Tehran, Iran", "country": "Iran" }],
+      "idDocuments": [],
+      "relationships": [],
+      "attributes": [
+        { "group": "Vessel / Aircraft", "label": "Aircraft Tail Number", "value": "EX-45012" },
+        { "group": "Vessel / Aircraft", "label": "Previous Aircraft Tail Number", "value": "EP-TTA" },
+        { "group": "Vessel / Aircraft", "label": "Aircraft Model", "value": "Boeing 747-200F" },
+        { "group": "Vessel / Aircraft", "label": "Aircraft Manufacture Date", "value": "1998" },
+        { "group": "Vessel / Aircraft", "label": "Aircraft Manufacturer Serial Number (MSN)", "value": "28104" }
+      ],
+      "identifiers": [
+        { "type": "Aircraft Tail", "value": "EX-45012" },
+        { "type": "Aircraft MSN", "value": "28104" }
+      ],
+      "remarks": ""
+    },
+    {
+      "id": "90012", "list": "Non-SDN Palestinian Legislative Council List", "type": "Individual",
+      "name": "HADDAD, Samir", "title": "Council Member",
+      "programs": ["NS-PLC"], "sanctionsTypes": ["Reject"],
+      "legalAuthorities": ["Executive Order 13224 (NS-PLC)"], "datePublished": "2021-04-14",
+      "names": [
+        { "name": "HADDAD, Samir", "type": "Primary", "primary": true, "lowQuality": false, "script": "Latin", "native": "سمير حداد", "parts": [] },
+        { "name": "HADDAD, Sameer", "type": "A.K.A.", "primary": false, "lowQuality": true, "script": "Latin", "native": "", "parts": [] }
+      ],
+      "addresses": [{ "full": "Gaza", "country": "Palestinian Territory" }],
+      "idDocuments": [],
+      "relationships": [],
+      "attributes": [
+        { "group": "Identity", "label": "Date of Birth", "value": "1965" },
+        { "group": "Identity", "label": "Gender", "value": "Male" },
+        { "group": "Identity", "label": "Title", "value": "Council Member" }
+      ],
+      "identifiers": [],
+      "remarks": ""
+    }
+  ]
+}
