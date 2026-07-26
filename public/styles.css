@@ -453,7 +453,9 @@ code { font-family: var(--mono); color: var(--color-primary); }
 .dot-center { background: #2563EB; } .dot-block { background: #DC2626; } .dot-restrict { background: #D97706; } .dot-ext { background: #94A3B8; border: 1px dashed #64748B; }
 .edge-own { width: 16px; height: 0; border-top: 2.4px solid #DC2626; flex-shrink: 0; }
 .edge-interest { width: 16px; height: 0; border-top: 1.6px dashed #D97706; flex-shrink: 0; }
-/* Beneficial-interest links only carry meaning in the hierarchy view. */
+.edge-other { width: 16px; height: 0; border-top: 1.6px dashed var(--color-border-strong); flex-shrink: 0; }
+.edge-peer { width: 16px; height: 0; border-top: 1.5px dotted var(--color-muted-fg); flex-shrink: 0; }
+/* These link kinds are only distinguished in the hierarchy view. */
 .legend-ownership-only { display: none !important; }
 .graph-modal.view-ownership .legend-ownership-only { display: flex !important; }
 .graph-view-note { font-size: .7rem; line-height: 1.45; color: var(--color-muted-fg); margin: 2px 0 0; padding: 8px 10px; background: var(--color-surface-2); border: 1px solid var(--color-border); border-radius: var(--radius-sm); }

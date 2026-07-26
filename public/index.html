@@ -147,8 +147,8 @@
         </div>
         <div class="graph-controls">
           <div class="view-toggle" role="group" aria-label="Diagram view">
-            <button type="button" data-view="radial" class="active" title="Radial ego-network: every relationship type, ringed by hop distance">Radial</button>
-            <button type="button" data-view="ownership" title="Ownership hierarchy: owners above, owned below — the 50% Rule chain">Ownership</button>
+            <button type="button" data-view="radial" class="active" title="Radial ego-network: every relationship, ringed by hop distance">Radial</button>
+            <button type="button" data-view="ownership" title="Hierarchy: principals above, subordinates below — ownership, control, support and agency chains">Hierarchy</button>
           </div>
           <div class="depth-toggle" role="group" aria-label="Hop depth">
             <button type="button" data-depth="1">1 hop</button>
@@ -172,6 +172,8 @@
             <span><i class="dot dot-ext"></i> External / unlisted</span>
             <span><i class="edge-own"></i> 50%+ ownership</span>
             <span class="legend-ownership-only"><i class="edge-interest"></i> Beneficial interest</span>
+            <span class="legend-ownership-only"><i class="edge-other"></i> Support / agency / office</span>
+            <span class="legend-ownership-only"><i class="edge-peer"></i> Family / association</span>
           </div>
           <p id="graphViewNote" class="graph-view-note" hidden></p>
           <h3>Top by weighted degree</h3>

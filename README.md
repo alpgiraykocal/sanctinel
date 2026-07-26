@@ -190,16 +190,23 @@ Any hit with relationships shows a **View network** button that opens a radial e
 - **Direction + type + ownership preserved.** 50%+ ownership edges are drawn red and
   thick; the panel flags them because they drive the 50 Percent Rule. External/unlisted
   related parties appear as dashed nodes (an unlisted 50%+ owner still blocks its chain).
-- **Two views of the same ego-network.** *Radial* answers "who is connected to this
-  party" across every relationship type. *Ownership* answers the question the 50 Percent
-  Rule actually asks — **owners above, holdings below**, so a chain reads top-down. The
-  radial ring cannot show that: fifty subsidiaries of one bank land as fifty equidistant
-  dots. The hierarchy is built only from edges whose direction the server resolved
-  (`edge.role`), because OFAC's wording flips between types — *"Owned or Controlled By"*
-  makes the source the subsidiary, *"Owns, controls, or operates"* makes it the owner —
-  and a tree built on the undirected "ownership" flag would invert half the chains.
-  Support, agency, family and association links are counted and reported, not drawn: the
-  50 Percent Rule does not reach them.
+- **Two views of the same ego-network.** *Radial* rings every relationship by hop
+  distance. *Hierarchy* stacks them — **principals above, subordinates below** — so a
+  chain reads top-down: ownership chains, but equally the support chain
+  `TURKMEN → TALIB → AL QA'IDA`, which contains no ownership edge at all. The ring
+  cannot show either: fifty subsidiaries of one bank land as fifty equidistant dots.
+- **Direction is resolved per relationship type** (`lib/graph.relationDirection`), not
+  inferred from the picture. OFAC phrases a relationship outward from the listed party —
+  *"Providing support **to**"*, *"Acting for or on behalf **of**"*, *"Owned or Controlled
+  **By**"* — so the named party is the principal and goes above; the exceptions are the
+  types phrased the other way (*"Owns, controls, or operates"* → below) and the symmetric
+  ones (family, association → level). Node position shows who is superior; the **arrow
+  points at the target of the stated relationship**, which is not always downward — a
+  support link drawn downward would claim the principal supports its subordinate.
+- **Ownership stays distinct** — solid red, its own legend entry, and a side-panel line
+  saying how many of the links on screen it covers — because only ownership drives the
+  50 Percent Rule. Beneficial interest is dashed amber, support/agency/office dashed
+  grey, family/association dotted and level.
 - **Explainable metrics** — degree + weighted degree (ownership weighted double), top-5
   ranked in the side panel. Deterministic layout (sorted by name), hover for detail,
   click a node to recenter.

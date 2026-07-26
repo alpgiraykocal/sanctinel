@@ -105,18 +105,22 @@
     });
   }
 
-  /* ---------- ownership hierarchy ---------- */
+  /* ---------- relationship hierarchy ---------- */
 
   /*
-   * Owners above, owned below. The radial view answers "who is connected to
-   * this party"; this one answers the question the 50 Percent Rule actually
-   * asks — "who owns whom, and how far does the chain run" — which a ring of
-   * fifty equidistant dots cannot show.
+   * Principals above, subordinates below. The radial view answers "who is
+   * connected to this party"; this one answers "who stands above whom, and how
+   * far the chain runs" — which a ring of equidistant dots cannot show.
    *
-   * Only edges the server resolved to an ownership direction are structural
-   * here (edge.role, see lib/graph.js). Support, agency, family and association
-   * links are counted and reported, not drawn: the 50 Percent Rule does not
-   * reach them, and putting them in the same tree would imply it does.
+   * EVERY relationship type is drawn, not only ownership. Restricting the
+   * hierarchy to ownership left 42% of the parties that have any relationship
+   * at all with an empty diagram, and the chains it dropped are often the ones
+   * worth seeing: TURKMEN → TALIB → AL QA'IDA is a support chain with no
+   * ownership edge anywhere in it.
+   *
+   * Ownership stays distinct — solid red, its own legend entry, called out in
+   * the side note — because it alone drives the 50 Percent Rule. Per-type
+   * direction is resolved server-side (lib/graph.relationDirection).
    */
   // rowGap leaves a lane wide enough for a connector bus between wrapped rows;
   // padBottom keeps the last row clear of the renderer badge.
@@ -141,53 +145,70 @@
     return stripped.length >= 3 ? stripped : s;
   }
 
-  function ownershipEdges() {
-    return state.data.edges.filter((e) => e.role === 'owns' || e.role === 'owned_by');
-  }
-
-  // Normalize every ownership edge to owner → owned, dropping self-loops.
-  function ownerPairs() {
+  // Normalize every edge to above → below, dropping self-loops. Peer edges
+  // (family, association) carry no direction and are kept aside so they can be
+  // drawn level rather than forced into a rung they do not belong on.
+  function hierPairs() {
     const out = [];
+    const peers = [];
     const seen = new Set();
-    for (const e of ownershipEdges()) {
-      const owner = e.role === 'owns' ? e.source : e.target;
-      const owned = e.role === 'owns' ? e.target : e.source;
-      if (owner === owned) continue;
-      const key = `${owner}>${owned}`;
+    for (const e of state.data.edges) {
+      if (e.source === e.target) continue;
+      const dir = e.hier || 'up';
+      if (dir === 'peer') {
+        const key = [e.source, e.target].sort().join('~');
+        if (seen.has(key)) continue;
+        seen.add(key);
+        peers.push({ a: e.source, b: e.target, type: e.type });
+        continue;
+      }
+      const above = dir === 'down' ? e.source : e.target;
+      const below = dir === 'down' ? e.target : e.source;
+      const key = `${above}>${below}`;
       if (seen.has(key)) continue;
       seen.add(key);
-      out.push({ owner, owned, type: e.type, ownership: e.ownership });
+      // Position says who is superior; the ARROW says which way the stated
+      // relationship runs, and the two are not always the same. "X owns Y"
+      // points down at Y, but "X provides support to Y" puts Y above and points
+      // UP at Y — drawing that one downward would claim the principal supports
+      // its subordinate, the reverse of what the list says.
+      out.push({
+        owner: above, owned: below, type: e.type,
+        ownership: !!e.ownership, role: e.role || null, pointsUp: dir === 'up',
+      });
     }
-    return out;
+    return { pairs: out, peers };
   }
 
-  // Level 0 is the centre; negative levels are its owners, positive its
-  // holdings. BFS both ways from the centre so a cycle (A owns B owns A, which
-  // does occur in the data) terminates instead of recursing.
-  function assignLevels(pairs) {
-    const up = new Map(), down = new Map();
+  // Level 0 is the centre; negative levels are the parties above it (owners,
+  // principals, beneficiaries), positive the ones below (holdings, agents,
+  // supporters).
+  function assignLevels(pairs, peers) {
+    const up = new Map(), down = new Map(), side = new Map();
     const link = (map, from, to) => { const a = map.get(from); if (a) a.push(to); else map.set(from, [to]); };
     for (const p of pairs) { link(down, p.owner, p.owned); link(up, p.owned, p.owner); }
-    // One BFS over the ownership graph treated as undirected, with the level
-    // stepping up or down according to which way each edge points. Walking
-    // owners and holdings in two separate passes from the centre looked
+    for (const p of peers || []) { link(side, p.a, p.b); link(side, p.b, p.a); }
+    // One BFS over the relationship graph treated as undirected, with the level
+    // stepping up, down or staying put according to which way each edge points.
+    // Walking the two directions in separate passes from the centre looked
     // equivalent but was not: it never reached the centre's SIBLINGS — the
-    // other subsidiaries of its parent, which is most of the chain in practice
-    // and exactly what a 50% Rule review is looking for.
+    // other parties hanging off its principal, which is most of the chain in
+    // practice and exactly what the review is looking for.
     const level = new Map([[state.centerId, 0]]);
     let frontier = [state.centerId];
     while (frontier.length) {
       const next = [];
       for (const id of frontier) {
         const base = level.get(id);
-        for (const owner of up.get(id) || []) {
-          if (level.has(owner)) continue;
-          level.set(owner, base - 1); next.push(owner);
-        }
-        for (const owned of down.get(id) || []) {
-          if (level.has(owned)) continue;
-          level.set(owned, base + 1); next.push(owned);
-        }
+        const step = (map, delta) => {
+          for (const to of map.get(id) || []) {
+            if (level.has(to)) continue;
+            level.set(to, base + delta); next.push(to);
+          }
+        };
+        step(up, -1);
+        step(down, 1);
+        step(side, 0);
       }
       frontier = next;
     }
@@ -201,8 +222,8 @@
    * it needs and the connectors run through a horizontal bus per level.
    */
   function computeHierarchyLayout(w, h) {
-    const pairs = ownerPairs();
-    const level = assignLevels(pairs);
+    const { pairs, peers } = hierPairs();
+    const level = assignLevels(pairs, peers);
     const byId = new Map(state.data.nodes.map((n) => [n.id, n]));
 
     const levels = [...new Set([...level.values()])].sort((a, b) => a - b);
@@ -256,9 +277,38 @@
 
     const drawn = new Set(positions.map((p) => p.node.id));
     const shownPairs = pairs.filter((p) => drawn.has(p.owner) && drawn.has(p.owned));
-    const excluded = state.data.edges.length - ownershipEdges().length;
+    const shownPeers = peers.filter((p) => drawn.has(p.a) && drawn.has(p.b));
+    const ownershipLinks = shownPairs.filter((p) => p.ownership).length;
     const orphans = state.data.nodes.length - drawn.size;
-    return { positions, pairs: shownPairs, bands, scale, excluded, orphans };
+    return {
+      positions, pairs: shownPairs, peers: shownPeers, bands, scale,
+      ownershipLinks, orphans,
+    };
+  }
+
+  /*
+   * Three link styles, in descending legal weight. Ownership is the only one
+   * the 50 Percent Rule reaches, so it must never look like the others:
+   *   solid red    50%+ ownership / control
+   *   dashed amber beneficial interest (property held in a party's interest)
+   *   dashed grey  everything else — support, agency, office, association
+   */
+  const kindOf = (p) => (p.ownership ? 'own' : p.role ? 'interest' : 'other');
+
+  function linkStyle(p) {
+    const kind = typeof p === 'string' ? p : kindOf(p);
+    if (kind === 'own') return { color: C.edgeOwn, dash: null, width: 1.9, alpha: 0.85 };
+    if (kind === 'interest') return { color: C.restrict, dash: [4, 3], width: 1.4, alpha: 0.75 };
+    return { color: C.labelDim, dash: [4, 3], width: 1.4, alpha: 0.8 };
+  }
+
+  // A shared bus takes its children's style only when they agree. Painting a
+  // mixed bus in ownership red would say "everything hanging off this is owned",
+  // which for a principal that both owns one party and is merely supported by
+  // two others is exactly the wrong claim.
+  function busStyle(kids) {
+    const kinds = new Set(kids.map(kindOf));
+    return linkStyle(kinds.size === 1 ? [...kinds][0] : 'other');
   }
 
   function drawHierarchy(ctx, H, w, h, hover) {
@@ -269,10 +319,14 @@
         if (p.owner === hover) hot.add(p.owned);
         if (p.owned === hover) hot.add(p.owner);
       }
+      for (const p of H.peers) {
+        if (p.a === hover) hot.add(p.b);
+        if (p.b === hover) hot.add(p.a);
+      }
       hot.add(hover);
     }
 
-    // Band guides so the "above = owner" reading is unmistakable.
+    // Band guides so the "above = principal" reading is unmistakable.
     ctx.save();
     ctx.font = '10px "IBM Plex Mono", monospace';
     ctx.textAlign = 'left';
@@ -280,10 +334,10 @@
     for (const b of H.bands) {
       const n = b.list.length;
       const label = b.level === 0
-        ? (n > 1 ? `centre + ${n - 1} held by the same owner` : 'centre')
+        ? (n > 1 ? `centre + ${n - 1} at the same level` : 'centre')
         : b.level < 0
-          ? `owner${-b.level > 1 ? ` · ${-b.level} levels up` : ''}${n > 1 ? ` (${n})` : ''}`
-          : `owned · ${b.level} level${b.level > 1 ? 's' : ''} down${n > 1 ? ` (${n})` : ''}`;
+          ? `owners, principals & beneficiaries${-b.level > 1 ? ` · ${-b.level} up` : ''} (${n})`
+          : `holdings, agents & supporters${b.level > 1 ? ` · ${b.level} down` : ''} (${n})`;
       ctx.fillText(label, 10, b.top - 6);
       ctx.strokeStyle = C.guide;
       ctx.setLineDash([2, 6]);
@@ -304,7 +358,7 @@
       const a = pos.get(p.owner), b = pos.get(p.owned);
       if (!a || !b) continue;
       const g = byOwner.get(p.owner) || { owner: a, kids: [] };
-      g.kids.push({ box: b, ownership: p.ownership, owned: p.owned });
+      g.kids.push({ box: b, ownership: p.ownership, role: p.role, type: p.type, owned: p.owned, pointsUp: p.pointsUp });
       byOwner.set(p.owner, g);
     }
 
@@ -325,15 +379,15 @@
         const busY = down ? sample.y - sample.h / 2 - lane : sample.y + sample.h / 2 + lane;
         const xs = kids.map((k) => k.box.x);
         const trunkX = Math.min(Math.max(g.owner.x, Math.min(...xs)), Math.max(...xs));
-        const anyOwnership = kids.some((k) => k.ownership);
         const dimRow = hover && !hot.has(ownerId) && !kids.some((k) => hot.has(k.owned));
+        const rowStyle = busStyle(kids);
 
-        ctx.strokeStyle = anyOwnership ? C.edgeOwn : C.restrict;
-        ctx.globalAlpha = dimRow ? 0.1 : (anyOwnership ? 0.8 : 0.55);
-        ctx.lineWidth = anyOwnership ? 1.8 : 1.3;
-        if (!anyOwnership) ctx.setLineDash([4, 3]);
+        ctx.strokeStyle = rowStyle.color;
+        ctx.globalAlpha = dimRow ? 0.1 : rowStyle.alpha * 0.9;
+        ctx.lineWidth = rowStyle.width;
+        if (rowStyle.dash) ctx.setLineDash(rowStyle.dash);
 
-        // Trunk from the owner box to this row's bus.
+        // Trunk from the principal's box to this row's bus.
         ctx.beginPath();
         ctx.moveTo(g.owner.x, g.owner.y + (down ? g.owner.h / 2 : -g.owner.h / 2));
         ctx.lineTo(g.owner.x, busY);
@@ -344,28 +398,78 @@
         ctx.moveTo(Math.min(...xs), busY);
         ctx.lineTo(Math.max(...xs), busY);
         ctx.stroke();
+        ctx.setLineDash([]);
 
         for (const k of kids) {
           const dim = hover && !(hot.has(ownerId) && hot.has(k.owned));
-          ctx.globalAlpha = dim ? 0.1 : (k.ownership ? 0.85 : 0.6);
+          const st = linkStyle(k);
+          ctx.strokeStyle = st.color;
+          ctx.lineWidth = st.width;
+          if (st.dash) ctx.setLineDash(st.dash);
+          ctx.globalAlpha = dim ? 0.1 : st.alpha;
           const by = k.box.y - (down ? k.box.h / 2 : -k.box.h / 2);
           ctx.beginPath();
           ctx.moveTo(k.box.x, busY);
           ctx.lineTo(k.box.x, by);
           ctx.stroke();
+          ctx.setLineDash([]);
           if (!dim) {
-            const s = 6, dir = down ? 1 : -1;
+            const s = 6, toward = down ? 1 : -1;
+            // Apex sits on the box it points at: into the lower box when the
+            // relationship runs downward ("owns"), away from it and up toward
+            // the principal when it runs upward ("owned by", "support to").
+            const apexY = k.pointsUp ? by - s * toward * 1.6 : by;
+            const baseY = k.pointsUp ? by - s * toward * 0.6 : by - s * toward;
             ctx.beginPath();
-            ctx.moveTo(k.box.x, by);
-            ctx.lineTo(k.box.x - s * 0.6, by - s * dir);
-            ctx.lineTo(k.box.x + s * 0.6, by - s * dir);
+            ctx.moveTo(k.box.x, apexY);
+            ctx.lineTo(k.box.x - s * 0.6, baseY);
+            ctx.lineTo(k.box.x + s * 0.6, baseY);
             ctx.closePath();
-            ctx.fillStyle = k.ownership ? C.edgeOwn : C.restrict;
+            ctx.fillStyle = st.color;
             ctx.fill();
           }
+          // With mixed relationship types on one diagram the line style alone
+          // cannot say WHICH relationship this is, so name it on hover.
+          if (hover && (hover === ownerId || hover === k.owned)) {
+            labelText(ctx, k.type, k.box.x, (busY + by) / 2, '9px "IBM Plex Mono", monospace', C.labelDim, 'center');
+          }
         }
-        ctx.setLineDash([]);
         ctx.globalAlpha = 1;
+      }
+    }
+
+    // Peer links (family, association) carry no direction — draw them level,
+    // between the two boxes, so they never read as a chain of control.
+    for (const p of H.peers) {
+      const a0 = pos.get(p.a), b0 = pos.get(p.b);
+      if (!a0 || !b0) continue;
+      const [a, b] = a0.x <= b0.x ? [a0, b0] : [b0, a0];
+      const dim = hover && !(hot.has(p.a) && hot.has(p.b));
+      const sameRow = Math.abs(a.y - b.y) < 2;
+      ctx.save();
+      ctx.strokeStyle = C.labelDim;
+      ctx.globalAlpha = dim ? 0.1 : 0.9;
+      ctx.lineWidth = 1.6;
+      ctx.setLineDash([3, 3]);
+      ctx.beginPath();
+      let lx, ly;
+      if (sameRow) {
+        // Centre-to-centre would run underneath the opaque boxes and vanish.
+        // Bow the link just below the row so the whole span stays visible even
+        // when the two parties are not adjacent in it.
+        const dip = a.h / 2 + 9;
+        ctx.moveTo(a.x + a.w / 2, a.y);
+        ctx.quadraticCurveTo((a.x + b.x) / 2, a.y + dip, b.x - b.w / 2, b.y);
+        lx = (a.x + b.x) / 2; ly = a.y + dip * 0.75;
+      } else {
+        ctx.moveTo(a.x + a.w / 2, a.y);
+        ctx.lineTo(b.x - b.w / 2, b.y);
+        lx = (a.x + b.x) / 2; ly = (a.y + b.y) / 2;
+      }
+      ctx.stroke();
+      ctx.restore();
+      if (hover && (hover === p.a || hover === p.b)) {
+        labelText(ctx, p.type, lx, ly, '9px "IBM Plex Mono", monospace', C.labelDim, 'center');
       }
     }
 
@@ -644,7 +748,8 @@
   // Height the hierarchy needs at full size, so draw() can grow the canvas and
   // let the stage scroll instead of scaling boxes below readability.
   function hierarchyNaturalHeight(w) {
-    const level = assignLevels(ownerPairs());
+    const { pairs, peers } = hierPairs();
+    const level = assignLevels(pairs, peers);
     const counts = new Map();
     for (const [, l] of level) counts.set(l, (counts.get(l) || 0) + 1);
     if (!counts.size) return 0;
@@ -667,15 +772,15 @@
     const note = document.getElementById('graphViewNote');
     const badge = document.getElementById('graphRenderer');
 
-    if (!H.pairs.length) {
+    if (!H.pairs.length && !H.peers.length) {
       ctx.font = '13px "IBM Plex Sans", sans-serif';
       ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
       ctx.fillStyle = C.labelDim;
-      ctx.fillText('No ownership or control chain published for this party.', w / 2, h / 2 - 10);
+      ctx.fillText('No relationships published for this party.', w / 2, h / 2 - 10);
       ctx.font = '11px "IBM Plex Sans", sans-serif';
-      ctx.fillText(`Its ${state.data.edges.length} listed relationship${state.data.edges.length === 1 ? ' is' : 's are'} support, agency, family or association — outside the 50% Rule. Switch to Radial to see them.`, w / 2, h / 2 + 12);
-      if (badge) badge.textContent = 'no ownership chain';
-      if (note) { note.hidden = false; note.innerHTML = ''; note.textContent = 'The 50% Rule reaches ownership only. This party has none published.'; }
+      ctx.fillText('Nothing to place above or below it.', w / 2, h / 2 + 12);
+      if (badge) badge.textContent = 'no relationships';
+      if (note) { note.hidden = false; note.innerHTML = ''; note.textContent = 'This party has no listed relationships in the snapshot.'; }
       return;
     }
 
@@ -685,18 +790,23 @@
       if (p) drawTooltip(ctx, p, w, h);
     }
 
-    if (badge) badge.textContent = `${H.positions.length} entities · ${H.pairs.length} ownership link${H.pairs.length === 1 ? '' : 's'}`;
+    const links = H.pairs.length + H.peers.length;
+    if (badge) badge.textContent = `${H.positions.length} entities · ${links} link${links === 1 ? '' : 's'}`;
     if (note) {
-      const bits = [];
-      if (H.excluded) bits.push(`${H.excluded} non-ownership relationship${H.excluded === 1 ? '' : 's'} hidden (support, agency, family — outside the 50% Rule)`);
-      if (H.orphans) bits.push(`${H.orphans} part${H.orphans === 1 ? 'y' : 'ies'} not in any ownership chain`);
       note.hidden = false;
       note.innerHTML = '';
       const count = document.createElement('strong');
       count.className = 'graph-view-count';
-      count.textContent = `${H.positions.length} entities · ${H.pairs.length} ownership link${H.pairs.length === 1 ? '' : 's'}`;
+      count.textContent = `${H.positions.length} entities · ${links} relationship${links === 1 ? '' : 's'}`;
       note.appendChild(count);
-      if (bits.length) note.appendChild(document.createTextNode(bits.join(' · ') + '. Switch to Radial to see them.'));
+      // Say plainly how much of what is on screen the 50 Percent Rule reaches:
+      // the diagram now draws support, agency and office links alongside
+      // ownership, and only ownership carries the rule.
+      const bits = [H.ownershipLinks
+        ? `${H.ownershipLinks} of them ${H.ownershipLinks === 1 ? 'is an ownership link' : 'are ownership links'} (solid red) — only those drive the 50% Rule`
+        : 'None of them is an ownership link, so the 50% Rule does not reach this network'];
+      if (H.orphans) bits.push(`${H.orphans} part${H.orphans === 1 ? 'y is' : 'ies are'} not connected to the centre by any chain — see Radial`);
+      note.appendChild(document.createTextNode(bits.join('. ') + '.'));
     }
   }
 
@@ -841,7 +951,7 @@
     modal().querySelectorAll('.view-toggle button').forEach((b) => b.classList.toggle('active', b.dataset.view === view));
     modal().classList.toggle('view-ownership', view === 'ownership');
     const title = document.getElementById('graphTitle');
-    if (title) title.textContent = view === 'ownership' ? 'Ownership hierarchy' : 'Relationship network';
+    if (title) title.textContent = view === 'ownership' ? 'Relationship hierarchy' : 'Relationship network';
     const note = document.getElementById('graphViewNote');
     if (note && view !== 'ownership') { note.hidden = true; note.innerHTML = ''; }
     if (state.data) draw();
