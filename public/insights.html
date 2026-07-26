@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>List Insights — Sanctinel</title>
+  <meta name="description" content="Composition of the loaded OFAC, EU, UN, UK OFSI, BIS and State Department lists: counts by authority, list, party type and restriction, the designation timeline, and the most recently designated parties." />
+  <meta name="referrer" content="no-referrer" />
+  <meta name="robots" content="index, nofollow" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <script src="/theme.js"></script>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header">
+    <a class="brand" href="/" aria-label="Sanctinel home">
+      <span class="brand-logo" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="34" height="34">
+          <rect width="24" height="24" rx="7" fill="url(#lg)"/>
+          <defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3B82F6"/><stop offset="1" stop-color="#4F46E5"/></linearGradient></defs>
+          <path fill="#fff" d="M12 4 6 6.6v4.6c0 3.5 2.5 6 6 7.1 3.5-1.1 6-3.6 6-7.1V6.6L12 4Zm0 1.9 4.3 1.85V11.2c0 2.7-1.8 4.7-4.3 5.6-2.5-.9-4.3-2.9-4.3-5.6V7.75L12 5.9Z"/>
+          <path fill="#fff" d="m11 12.6-1.4-1.4-1.1 1.1 2.5 2.5 4-4-1.1-1.1L11 12.6Z"/>
+        </svg>
+      </span>
+      <span class="wordmark">
+        <span class="brand-name">Sanctinel</span>
+        <span class="brand-tag">Sanctions screening &amp; ownership intelligence</span>
+      </span>
+    </a>
+    <div class="header-right">
+      <a class="btn-ghost" href="/">← Back to screening</a>
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle dark mode" title="Toggle dark mode">
+        <svg class="sun" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10Zm0-5v3m0 14v3M4.2 4.2l2.1 2.1m11.4 11.4 2.1 2.1M2 12h3m14 0h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/></svg>
+        <svg class="moon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <main id="main" class="doc doc-wide">
+    <h1>List insights</h1>
+    <p class="lede">What is actually inside the snapshot you are screening against — how the parties break down by issuing authority, list, party type and operative restriction, how designations have accumulated over time, and who was designated most recently. Every figure is computed from the same immutable snapshot the search uses, so a statistic here and a hit there can never disagree.</p>
+    <p id="provenance" class="snap-provenance">Loading snapshot…</p>
+
+    <div id="loadError" class="no-hits" hidden>Statistics unavailable — the snapshot could not be read.</div>
+
+    <section class="doc-stats" id="headline" aria-label="Headline figures"></section>
+
+    <section>
+      <h2>Coverage by issuing authority</h2>
+      <p>Each authority runs its own regime. A count here is a count of designated parties, not of legal obligations — an OFAC blocking designation, an EU/UN/UK asset freeze and a BIS/State export-control listing impose entirely different duties.</p>
+      <div id="authBars" class="bar-chart"></div>
+    </section>
+
+    <section>
+      <h2>Designations over time</h2>
+      <h3>By year <span class="h3-note">(designation date published by the authority)</span></h3>
+      <div id="yearChart" class="col-chart" role="img" aria-label="Designations per year"></div>
+      <h3>Last 24 months</h3>
+      <div id="monthChart" class="col-chart" role="img" aria-label="Designations per month over the last 24 months"></div>
+      <p class="chart-note" id="timelineNote"></p>
+    </section>
+
+    <section>
+      <h2>Composition</h2>
+      <div class="two-col">
+        <div>
+          <h3>Party type</h3>
+          <div id="typeBars" class="bar-chart"></div>
+          <h3>Operative restriction</h3>
+          <div id="measureBars" class="bar-chart"></div>
+        </div>
+        <div>
+          <h3>Largest lists</h3>
+          <div id="listBars" class="bar-chart"></div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Programs &amp; jurisdictions</h2>
+      <div class="two-col">
+        <div>
+          <h3>Top programs / regimes</h3>
+          <div id="progBars" class="bar-chart"></div>
+        </div>
+        <div>
+          <h3>Top countries <span class="h3-note">(nationality, else address)</span></h3>
+          <div id="countryBars" class="bar-chart"></div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Record depth</h2>
+      <p>How much structured detail the snapshot carries beyond a bare name — the material that drives alias matching, identifier hits and the 50%-Rule ownership graph.</p>
+      <div id="depthStats" class="doc-stats"></div>
+    </section>
+
+    <section>
+      <h2>Most recent designations</h2>
+      <p>The latest parties added across all loaded lists, ranked by the designation date the authority itself published. OFAC publishes far more often than the others, so each authority's own most recent designations are included too — filter by authority to see them. Undated records (mostly older BIS and State Department entries) cannot be ranked and are excluded.</p>
+      <div class="recent-controls">
+        <label class="field">
+          <span class="field-label">Authority</span>
+          <select id="fAuthority"><option value="">All authorities</option></select>
+        </label>
+        <label class="field">
+          <span class="field-label">Party type</span>
+          <select id="fType"><option value="">All types</option></select>
+        </label>
+        <label class="field">
+          <span class="field-label">Find in list</span>
+          <input id="fText" type="search" placeholder="Name, program, country" autocomplete="off" />
+        </label>
+      </div>
+      <div id="recentCount" class="recent-count"></div>
+      <div id="recentList" class="recent-list"></div>
+      <button id="moreBtn" class="btn-ghost more-btn" type="button" hidden>Show more</button>
+    </section>
+
+    <section>
+      <h2>Reading these numbers</h2>
+      <ul class="doc-list">
+        <li>Counts describe <strong>this snapshot</strong>, not the live list. The snapshot version and retrieval time are shown at the top of this page.</li>
+        <li>The date is the <strong>authority's own designation/publication date</strong>, not when Sanctinel ingested the record. A party can appear in a recent snapshot with an old date.</li>
+        <li>A party listed by more than one authority is counted once <strong>per authority</strong> — the totals here are records, not unique real-world parties.</li>
+        <li>Program labels are the authority's own codes and are not harmonised across regimes; the same conduct carries different codes at OFAC, the EU and the UK.</li>
+        <li>None of this is a determination. Verify any specific party against the issuing authority before acting — see <a href="/about.html">about &amp; methodology</a>.</li>
+      </ul>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="foot-brand"><strong>Sanctinel</strong><span>Sanctions screening &amp; ownership intelligence</span></div>
+    <div class="foot-meta">
+      <span>Data: OFAC · EU · UN · UK OFSI · BIS · State Dept — public domain, refreshed daily.</span>
+      <span><a href="/">Screening tool</a> · <a href="/about.html">About &amp; methodology</a> · not legal advice</span>
+    </div>
+  </footer>
+
+  <script src="/insights.js"></script>
+</body>
+</html>

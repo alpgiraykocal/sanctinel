@@ -178,6 +178,27 @@ Any hit with relationships shows a **View network** button that opens a radial e
 - **Audit line** — center, depth, node/edge counts, ownership-edge count, timestamp.
 - Framed as a **triage/display aid, not a suspicious-activity or blocking determination.**
 
+## List insights page
+
+`/insights.html` (`lib/stats.js` + `public/insights.js`, `GET /api/stats`) summarizes the
+snapshot you are actually screening against:
+
+- **Headline figures** — parties, authorities, and how many were designated in the last
+  30 / 90 / 365 days.
+- **Composition** — counts by issuing authority, list, party type and *operative
+  restriction* (block vs asset freeze vs export licence requirement), plus top programs
+  and top countries.
+- **Designation timeline** — per year (16 years) and per month (24 months), from the
+  designation date each authority publishes. Dates are normalized across authorities
+  (OFAC/EU/UN/BIS ISO, UK OFSI `DD/MM/YYYY`), country labels too (`lib/countries.js`),
+  so one jurisdiction is not split across four rows.
+- **Most recent designations** — the newest parties across all lists *plus* each
+  authority's own newest, filterable by authority, party type and free text, each linking
+  straight into a screening query.
+
+Statistics come from the same immutable snapshot as `/api/search`, and are memoized per
+snapshot (a full pass is ~150ms over 38k entities, recomputed only after a refresh).
+
 ## Data
 
 - Ships with **fictional demo data** (`sample-data/sample.json`) so the UI runs offline
@@ -199,8 +220,10 @@ sanctions compliance.
 
 | Path | Role |
 |------|------|
-| `server.js` | HTTP server, static hosting, `/api/search`, `/api/meta`, `/api/refresh` |
+| `server.js` | HTTP server, static hosting, `/api/search`, `/api/meta`, `/api/stats`, `/api/refresh` |
 | `lib/ingest.js` | SLS fetch, CSV parse, snapshot build, poison-pill guard |
 | `lib/matcher.js` | Normalization + fuzzy scoring + match classification |
+| `lib/stats.js` | Snapshot analytics: composition, timeline, recent designations |
+| `lib/countries.js` | Cross-authority country normalization (ISO codes, long forms) |
 | `public/` | Frontend (HTML / CSS / JS) |
 | `sample-data/` | Fictional offline demo dataset |

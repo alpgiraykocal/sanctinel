@@ -9,6 +9,7 @@
  * Endpoints:
  *   GET  /healthz                        liveness + snapshot summary
  *   GET  /api/meta                       snapshot provenance + lists/programs + loading
+ *   GET  /api/stats                      list composition, designation timeline, recent additions
  *   GET  /api/search?q=&authority=&list=&program=&threshold=&yob=&country=  screening
  *   GET  /api/graph/ego-network?id=&depth=   relationship ego-network
  *   POST /api/refresh                    trigger a background live refresh (admin-gated)
@@ -32,6 +33,7 @@ const { screenEntity } = require('./lib/matcher');
 const { finalizeSnapshot, readCache } = require('./lib/ingest');
 const { egoNetwork } = require('./lib/graph');
 const { createLimiter } = require('./lib/ratelimit');
+const { snapshotStats } = require('./lib/stats');
 const searchIndex = require('./lib/searchindex');
 
 // ---- config (env-overridable) ----
@@ -219,6 +221,14 @@ function handle(req, res) {
     if (!rl.ok) return sendJson(res, 429, { error: 'rate limit exceeded' }, { 'Retry-After': String(rl.retryAfter) });
 
     if (p === '/api/meta') return sendJson(res, 200, meta());
+
+    // Aggregate list composition + most-recent designations. Memoized per
+    // snapshot in lib/stats, so this is a map lookup after the first call.
+    if (p === '/api/stats') {
+      if (req.method !== 'GET') return sendJson(res, 405, { error: 'method not allowed' });
+      const s = snapshotStats(snapshot);
+      return sendJson(res, 200, Object.assign({ loading }, s));
+    }
 
     if (p === '/api/search') {
       if (req.method !== 'GET') return sendJson(res, 405, { error: 'method not allowed' });
