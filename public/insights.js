@@ -12,13 +12,19 @@ const $ = (id) => document.getElementById(id);
 const esc = (s) => String(s == null ? '' : s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 const num = (n) => (n || 0).toLocaleString();
 
+// Designation dates are calendar dates, not instants. Formatting them in the
+// viewer's local zone renders a 2026-07-24 designation as "Jul 23, 2026" for
+// anyone west of UTC — a wrong date on a compliance record. Pin to UTC.
 const fmtDate = (iso) => {
   const t = Date.parse(iso);
-  return t ? new Date(t).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' }) : '';
+  return Number.isNaN(t) ? '' : new Date(t).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric', timeZone: 'UTC' });
 };
 const fmtMonth = (key) => {
   const t = Date.parse(key + '-01T00:00:00Z');
-  return t ? new Date(t).toLocaleDateString(undefined, { year: '2-digit', month: 'short', timeZone: 'UTC' }) : key;
+  if (Number.isNaN(t)) return key;
+  // "Jul '26" rather than "Jul 26", which reads as a day of the month on an axis.
+  const parts = new Date(t).toLocaleDateString('en-US', { year: '2-digit', month: 'short', timeZone: 'UTC' }).split(' ');
+  return `${parts[0]} '${parts[1]}`;
 };
 
 const authClass = (a) => 'auth-' + String(a || '').toLowerCase().replace(/[^a-z]/g, '');

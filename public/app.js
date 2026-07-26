@@ -123,7 +123,18 @@ async function runSearch(e) {
   $('resultList').innerHTML = '<div class="skeleton"></div><div class="skeleton" style="margin-top:14px"></div>';
 
   try {
-    const data = await fetch('/api/search?' + params, { signal: controller.signal }).then((r) => r.json());
+    const res = await fetch('/api/search?' + params, { signal: controller.signal });
+    const data = await res.json().catch(() => ({}));
+    // Rate limits and server errors come back as {error}. Without this the
+    // render path hit `data.results.length` on undefined and the analyst saw a
+    // JavaScript type error instead of "search rate limit exceeded".
+    if (!res.ok || !Array.isArray(data.results)) {
+      const reason = data.error || `server responded ${res.status}`;
+      const retry = res.status === 429 ? ' Wait a minute and try again.' : '';
+      $('resultSummary').hidden = true;
+      $('resultList').innerHTML = `<div class="no-hits"><strong>Search unavailable:</strong> ${esc(reason)}.${retry}</div>`;
+      return;
+    }
     lastResults = data.results;
     render(data);
     syncUrl(q);
@@ -137,14 +148,21 @@ async function runSearch(e) {
 function render(data) {
   const list = $('resultList');
   const summary = $('resultSummary');
-  const n = data.results.length;
-  summary.hidden = false;
+  const shown = data.results.length;
+  // The server caps the payload at the top-scoring slice. Report the number of
+  // parties that actually cleared the threshold, and say plainly when the list
+  // below is only part of it — an under-reported hit count is a compliance
+  // problem, not a display detail.
+  const total = typeof data.count === 'number' ? data.count : shown;
+  const truncated = data.truncated || total > shown;
   $('copyLinkBtn').hidden = false;
-  summary.innerHTML = n
-    ? `<strong>${n}</strong> potential match${n === 1 ? '' : 'es'} for <strong>“${esc(data.query)}”</strong> <span class="summary-sub">· screened against ${(data.snapshot.count || 0).toLocaleString()} sanctioned parties at threshold ${data.threshold}</span>`
+  summary.hidden = !total;
+  summary.innerHTML = total
+    ? `<strong>${total.toLocaleString()}</strong> potential match${total === 1 ? '' : 'es'} for <strong>“${esc(data.query)}”</strong> <span class="summary-sub">· screened against ${(data.snapshot.count || 0).toLocaleString()} listed parties at threshold ${data.threshold}</span>${
+        truncated ? `<span class="truncation-note">Showing the ${shown.toLocaleString()} highest-scoring — narrow the query or raise the threshold to see the rest.</span>` : ''}`
     : '';
 
-  if (!n) {
+  if (!total) {
     const scope = $('authority').value ? `the ${esc($('authority').value)} list` : 'the sanctions and export-control lists';
     list.innerHTML = `<div class="no-hits clear"><strong>No match</strong> for “${esc(data.query)}” in ${scope} at threshold ${data.threshold}.<br>Absence of a hit is not a clearance — these lists do not cover every regime (other national and dual-use lists are not included), so confirm the snapshot is current and consider lowering the threshold for a below-the-line check.</div>`;
     return;
@@ -302,7 +320,7 @@ async function refreshLive() {
     if (!res.ok) { alert('Live refresh unavailable: ' + res.error); applyMeta(res.meta); return; }
     applyMeta(res.meta); pollIfLoading(res.meta);
   } catch (e) { alert('Live refresh error: ' + e.message); }
-  finally { btn.disabled = false; btn.textContent = 'Refresh live'; }
+  finally { btn.disabled = false; btn.textContent = 'Refresh'; }
 }
 
 // ---- export helpers ----
@@ -359,9 +377,13 @@ function memoHtml(r) {
 function printMemo(r) {
   const el = $('printArea');
   el.innerHTML = memoHtml(r);
-  document.body.classList.add('printing');
+  // Clear once printing is done so a screened party's record does not sit in
+  // the DOM for the rest of the session. afterprint fires in every current
+  // browser; the timeout only covers a dialog that never reports back.
+  const clear = () => { el.innerHTML = ''; window.removeEventListener('afterprint', clear); };
+  window.addEventListener('afterprint', clear);
+  setTimeout(clear, 60000);
   window.print();
-  setTimeout(() => document.body.classList.remove('printing'), 500);
 }
 
 // ---- shareable URL ----

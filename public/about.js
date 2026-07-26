@@ -9,11 +9,14 @@ const fmtDate = (iso) => { const t = Date.parse(iso); return t ? new Date(t).toL
   catch { document.getElementById('pubs').textContent = 'Coverage data unavailable.'; return; }
 
   const stat = (n, l) => `<div class="stat"><span class="stat-num">${n}</span><span class="stat-lbl">${l}</span></div>`;
+  // "listed parties", not "sanctioned parties": a BIS/State export-control
+  // listing is a licence restriction, not a sanction, and the same distinction
+  // applies to the list and programme counts.
   document.getElementById('stats').innerHTML =
-    stat((m.count || 0).toLocaleString(), 'sanctioned parties') +
+    stat((m.count || 0).toLocaleString(), 'listed parties') +
     stat((m.authorities || []).length || 1, 'issuing authorities') +
-    stat((m.lists || []).length, 'sanctions lists') +
-    stat((m.programs || []).length, 'sanctions programs');
+    stat((m.lists || []).length, 'lists covered') +
+    stat((m.programs || []).length, 'programs & regimes');
 
   const authEl = document.getElementById('authCov');
   if (authEl) authEl.innerHTML = (m.authorities || []).map((a) => `<span class="prog-chip">${esc(a)}</span>`).join(' ');
