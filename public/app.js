@@ -11,11 +11,24 @@ const AUTHORITY_SOURCE = {
   EU: 'the EU Consolidated Financial Sanctions List (webgate.ec.europa.eu/fsd/fsf)',
   UN: 'the UN Security Council Consolidated List (un.org/securitycouncil)',
   UK: 'the UK OFSI Consolidated List (gov.uk/government/publications/financial-sanctions-consolidated-list-of-targets)',
+  BIS: "BIS's own list in EAR Supplement No. 4 to Part 744 (bis.gov/regulations/ear/744)",
+  State: 'the State Department / DDTC debarred and nonproliferation notices (pmddtc.state.gov)',
 };
 
 // Action guidance keyed to authority + list type. Triage hint, not a determination.
 function determinationHint(r) {
   const l = r.list || '';
+  // U.S. export-control lists: the obligation is a licence requirement or loss
+  // of export privileges — NOT an asset freeze. Never blend these with the
+  // financial-sanctions doctrine above.
+  if (r.authority === 'BIS' || r.authority === 'State') {
+    if (/Denied Persons/i.test(l)) return { label: 'Export privileges denied', text: 'BIS Denied Persons List: the party’s export privileges are <strong>denied</strong> — do not participate in any export, reexport or transfer subject to the EAR involving them. This is export control, <strong>not</strong> an asset freeze; funds are not blocked.' };
+    if (/Unverified/i.test(l)) return { label: 'Unverified end-user', text: 'BIS Unverified List: BIS could not verify the party’s bona fides. <strong>No licence exceptions</strong> may be used and a UVL statement is required before shipping items subject to the EAR. Export control only — not an asset freeze.' };
+    if (/Military End-User/i.test(l)) return { label: 'Military end-user licence', text: 'BIS Military End-User List: a <strong>licence is required</strong> for the items specified in EAR §744.21 destined for this party. Export control only — not an asset freeze.' };
+    if (/ITAR Debarred/i.test(l)) return { label: 'ITAR debarred', text: 'State/DDTC debarment: the party is <strong>barred from participating in defence-article exports</strong> under the AECA/ITAR. Export control only — not an asset freeze. Confirm the current debarment status with DDTC.' };
+    if (/Nonproliferation/i.test(l)) return { label: 'Nonproliferation measures', text: 'State Department nonproliferation sanctions: <strong>measures vary by determination</strong> (procurement/import bans, licence denials). Read the specific measures imposed; this is not an asset freeze.' };
+    return { label: 'Export licence required', text: 'BIS Entity List: a <strong>licence is required</strong> for exports, reexports or in-country transfers subject to the EAR, usually with a presumption of denial. This is export control, <strong>not</strong> a financial sanction — funds are not blocked and this is separate from any OFAC designation.' };
+  }
   if (r.authority === 'EU') return { label: 'EU asset freeze', text: 'EU designation: <strong>freeze funds and economic resources</strong> and make none available, directly or indirectly, to or for the listed person. Applies under the cited Council Regulation across all member states — EU regime, not OFAC doctrine.' };
   if (r.authority === 'UN') return { label: 'UN asset freeze', text: 'UN Security Council listing: member states must <strong>freeze funds and economic resources</strong> and bar their provision. Apply the implementing national/EU regulation; this is not OFAC doctrine.' };
   if (r.authority === 'UK') return { label: 'UK asset freeze', text: 'UK OFSI designation: <strong>freeze funds/economic resources</strong> and do not make them available to or for the designated person; report to OFSI. UK regime, not OFAC.' };
@@ -132,8 +145,8 @@ function render(data) {
     : '';
 
   if (!n) {
-    const scope = $('authority').value ? `the ${esc($('authority').value)} list` : 'the OFAC, EU, UN and UK lists';
-    list.innerHTML = `<div class="no-hits clear"><strong>No match</strong> for “${esc(data.query)}” in ${scope} at threshold ${data.threshold}.<br>Absence of a hit is not a clearance — these lists do not cover every regime (national lists and export-control lists are not included), so confirm the snapshot is current and consider lowering the threshold for a below-the-line check.</div>`;
+    const scope = $('authority').value ? `the ${esc($('authority').value)} list` : 'the sanctions and export-control lists';
+    list.innerHTML = `<div class="no-hits clear"><strong>No match</strong> for “${esc(data.query)}” in ${scope} at threshold ${data.threshold}.<br>Absence of a hit is not a clearance — these lists do not cover every regime (other national and dual-use lists are not included), so confirm the snapshot is current and consider lowering the threshold for a below-the-line check.</div>`;
     return;
   }
 
@@ -340,7 +353,7 @@ function memoHtml(r) {
       ${(r.addresses || []).length ? `<tr><th>Addresses</th><td>${list(r.addresses, (a) => `${esc(a.full || a)}<br>`)}</td></tr>` : ''}
       ${(r.relationships || []).length ? `<tr><th>Relationships</th><td>${list(r.relationships, (x) => `${esc(x.type)}: ${esc(x.relatedName)}<br>`)}</td></tr>` : ''}
     </table>
-    <p class="memo-foot">Screening analysis only — not a determination and not legal advice. Confirm against the issuing authority's own list before any compliance decision: ${esc(AUTHORITY_SOURCE[r.authority] || AUTHORITY_SOURCE.OFAC)}. For OFAC designations, apply the 50% Rule to ownership.</p>`;
+    <p class="memo-foot">Screening analysis only — not a determination and not legal advice. Confirm against the issuing authority's own list before any compliance decision: ${esc(AUTHORITY_SOURCE[r.authority] || AUTHORITY_SOURCE.OFAC)}. For OFAC designations, apply the 50% Rule to ownership. Export-control listings (BIS/State) impose licence requirements, not asset freezes.</p>`;
 }
 
 function printMemo(r) {

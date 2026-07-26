@@ -68,7 +68,11 @@
 :root[data-theme="dark"] .site-footer { background: rgba(19,28,49,.5); }
 :root[data-theme="dark"] .notice-bar { background: linear-gradient(90deg, rgba(37,99,235,.14), rgba(124,58,237,.12)); border-color: #2A3B66; }
 :root[data-theme="dark"] .btn-ghost:hover { background: #16233E; }
-:root[data-theme="dark"] .tag.tag-list { background: #251C3E; border-color: #4C3A7A; color: #C4B5FD; }
+:root[data-theme="dark"] .tag.tag-auth.auth-bis { border-color: #C4B5FD; background: #F5F3FF; color: #5B21B6; }
+.tag.tag-auth.auth-state { border-color: #99F6E4; background: #F0FDFA; color: #115E59; }
+:root[data-theme="dark"] .tag.tag-auth.auth-bis { background: #1F1633; border-color: #4C3A7A; color: #C4B5FD; }
+:root[data-theme="dark"] .tag.tag-auth.auth-state { background: #0E2A28; border-color: #2A5A54; color: #5EEAD4; }
+.tag.tag-list { background: #251C3E; border-color: #4C3A7A; color: #C4B5FD; }
 :root[data-theme="dark"] .tag.tag-type { background: #142544; border-color: #2C4A7A; color: #93C5FD; }
 :root[data-theme="dark"] .tag.tag-id { border-color: #4C3A7A; }
 :root[data-theme="dark"] .rel-note, :root[data-theme="dark"] .graph-note { border-color: #4A3E1A; color: #FCD34D; }

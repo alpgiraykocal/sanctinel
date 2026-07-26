@@ -1,7 +1,7 @@
 'use strict';
 
 /*
- * Sanctions screening server (OFAC + EU + UN + UK) — zero external dependencies.
+ * Sanctions + export-control screening server (OFAC/EU/UN/UK + BIS/State).
  *
  *   node server.js            → live by default: serve cache instantly, refresh in background
  *   node server.js --demo     → offline: serve the fictional demo sample only

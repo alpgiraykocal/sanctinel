@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Sanctinel — OFAC, EU, UN &amp; UK Sanctions Screening</title>
-  <meta name="description" content="Search the U.S. OFAC, EU, UN Security Council and UK OFSI sanctions lists by name, alias, or identifier, with multilingual fuzzy matching, the 50% Rule ownership network, and full entity records. Educational tool — not legal advice." />
+  <title>Sanctinel — Sanctions &amp; Export-Control Screening</title>
+  <meta name="description" content="Search the OFAC, EU, UN and UK sanctions lists plus the U.S. BIS and State Department export-control restricted-party lists by name, alias, or identifier, with multilingual fuzzy matching, the 50% Rule ownership network, and full entity records. Educational tool — not legal advice." />
   <meta name="referrer" content="no-referrer" />
   <meta name="robots" content="index, nofollow" />
-  <meta property="og:title" content="Sanctinel — OFAC, EU, UN &amp; UK Sanctions Screening" />
-  <meta property="og:description" content="Multilingual fuzzy name + identifier screening across the OFAC, EU, UN and UK sanctions lists, with ownership-network visualization. Educational — not legal advice." />
+  <meta property="og:title" content="Sanctinel — Sanctions &amp; Export-Control Screening" />
+  <meta property="og:description" content="Multilingual fuzzy name + identifier screening across the OFAC, EU, UN and UK sanctions lists and the U.S. BIS / State export-control lists, with ownership-network visualization. Educational — not legal advice." />
   <meta property="og:type" content="website" />
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
   <script src="/theme.js"></script>
@@ -50,7 +50,7 @@
 
   <div class="notice-bar" role="note">
     <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M11 7h2v2h-2V7Zm0 4h2v6h-2v-6Zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2Zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8Z"/></svg>
-    <p><strong>Screening intelligence, not legal advice.</strong> Hits are leads to verify, not determinations. Confirm against the issuing authority — <a href="https://sanctionssearch.ofac.treas.gov" rel="noreferrer noopener" target="_blank">OFAC</a>, <a href="https://webgate.ec.europa.eu/fsd/fsf" rel="noreferrer noopener" target="_blank">EU</a>, <a href="https://www.un.org/securitycouncil/content/un-sc-consolidated-list" rel="noreferrer noopener" target="_blank">UN</a> or <a href="https://www.gov.uk/government/publications/financial-sanctions-consolidated-list-of-targets" rel="noreferrer noopener" target="_blank">UK OFSI</a> — before any compliance decision. Your queries are never stored.</p>
+    <p><strong>Screening intelligence, not legal advice.</strong> Hits are leads to verify, not determinations. Confirm against the issuing authority — <a href="https://sanctionssearch.ofac.treas.gov" rel="noreferrer noopener" target="_blank">OFAC</a>, <a href="https://webgate.ec.europa.eu/fsd/fsf" rel="noreferrer noopener" target="_blank">EU</a>, <a href="https://www.un.org/securitycouncil/content/un-sc-consolidated-list" rel="noreferrer noopener" target="_blank">UN</a> or <a href="https://www.gov.uk/government/publications/financial-sanctions-consolidated-list-of-targets" rel="noreferrer noopener" target="_blank">UK OFSI</a>, <a href="https://www.bis.gov/regulations/ear/744" rel="noreferrer noopener" target="_blank">BIS</a> or <a href="https://www.pmddtc.state.gov" rel="noreferrer noopener" target="_blank">DDTC</a> — before any compliance decision. Export-control listings carry licence obligations, not asset freezes. Your queries are never stored.</p>
   </div>
 
   <main id="main" class="layout">
@@ -60,13 +60,13 @@
           <span class="field-label">Screen a name, entity, or vessel</span>
           <input id="q" name="q" type="search" placeholder="Name, alias, IMO, passport, tax ID, or crypto address"
                  enterkeyhint="search" autofocus aria-describedby="q-help" />
-          <span id="q-help" class="field-help">Screens primary names and all aliases across the OFAC, EU, UN and UK lists (multilingual: phonetic, transliteration and legal-form variants normalized), plus exact non-name identifiers: passport, national/tax/registration IDs, IMO, MMSI, call sign, digital-currency address.</span>
+          <span id="q-help" class="field-help">Screens primary names and all aliases across the sanctions lists (OFAC, EU, UN, UK) and the U.S. export-control lists (BIS, State) (multilingual: phonetic, transliteration and legal-form variants normalized), plus exact non-name identifiers: passport, national/tax/registration IDs, IMO, MMSI, call sign, digital-currency address.</span>
         </label>
 
         <div class="filters">
           <label class="field">
             <span class="field-label">Authority</span>
-            <select id="authority" name="authority"><option value="">All authorities (OFAC · EU · UN · UK)</option></select>
+            <select id="authority" name="authority"><option value="">All authorities (sanctions + export control)</option></select>
           </label>
           <label class="field">
             <span class="field-label">List</span>
@@ -114,7 +114,7 @@
       <div id="emptyState" class="empty-state">
         <svg viewBox="0 0 24 24" width="44" height="44" aria-hidden="true"><path fill="currentColor" d="M15.5 14h-.8l-.3-.3a6.5 6.5 0 1 0-.7.7l.3.3v.8l5 5 1.5-1.5-5-5Zm-6 0A4.5 4.5 0 1 1 14 9.5 4.5 4.5 0 0 1 9.5 14Z"/></svg>
         <h2>Screen any party in seconds</h2>
-        <p>Multilingual fuzzy name matching, non-name identifiers, and 50%-Rule ownership networks across the OFAC, EU, UN and UK sanctions lists.</p>
+        <p>Multilingual fuzzy name matching, non-name identifiers, and 50%-Rule ownership networks across the OFAC, EU, UN and UK sanctions lists plus the U.S. BIS and State export-control lists.</p>
         <div class="examples">
           <span>Try</span>
           <button class="chip" type="button" data-q="Sberbank">Sberbank</button>
@@ -131,7 +131,7 @@
       <span>Sanctions screening &amp; ownership intelligence</span>
     </div>
     <div class="foot-meta">
-      <span>Data: U.S. OFAC · EU · UN Security Council · UK OFSI — public domain, refreshed daily.</span>
+      <span>Data: OFAC · EU · UN · UK OFSI · BIS · State Dept — public domain, refreshed daily.</span>
       <span><a href="/about.html">About &amp; methodology</a> · not legal advice · verify with the issuing authority</span>
     </div>
   </footer>
