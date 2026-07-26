@@ -71,6 +71,7 @@
     <section>
       <h2>Identifiers &amp; ownership</h2>
       <p>Beyond names, an exact match on a <strong>passport, national / tax / registration id, IMO, MMSI, call sign, aircraft tail, or digital-currency address</strong> is flagged directly. Relationship data drives an ownership graph implementing OFAC's <strong>50 Percent Rule</strong>: entities owned 50%+ by a blocked party are themselves blocked even when unlisted — the network view traces those chains.</p>
+      <p>Any hit with relationships opens in two views. <strong>Radial</strong> shows every listed relationship around the party. <strong>Ownership</strong> redraws the same data as a hierarchy — owners above, holdings below — because that is the shape the 50 Percent Rule is read in. The hierarchy uses only relationships whose direction is unambiguous: OFAC's wording flips between types, so “Owned or Controlled By” and “Owns, controls, or operates” are resolved separately rather than treated as one undirected link. Support, agency, family and association links are reported but not drawn there — the rule does not reach them.</p>
     </section>
 
     <section>

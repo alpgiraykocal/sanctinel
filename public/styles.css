@@ -421,9 +421,27 @@ code { font-family: var(--mono); color: var(--color-primary); }
 .depth-toggle button + button { border-left: 1px solid var(--color-border-strong); }
 .depth-toggle button.active { background: var(--color-primary); color: var(--color-on-primary); font-weight: 600; }
 
+/* Diagram view switch — same control language as the hop depth toggle. */
+.view-toggle { display: inline-flex; border: 1px solid var(--color-border-strong); border-radius: var(--radius-sm); overflow: hidden; }
+.view-toggle button { background: var(--color-surface); color: var(--color-muted-fg); border: none; padding: 7px 12px; font: inherit; font-size: .78rem; cursor: pointer; transition: background .14s ease; }
+.view-toggle button:hover { background: var(--color-surface-2); }
+.view-toggle button + button { border-left: 1px solid var(--color-border-strong); }
+.view-toggle button.active { background: var(--color-accent); color: #fff; font-weight: 600; }
+
 .graph-body { flex: 1; display: grid; grid-template-columns: 1fr 260px; min-height: 0; }
 .graph-stage { position: relative; overflow: hidden; background: radial-gradient(700px 460px at 42% 46%, #FFFFFF 0%, #EEF2F8 82%); }
 .graph-stage canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+/* The hierarchy has a legibility floor: on a narrow screen 48 subsidiaries
+   cannot be squeezed into the stage and stay readable, so the diagram grows
+   past it and the stage scrolls rather than shrinking the boxes to stripes. */
+.graph-modal.view-ownership .graph-stage { overflow-y: auto; overflow-x: hidden; }
+.graph-modal.view-ownership #graphCanvas { position: relative; height: auto; }
+.graph-modal.view-ownership #graphGL { display: none; }
+/* The stage scrolls in this view, so a corner-pinned badge would either scroll
+   away with the diagram or sit on top of a row of boxes. The counts move into
+   the side panel instead. */
+.graph-modal.view-ownership .graph-renderer { display: none; }
+.graph-view-count { display: block; font-weight: 600; color: var(--color-foreground); margin-bottom: 3px; }
 #graphGL { z-index: 1; pointer-events: none; }
 #graphCanvas { z-index: 2; }
 .graph-renderer { position: absolute; right: 12px; bottom: 10px; z-index: 3; font-family: var(--mono); font-size: .62rem; color: var(--color-muted-fg); background: rgba(255,255,255,.78); border: 1px solid var(--color-border); border-radius: 6px; padding: 2px 7px; pointer-events: none; }
@@ -434,6 +452,11 @@ code { font-family: var(--mono); color: var(--color-primary); }
 .dot { width: 11px; height: 11px; border-radius: 50%; flex-shrink: 0; }
 .dot-center { background: #2563EB; } .dot-block { background: #DC2626; } .dot-restrict { background: #D97706; } .dot-ext { background: #94A3B8; border: 1px dashed #64748B; }
 .edge-own { width: 16px; height: 0; border-top: 2.4px solid #DC2626; flex-shrink: 0; }
+.edge-interest { width: 16px; height: 0; border-top: 1.6px dashed #D97706; flex-shrink: 0; }
+/* Beneficial-interest links only carry meaning in the hierarchy view. */
+.legend-ownership-only { display: none !important; }
+.graph-modal.view-ownership .legend-ownership-only { display: flex !important; }
+.graph-view-note { font-size: .7rem; line-height: 1.45; color: var(--color-muted-fg); margin: 2px 0 0; padding: 8px 10px; background: var(--color-surface-2); border: 1px solid var(--color-border); border-radius: var(--radius-sm); }
 .graph-metrics { margin: 0; padding-left: 18px; display: grid; gap: 5px; font-size: .8rem; }
 .graph-metrics li { display: flex; justify-content: space-between; gap: 8px; }
 .graph-metrics li span:first-child { color: var(--color-foreground); }
@@ -447,8 +470,8 @@ code { font-family: var(--mono); color: var(--color-primary); }
   .graph-header h2 { font-size: .95rem; }
   .graph-sub { max-width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .graph-controls { width: 100%; justify-content: space-between; }
-  .depth-toggle { flex: 1; }
-  .depth-toggle button { flex: 1; padding: 8px 6px; }
+  .depth-toggle, .view-toggle { flex: 1; }
+  .depth-toggle button, .view-toggle button { flex: 1; padding: 8px 6px; }
   /* Stage must keep real height in the single-column grid (canvases are
      position:absolute and collapse without it) */
   .graph-body { grid-template-columns: 1fr; grid-template-rows: minmax(0, 1fr) auto; }

@@ -17,7 +17,7 @@
   const cv = () => document.getElementById('graphCanvas');
   const glCanvas = () => document.getElementById('graphGL');
 
-  let state = { data: null, depth: 2, hover: null, layout: [], centerId: null, geom: null, glCtx: null, glFailed: false };
+  let state = { data: null, depth: 2, hover: null, layout: [], centerId: null, geom: null, glCtx: null, glFailed: false, view: 'radial' };
 
   const LIGHT_C = {
     center: '#2563EB', centerHalo: 'rgba(37,99,235,.16)', centerRing: '#1D4ED8',
@@ -103,6 +103,309 @@
       }
       return { node: n, x: pos[n.id].x, y: pos[n.id].y, r, ang: pos[n.id].ang };
     });
+  }
+
+  /* ---------- ownership hierarchy ---------- */
+
+  /*
+   * Owners above, owned below. The radial view answers "who is connected to
+   * this party"; this one answers the question the 50 Percent Rule actually
+   * asks — "who owns whom, and how far does the chain run" — which a ring of
+   * fifty equidistant dots cannot show.
+   *
+   * Only edges the server resolved to an ownership direction are structural
+   * here (edge.role, see lib/graph.js). Support, agency, family and association
+   * links are counted and reported, not drawn: the 50 Percent Rule does not
+   * reach them, and putting them in the same tree would imply it does.
+   */
+  // rowGap leaves a lane wide enough for a connector bus between wrapped rows;
+  // padBottom keeps the last row clear of the renderer badge.
+  const HB = { nodeW: 150, nodeH: 34, gapX: 14, gapY: 74, rowGap: 26, pad: 22, padBottom: 30 };
+  // Below this the box text stops being readable, so the stage scrolls instead.
+  const MIN_HIERARCHY_SCALE = 0.66;
+
+  /*
+   * Corporate names in this data are mostly legal form: forty boxes reading
+   * "LIMITED LIABILITY C…" and "JOINT STOCK COMPA…" tell an analyst nothing,
+   * because the part that identifies the company is the part that gets cut.
+   * Strip the legal form for the box label; the tooltip still carries the name
+   * exactly as the authority published it.
+   */
+  const LEGAL_PREFIX = /^(?:(?:PUBLIC|OPEN|CLOSED|PRIVATE|FEDERAL|NON[- ]?PUBLIC)\s+)?(?:JOINT[- ]STOCK\s+COMPANY|LIMITED\s+LIABILITY\s+COMPANY|LIMITED\s+LIABILITY\s+PARTNERSHIP|JOINT\s+VENTURE|STOCK\s+COMPANY|COMPANY|CORPORATION|OOO|OAO|PAO|ZAO|AO|JSC|PJSC|OJSC|CJSC|LLC|LLP|LTD|PLC|SA|AG|GMBH|SPA|BV|NV)\b[\s,.:-]*/i;
+  const LEGAL_SUFFIX = /[\s,]+(?:OOO|OAO|PAO|ZAO|AO|JSC|PJSC|OJSC|CJSC|LLC|LLP|LTD|LIMITED|PLC|S\.?A\.?|A\.?G\.?|GMBH|S\.?P\.?A\.?|B\.?V\.?|N\.?V\.?|INC\.?|CO\.?)\s*$/i;
+
+  function shortName(name) {
+    let s = String(name || '').trim();
+    const stripped = s.replace(LEGAL_PREFIX, '').replace(LEGAL_SUFFIX, '').trim();
+    // Only use it if something identifying survived — "OOO" alone is not a name.
+    return stripped.length >= 3 ? stripped : s;
+  }
+
+  function ownershipEdges() {
+    return state.data.edges.filter((e) => e.role === 'owns' || e.role === 'owned_by');
+  }
+
+  // Normalize every ownership edge to owner → owned, dropping self-loops.
+  function ownerPairs() {
+    const out = [];
+    const seen = new Set();
+    for (const e of ownershipEdges()) {
+      const owner = e.role === 'owns' ? e.source : e.target;
+      const owned = e.role === 'owns' ? e.target : e.source;
+      if (owner === owned) continue;
+      const key = `${owner}>${owned}`;
+      if (seen.has(key)) continue;
+      seen.add(key);
+      out.push({ owner, owned, type: e.type, ownership: e.ownership });
+    }
+    return out;
+  }
+
+  // Level 0 is the centre; negative levels are its owners, positive its
+  // holdings. BFS both ways from the centre so a cycle (A owns B owns A, which
+  // does occur in the data) terminates instead of recursing.
+  function assignLevels(pairs) {
+    const up = new Map(), down = new Map();
+    const link = (map, from, to) => { const a = map.get(from); if (a) a.push(to); else map.set(from, [to]); };
+    for (const p of pairs) { link(down, p.owner, p.owned); link(up, p.owned, p.owner); }
+    // One BFS over the ownership graph treated as undirected, with the level
+    // stepping up or down according to which way each edge points. Walking
+    // owners and holdings in two separate passes from the centre looked
+    // equivalent but was not: it never reached the centre's SIBLINGS — the
+    // other subsidiaries of its parent, which is most of the chain in practice
+    // and exactly what a 50% Rule review is looking for.
+    const level = new Map([[state.centerId, 0]]);
+    let frontier = [state.centerId];
+    while (frontier.length) {
+      const next = [];
+      for (const id of frontier) {
+        const base = level.get(id);
+        for (const owner of up.get(id) || []) {
+          if (level.has(owner)) continue;
+          level.set(owner, base - 1); next.push(owner);
+        }
+        for (const owned of down.get(id) || []) {
+          if (level.has(owned)) continue;
+          level.set(owned, base + 1); next.push(owned);
+        }
+      }
+      frontier = next;
+    }
+    return level;
+  }
+
+  /*
+   * Wide sibling sets are the norm here — one Russian parent bank can hold
+   * fifty listed subsidiaries. Laying them out on a single row would squeeze
+   * each box to a few unreadable pixels, so a level wraps into as many rows as
+   * it needs and the connectors run through a horizontal bus per level.
+   */
+  function computeHierarchyLayout(w, h) {
+    const pairs = ownerPairs();
+    const level = assignLevels(pairs);
+    const byId = new Map(state.data.nodes.map((n) => [n.id, n]));
+
+    const levels = [...new Set([...level.values()])].sort((a, b) => a - b);
+    const perLevel = new Map(levels.map((l) => [l, []]));
+    for (const [id, l] of level) { const n = byId.get(id); if (n) perLevel.get(l).push(n); }
+    // Deterministic: centre first in its band, then heaviest, then by name.
+    for (const list of perLevel.values()) {
+      list.sort((a, b) => {
+        if (a.id === state.centerId) return -1;
+        if (b.id === state.centerId) return 1;
+        return (b.weightedDegree - a.weightedDegree) || a.name.localeCompare(b.name);
+      });
+    }
+
+    const usableW = Math.max(HB.nodeW + HB.pad * 2, w - HB.pad * 2);
+    const perRow = Math.max(1, Math.floor((usableW + HB.gapX) / (HB.nodeW + HB.gapX)));
+
+    // Height each band needs once its members wrap.
+    const bands = levels.map((l) => {
+      const list = perLevel.get(l);
+      const rows = Math.max(1, Math.ceil(list.length / perRow));
+      return { level: l, list, rows, height: rows * HB.nodeH + (rows - 1) * HB.rowGap };
+    });
+
+    const totalH = bands.reduce((s, b) => s + b.height, 0) + (bands.length - 1) * HB.gapY;
+    const usableH = h - HB.pad - HB.padBottom;
+    const scale = Math.min(1, usableH / Math.max(1, totalH));
+
+    const positions = [];
+    let y = HB.pad + Math.max(0, (usableH - totalH * scale) / 2);
+    for (const band of bands) {
+      band.top = y;
+      band.bottom = y + band.height * scale;
+      for (let i = 0; i < band.list.length; i++) {
+        const row = Math.floor(i / perRow);
+        const inRow = band.list.slice(row * perRow, (row + 1) * perRow).length;
+        const col = i % perRow;
+        const rowW = inRow * HB.nodeW + (inRow - 1) * HB.gapX;
+        const x0 = (w - rowW) / 2;
+        positions.push({
+          node: band.list[i],
+          x: x0 + col * (HB.nodeW + HB.gapX) + HB.nodeW / 2,
+          y: y + (row * (HB.nodeH + HB.rowGap) + HB.nodeH / 2) * scale,
+          w: HB.nodeW, h: HB.nodeH * scale,
+          r: Math.max(6, (HB.nodeH * scale) / 2), // hit radius for shared hover/click
+          level: band.level,
+        });
+      }
+      y += band.height * scale + HB.gapY * scale;
+    }
+
+    const drawn = new Set(positions.map((p) => p.node.id));
+    const shownPairs = pairs.filter((p) => drawn.has(p.owner) && drawn.has(p.owned));
+    const excluded = state.data.edges.length - ownershipEdges().length;
+    const orphans = state.data.nodes.length - drawn.size;
+    return { positions, pairs: shownPairs, bands, scale, excluded, orphans };
+  }
+
+  function drawHierarchy(ctx, H, w, h, hover) {
+    const pos = new Map(H.positions.map((p) => [p.node.id, p]));
+    const hot = new Set();
+    if (hover) {
+      for (const p of H.pairs) {
+        if (p.owner === hover) hot.add(p.owned);
+        if (p.owned === hover) hot.add(p.owner);
+      }
+      hot.add(hover);
+    }
+
+    // Band guides so the "above = owner" reading is unmistakable.
+    ctx.save();
+    ctx.font = '10px "IBM Plex Mono", monospace';
+    ctx.textAlign = 'left';
+    ctx.fillStyle = C.guideText;
+    for (const b of H.bands) {
+      const n = b.list.length;
+      const label = b.level === 0
+        ? (n > 1 ? `centre + ${n - 1} held by the same owner` : 'centre')
+        : b.level < 0
+          ? `owner${-b.level > 1 ? ` · ${-b.level} levels up` : ''}${n > 1 ? ` (${n})` : ''}`
+          : `owned · ${b.level} level${b.level > 1 ? 's' : ''} down${n > 1 ? ` (${n})` : ''}`;
+      ctx.fillText(label, 10, b.top - 6);
+      ctx.strokeStyle = C.guide;
+      ctx.setLineDash([2, 6]);
+      ctx.beginPath(); ctx.moveTo(8, b.top - 2); ctx.lineTo(w - 8, b.top - 2); ctx.stroke();
+      ctx.setLineDash([]);
+    }
+    ctx.restore();
+
+    /*
+     * One trunk per owner, one horizontal bus per row of its holdings, then a
+     * short drop into each box — the org-chart convention. Drawing an
+     * independent elbow per child instead put forty near-parallel verticals
+     * through every row of a wide band, which reads as noise rather than
+     * structure.
+     */
+    const byOwner = new Map();
+    for (const p of H.pairs) {
+      const a = pos.get(p.owner), b = pos.get(p.owned);
+      if (!a || !b) continue;
+      const g = byOwner.get(p.owner) || { owner: a, kids: [] };
+      g.kids.push({ box: b, ownership: p.ownership, owned: p.owned });
+      byOwner.set(p.owner, g);
+    }
+
+    for (const [ownerId, g] of byOwner) {
+      // Rows share a y; group so each gets its own bus.
+      const rows = new Map();
+      for (const k of g.kids) {
+        const key = Math.round(k.box.y);
+        const list = rows.get(key);
+        if (list) list.push(k); else rows.set(key, [k]);
+      }
+      // Keep the bus inside the lane between rows so it never hides under the
+      // row above it.
+      const lane = Math.max(5, Math.min(13, (HB.rowGap * H.scale) / 2));
+      for (const [rowY, kids] of rows) {
+        const down = rowY > g.owner.y;
+        const sample = kids[0].box;
+        const busY = down ? sample.y - sample.h / 2 - lane : sample.y + sample.h / 2 + lane;
+        const xs = kids.map((k) => k.box.x);
+        const trunkX = Math.min(Math.max(g.owner.x, Math.min(...xs)), Math.max(...xs));
+        const anyOwnership = kids.some((k) => k.ownership);
+        const dimRow = hover && !hot.has(ownerId) && !kids.some((k) => hot.has(k.owned));
+
+        ctx.strokeStyle = anyOwnership ? C.edgeOwn : C.restrict;
+        ctx.globalAlpha = dimRow ? 0.1 : (anyOwnership ? 0.8 : 0.55);
+        ctx.lineWidth = anyOwnership ? 1.8 : 1.3;
+        if (!anyOwnership) ctx.setLineDash([4, 3]);
+
+        // Trunk from the owner box to this row's bus.
+        ctx.beginPath();
+        ctx.moveTo(g.owner.x, g.owner.y + (down ? g.owner.h / 2 : -g.owner.h / 2));
+        ctx.lineTo(g.owner.x, busY);
+        ctx.lineTo(trunkX, busY);
+        ctx.stroke();
+        // The bus itself.
+        ctx.beginPath();
+        ctx.moveTo(Math.min(...xs), busY);
+        ctx.lineTo(Math.max(...xs), busY);
+        ctx.stroke();
+
+        for (const k of kids) {
+          const dim = hover && !(hot.has(ownerId) && hot.has(k.owned));
+          ctx.globalAlpha = dim ? 0.1 : (k.ownership ? 0.85 : 0.6);
+          const by = k.box.y - (down ? k.box.h / 2 : -k.box.h / 2);
+          ctx.beginPath();
+          ctx.moveTo(k.box.x, busY);
+          ctx.lineTo(k.box.x, by);
+          ctx.stroke();
+          if (!dim) {
+            const s = 6, dir = down ? 1 : -1;
+            ctx.beginPath();
+            ctx.moveTo(k.box.x, by);
+            ctx.lineTo(k.box.x - s * 0.6, by - s * dir);
+            ctx.lineTo(k.box.x + s * 0.6, by - s * dir);
+            ctx.closePath();
+            ctx.fillStyle = k.ownership ? C.edgeOwn : C.restrict;
+            ctx.fill();
+          }
+        }
+        ctx.setLineDash([]);
+        ctx.globalAlpha = 1;
+      }
+    }
+
+    // Node boxes.
+    for (const p of H.positions) {
+      const n = p.node;
+      const isCenter = n.id === state.centerId;
+      const dim = hover && !hot.has(n.id);
+      ctx.globalAlpha = dim ? 0.3 : 1;
+      const x = p.x - p.w / 2, y = p.y - p.h / 2;
+      ctx.save();
+      ctx.shadowColor = 'rgba(15,23,42,.16)'; ctx.shadowBlur = 5; ctx.shadowOffsetY = 2;
+      roundRect(ctx, x, y, p.w, p.h, 7);
+      ctx.fillStyle = isCenter ? C.center : C.halo;
+      ctx.fill();
+      ctx.restore();
+      roundRect(ctx, x, y, p.w, p.h, 7);
+      ctx.lineWidth = isCenter ? 2 : 1.4;
+      ctx.strokeStyle = isCenter ? C.centerRing : nodeColor(n);
+      if (!n.inSnapshot) ctx.setLineDash([3, 3]);
+      ctx.stroke();
+      ctx.setLineDash([]);
+      // Severity flag down the left edge.
+      ctx.fillStyle = nodeColor(n);
+      ctx.fillRect(x + 1.5, y + 3, 3, Math.max(4, p.h - 6));
+
+      if (p.h >= 13) {
+        ctx.font = `${isCenter ? 600 : 500} 11px "IBM Plex Sans", sans-serif`;
+        ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+        ctx.fillStyle = isCenter ? C.nodeStroke : C.label;
+        let label = shortName(n.name);
+        const maxW = p.w - 18;
+        if (ctx.measureText(label).width > maxW) {
+          while (label.length > 1 && ctx.measureText(label + '…').width > maxW) label = label.slice(0, -1);
+          label += '…';
+        }
+        ctx.fillText(label, x + 10, p.y);
+      }
+      ctx.globalAlpha = 1;
+    }
   }
 
   function neighborsOf(id) {
@@ -292,8 +595,9 @@
     ctx.font = '11px "IBM Plex Sans", sans-serif';
     const bw = Math.min(280, Math.max(...lines.map((l) => ctx.measureText(l).width)) + 20);
     const bh = lines.length * 15 + 12;
-    let bx = p.x + p.r + 10, by = p.y - bh / 2;
-    if (bx + bw > w) bx = p.x - p.r - 10 - bw;
+    const half = p.w ? p.w / 2 : p.r; // boxes in the hierarchy view, circles in the radial one
+    let bx = p.x + half + 10, by = p.y - bh / 2;
+    if (bx + bw > w) bx = p.x - half - 10 - bw;
     if (by < 4) by = 4; if (by + bh > h - 4) by = h - 4 - bh;
     ctx.save(); ctx.shadowColor = 'rgba(0,0,0,.28)'; ctx.shadowBlur = 14; ctx.shadowOffsetY = 5;
     ctx.fillStyle = C.tipBg; roundRect(ctx, bx, by, bw, bh, 9); ctx.fill(); ctx.restore();
@@ -335,16 +639,93 @@
     }
   }
 
+  // The hierarchy is drawn in 2D only: it is at most a few hundred boxes, and
+  // the WebGL path draws points, not labelled rectangles.
+  // Height the hierarchy needs at full size, so draw() can grow the canvas and
+  // let the stage scroll instead of scaling boxes below readability.
+  function hierarchyNaturalHeight(w) {
+    const level = assignLevels(ownerPairs());
+    const counts = new Map();
+    for (const [, l] of level) counts.set(l, (counts.get(l) || 0) + 1);
+    if (!counts.size) return 0;
+    const usableW = Math.max(HB.nodeW + HB.pad * 2, w - HB.pad * 2);
+    const perRow = Math.max(1, Math.floor((usableW + HB.gapX) / (HB.nodeW + HB.gapX)));
+    let total = 0;
+    for (const n of counts.values()) {
+      const rows = Math.max(1, Math.ceil(n / perRow));
+      total += rows * HB.nodeH + (rows - 1) * HB.rowGap;
+    }
+    return total + (counts.size - 1) * HB.gapY + HB.pad + HB.padBottom;
+  }
+
+  function drawOwnershipView(ctx, w, h) {
+    blankGL();
+    const H = computeHierarchyLayout(w, h);
+    state.layout = H.positions;
+    state.hierarchy = H;
+
+    const note = document.getElementById('graphViewNote');
+    const badge = document.getElementById('graphRenderer');
+
+    if (!H.pairs.length) {
+      ctx.font = '13px "IBM Plex Sans", sans-serif';
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillStyle = C.labelDim;
+      ctx.fillText('No ownership or control chain published for this party.', w / 2, h / 2 - 10);
+      ctx.font = '11px "IBM Plex Sans", sans-serif';
+      ctx.fillText(`Its ${state.data.edges.length} listed relationship${state.data.edges.length === 1 ? ' is' : 's are'} support, agency, family or association — outside the 50% Rule. Switch to Radial to see them.`, w / 2, h / 2 + 12);
+      if (badge) badge.textContent = 'no ownership chain';
+      if (note) { note.hidden = false; note.innerHTML = ''; note.textContent = 'The 50% Rule reaches ownership only. This party has none published.'; }
+      return;
+    }
+
+    drawHierarchy(ctx, H, w, h, state.hover);
+    if (state.hover) {
+      const p = state.layout.find((q) => q.node.id === state.hover);
+      if (p) drawTooltip(ctx, p, w, h);
+    }
+
+    if (badge) badge.textContent = `${H.positions.length} entities · ${H.pairs.length} ownership link${H.pairs.length === 1 ? '' : 's'}`;
+    if (note) {
+      const bits = [];
+      if (H.excluded) bits.push(`${H.excluded} non-ownership relationship${H.excluded === 1 ? '' : 's'} hidden (support, agency, family — outside the 50% Rule)`);
+      if (H.orphans) bits.push(`${H.orphans} part${H.orphans === 1 ? 'y' : 'ies'} not in any ownership chain`);
+      note.hidden = false;
+      note.innerHTML = '';
+      const count = document.createElement('strong');
+      count.className = 'graph-view-count';
+      count.textContent = `${H.positions.length} entities · ${H.pairs.length} ownership link${H.pairs.length === 1 ? '' : 's'}`;
+      note.appendChild(count);
+      if (bits.length) note.appendChild(document.createTextNode(bits.join(' · ') + '. Switch to Radial to see them.'));
+    }
+  }
+
   /* ---------- orchestrator ---------- */
   function draw() {
     applyTheme();
     const canvas = cv();
     const ctx = canvas.getContext('2d');
     const dpr = window.devicePixelRatio || 1;
+
+    // Size the canvas before measuring it: in the hierarchy view it may need to
+    // be taller than the stage (which then scrolls).
+    if (state.view === 'ownership' && state.data) {
+      // Shrink to fit while the boxes stay readable; past that point grow the
+      // canvas and scroll. On a desktop stage the whole chain still fits in one
+      // view — losing that overview to a scrollbar would be a worse trade.
+      const stage = canvas.parentElement;
+      const need = hierarchyNaturalHeight(canvas.clientWidth || stage.clientWidth) * MIN_HIERARCHY_SCALE;
+      canvas.style.height = Math.max(stage.clientHeight, Math.min(need, 8000)) + 'px';
+    } else {
+      canvas.style.height = '';
+    }
+
     const w = canvas.clientWidth, h = canvas.clientHeight;
     canvas.width = Math.round(w * dpr); canvas.height = Math.round(h * dpr);
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.clearRect(0, 0, w, h);
+
+    if (state.view === 'ownership') return drawOwnershipView(ctx, w, h);
 
     const layout = computeLayout(state.data, w, h);
     state.layout = layout;
@@ -386,6 +767,13 @@
   }
 
   function hitTest(mx, my) {
+    // The hierarchy draws rectangles, the radial view circles.
+    if (state.view === 'ownership') {
+      for (const p of state.layout) {
+        if (Math.abs(mx - p.x) <= p.w / 2 && Math.abs(my - p.y) <= p.h / 2 + 3) return p.node.id;
+      }
+      return null;
+    }
     let best = null, bestD = Infinity;
     for (const p of state.layout) {
       const dx = mx - p.x, dy = my - p.y, d = dx * dx + dy * dy;
@@ -408,9 +796,21 @@
     renderMetrics(); draw();
   }
 
-  function open(id) { modal().hidden = false; document.getElementById('graphTitle').textContent = 'Relationship network'; setDepthButtons(2); load(id, 2); document.body.style.overflow = 'hidden'; }
+  function open(id) { modal().hidden = false; document.getElementById('graphTitle').textContent = 'Relationship network'; setDepthButtons(2); setView('radial'); load(id, 2); document.body.style.overflow = 'hidden'; }
   function close() { modal().hidden = true; document.body.style.overflow = ''; state.data = null; }
   function setDepthButtons(d) { modal().querySelectorAll('.depth-toggle button').forEach((b) => b.classList.toggle('active', Number(b.dataset.depth) === d)); }
+
+  function setView(view) {
+    state.view = view;
+    state.hover = null;
+    modal().querySelectorAll('.view-toggle button').forEach((b) => b.classList.toggle('active', b.dataset.view === view));
+    modal().classList.toggle('view-ownership', view === 'ownership');
+    const title = document.getElementById('graphTitle');
+    if (title) title.textContent = view === 'ownership' ? 'Ownership hierarchy' : 'Relationship network';
+    const note = document.getElementById('graphViewNote');
+    if (note && view !== 'ownership') { note.hidden = true; note.innerHTML = ''; }
+    if (state.data) draw();
+  }
 
   function wire() {
     const m = modal();
@@ -420,6 +820,7 @@
       setDepthButtons(Number(b.dataset.depth));
       load(state.centerId, Number(b.dataset.depth));
     }));
+    m.querySelectorAll('.view-toggle button').forEach((b) => b.addEventListener('click', () => setView(b.dataset.view)));
     const canvas = cv();
     canvas.addEventListener('mousemove', (e) => {
       const rect = canvas.getBoundingClientRect();
