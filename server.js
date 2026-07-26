@@ -74,7 +74,7 @@ function startRefresh() {
   });
   w.on('message', (m) => {
     loading = false;
-    if (m.ok) { const c = readCache(); if (c) { snapshot = c.snapshot; queryCache.clear(); console.log(`Live snapshot ready: ${m.count} entities (pub ${m.publicationId}) in ${(m.ms / 1000).toFixed(0)}s`); } }
+    if (m.ok) { const c = readCache(); if (c) { snapshot = c.snapshot; queryCache.clear(); warmIndex(); console.log(`Live snapshot ready: ${m.count} entities (pub ${m.publicationId}) in ${(m.ms / 1000).toFixed(0)}s`); } }
     else console.warn(`Live refresh failed: ${m.error}. Keeping current snapshot.`);
     w.terminate();
   });
@@ -132,11 +132,14 @@ function meta() {
   };
 }
 
-// ---- search (with a short result cache + bigram candidate prefilter) ----
+// ---- search (with a result cache + candidate prefilter) ----
+// The snapshot is immutable and only changes on a refresh, which clears this
+// cache, so a longer TTL cannot serve stale results — and repeat traffic on the
+// same handful of names is most of the load.
 const queryCache = new Map(); // key -> { t, payload }
-const QCACHE_TTL = 60000, QCACHE_MAX = 300;
+const QCACHE_TTL = 10 * 60 * 1000, QCACHE_MAX = 500;
 
-// Bigram index, rebuilt lazily whenever the snapshot object changes.
+// Candidate index, rebuilt whenever the snapshot object changes.
 let index = null, indexedSnapshot = null;
 function ensureIndex() {
   if (indexedSnapshot !== snapshot) {
@@ -146,6 +149,21 @@ function ensureIndex() {
     console.log(`Search index built: ${snapshot.count} entities in ${Date.now() - t}ms`);
   }
   return index;
+}
+
+// Build it off the back of boot instead of inside the first search: it takes
+// ~1.5s over 38k entities, and making the first visitor of a cold instance pay
+// for that is most of why the app feels slow after a restart.
+//
+// Deliberately delayed rather than immediate: parsing the cached snapshot
+// leaves ~200MB of short-lived garbage, and building the index on top of it
+// before that is collected pushes peak memory up on a small container. A few
+// seconds later the heap has settled and the build costs only what it keeps.
+const INDEX_WARM_DELAY_MS = 4000;
+function warmIndex() {
+  setTimeout(() => {
+    try { ensureIndex(); } catch (e) { console.warn('index warm-up failed:', e.message); }
+  }, INDEX_WARM_DELAY_MS).unref();
 }
 
 function search(params) {
@@ -332,6 +350,7 @@ server.listen(PORT, HOST, () => {
   if (cached) { snapshot = cached.snapshot; console.log(`Loaded cached snapshot: ${snapshot.source} (${snapshot.count} entities)`); }
   console.log(`Sanctions screening on http://${HOST}:${PORT}  (live=${!DEMO_ONLY}, admin-refresh=${ADMIN_TOKEN ? 'on' : 'off'})`);
   console.log(`Snapshot: ${snapshot.source} (${snapshot.count} entities)`);
+  warmIndex();
   if (!DEMO_ONLY) {
     const stale = !cached || cached.ageMs > TTL_MS;
     if (stale) startRefresh();

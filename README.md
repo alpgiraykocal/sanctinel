@@ -152,6 +152,16 @@ full-scans instead, because no cheap index covers what the scorer accepts down t
 running typo, acronym and verbatim queries down both paths and failing on any
 divergence.
 
+**Cost of the index.** Postings are stored CSR-style — one flat `Int32Array` per lane
+plus an offset table — not as a `Map` of per-key arrays. Over the live 38k snapshot that
+is 2.3M postings in 70k lists: **36MB** as arrays-of-arrays, **9MB** flat. On a 512MB
+container that difference decides whether the process survives, and the flat form scans
+faster besides (candidate selection is ~1ms; effectively all search time is scoring).
+The index is built a few seconds after boot rather than inside the first query — it
+takes ~1.5s, and making the first visitor of a cold instance pay for it was most of why
+the app felt slow after a restart — and deliberately *after* the snapshot-parse garbage
+has been collected, so the two peaks do not stack.
+
 ## Complete record
 
 Each hit surfaces the full entity: all names/aliases (typed), addresses, and every
