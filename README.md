@@ -118,6 +118,14 @@ whole-string channel and **acronym/initialism** matching (CML ↔ Caspian Mariti
 Logistics). Strength is classified `exact → strong → fuzzy → weak`; common single given
 names (Ali, Mohammed…) are downgraded to cut noise.
 
+Scoring is where essentially all search time goes — candidate selection is ~1ms — so the
+hot path is kept tight: per-token derivations (transliteration fold, metaphone key,
+bigram and trigram sets) are **memoized on the token string**, since the same tokens
+recur relentlessly across 38k records; Damerau-Levenshtein runs on three rolling typed
+rows instead of allocating a matrix per call; and the edit and Dice channels are skipped
+when their own exact upper bounds cannot beat the score already in hand. None of this
+changes a single score — verified pair-by-pair against the previous implementation.
+
 **Secondary-identifier corroboration:** optional year-of-birth and country/nationality
 inputs act as **score modifiers** — they raise a fuzzy hit they confirm and lower one
 they contradict (a green `ID ✓` / red `ID ✗` badge shows which), never as a hard filter.
