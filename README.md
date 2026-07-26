@@ -130,6 +130,28 @@ registration IDs, IMO, MMSI, call sign, aircraft tail, digital-currency address,
 phone — producing an `identifier` match type. Screening the full identifier surface,
 not just names, is required by OFAC guidance.
 
+### Candidate prefilter and its recall invariant
+
+Scoring a query against all 38k entities takes ~2s, so at the default threshold
+`lib/searchindex.js` narrows the field to entities that share enough trigrams with the
+query (~5–10% of the list, 5-10× faster). That optimisation is only safe if it can never
+hide a hit a full scan would have found — a false negative is the failure mode that
+matters in screening — so every scoring channel that can reach 0.95 is reproducible
+from the index:
+
+| Channel | Why trigrams alone miss it | Index lane |
+|---|---|---|
+| transliteration variants | Kadyrov/Kadirov differ throughout | trigrams of the **folded** form, and the scorer only applies the boost when the folded forms actually share one |
+| acronyms | "CCC" shares nothing with China Communications Construction Company | **acronym** index of each name's initials |
+| short-token typos | one transposition in GHSAIR/GHASIR breaks every trigram | **bigram** lane for tokens ≤ 7 chars, ≥ 2 shared |
+| exact identifiers | an IMO number shares nothing with a name | identifier index |
+
+Below the default threshold — an analyst deliberately widening the net — `server.js`
+full-scans instead, because no cheap index covers what the scorer accepts down there.
+`node scripts/verify-recall.js [n]` checks the invariant against the real snapshot by
+running typo, acronym and verbatim queries down both paths and failing on any
+divergence.
+
 ## Complete record
 
 Each hit surfaces the full entity: all names/aliases (typed), addresses, and every
@@ -223,7 +245,9 @@ sanctions compliance.
 | `server.js` | HTTP server, static hosting, `/api/search`, `/api/meta`, `/api/stats`, `/api/refresh` |
 | `lib/ingest.js` | SLS fetch, CSV parse, snapshot build, poison-pill guard |
 | `lib/matcher.js` | Normalization + fuzzy scoring + match classification |
+| `lib/searchindex.js` | Candidate prefilter (trigram / bigram / acronym / identifier lanes) |
 | `lib/stats.js` | Snapshot analytics: composition, timeline, recent designations |
 | `lib/countries.js` | Cross-authority country normalization (ISO codes, long forms) |
+| `scripts/verify-recall.js` | Proves the prefilter returns what a full scan would |
 | `public/` | Frontend (HTML / CSS / JS) |
 | `sample-data/` | Fictional offline demo dataset |

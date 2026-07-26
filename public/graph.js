@@ -356,10 +356,8 @@
     drawGuides(ctx, cx, cy, ringGap, depthMax);
 
     const useGL = layout.length > GL_MIN && !state.glFailed;
-    let mode = 'Canvas 2D';
 
     if (useGL && drawGL(pos, layout, edges, hover, hoverNb, w, h, dpr)) {
-      mode = 'WebGL';
       // Overlay extras the shaders don't draw: center halo + hover ring.
       const center = pos[state.centerId];
       if (center) { ctx.beginPath(); ctx.arc(center.x, center.y, center.r + 9, 0, Math.PI * 2); ctx.fillStyle = C.centerHalo; ctx.fill(); }
@@ -385,7 +383,6 @@
 
     const badge = document.getElementById('graphRenderer');
     if (badge) badge.textContent = `${layout.length} entities · ${edges.length} connections`;
-    void mode;
   }
 
   function hitTest(mx, my) {

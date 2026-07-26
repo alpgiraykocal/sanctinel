@@ -160,7 +160,6 @@ body {
 .btn-ghost:hover { background: #F5F8FF; border-color: var(--color-primary); box-shadow: var(--shadow); }
 .btn-ghost:disabled { opacity: .5; cursor: progress; }
 a.btn-ghost { text-decoration: none; display: inline-block; }
-@media (max-width: 640px) { .nav-link { display: none; } }
 
 /* Notice bar (legal, slim) */
 .notice-bar {
@@ -381,6 +380,7 @@ input[type=range] { width: 100%; accent-color: var(--color-primary); height: 22p
 .chip:active { transform: scale(.97); }
 .no-hits.clear { border: 1px solid #86EFAC; color: var(--color-ok-fg); background: var(--color-ok-bg); box-shadow: none; }
 .summary-sub { color: var(--color-muted-fg); font-weight: 400; }
+.truncation-note { display: block; margin-top: 4px; font-size: .76rem; font-weight: 500; color: var(--color-warn-fg); }
 
 .skeleton { height: 96px; border-radius: var(--radius); border: 1px solid var(--color-border); background: linear-gradient(90deg, var(--color-surface) 25%, var(--color-surface-2) 50%, var(--color-surface) 75%); background-size: 200% 100%; animation: sh 1.2s infinite; }
 @keyframes sh { to { background-position: -200% 0; } }

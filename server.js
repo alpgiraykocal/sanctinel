@@ -46,6 +46,7 @@ const TRUST_PROXY = process.env.TRUST_PROXY !== 'false';
 const PUBLIC_DIR = path.join(__dirname, 'public');
 
 const MAX_Q = 120, MAX_FIELD = 80;
+const MAX_RESULTS = 200; // top-scoring slice returned; payload reports the true total
 
 const apiLimiter = createLimiter({ windowMs: 60000, max: Number(process.env.RATE_MAX) || 120 });
 const searchLimiter = createLimiter({ windowMs: 60000, max: Number(process.env.SEARCH_RATE_MAX) || 30 });
@@ -102,9 +103,21 @@ function clientIp(req) {
   return req.socket.remoteAddress || '?';
 }
 
-function sendJson(res, code, obj, extra) {
-  const body = Buffer.from(JSON.stringify(obj));
-  res.writeHead(code, Object.assign({ 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' }, securityHeaders(), extra || {}));
+// JSON responses are gzipped when the client accepts it and the body is worth
+// compressing — /api/stats alone is ~96KB of highly repetitive JSON, and it is
+// fetched on every insights page load.
+function sendJson(res, code, obj, extra, req) {
+  let body = Buffer.from(JSON.stringify(obj));
+  const headers = Object.assign(
+    { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' },
+    securityHeaders(), extra || {},
+  );
+  if (req && body.length > 1024 && /\bgzip\b/.test(req.headers['accept-encoding'] || '')) {
+    body = zlib.gzipSync(body);
+    headers['Content-Encoding'] = 'gzip';
+    headers['Vary'] = 'Accept-Encoding';
+  }
+  res.writeHead(code, headers);
   res.end(body);
 }
 
@@ -140,7 +153,11 @@ function search(params) {
   const listFilter = (params.get('list') || '').slice(0, MAX_FIELD);
   const programFilter = (params.get('program') || '').slice(0, MAX_FIELD);
   const authorityFilter = (params.get('authority') || '').slice(0, MAX_FIELD);
-  const threshold = Math.min(1, Math.max(0.8, parseFloat(params.get('threshold')) || 0.95));
+  // Number(), not `parseFloat(...) || 0.95`: threshold=0 is falsy, so the old
+  // form turned "widen the net as far as it goes" into the NARROWEST setting.
+  const rawThreshold = (params.get('threshold') || '').trim();
+  const parsedThreshold = rawThreshold === '' ? NaN : Number(rawThreshold);
+  const threshold = Number.isFinite(parsedThreshold) ? Math.min(1, Math.max(0.8, parsedThreshold)) : 0.95;
   const yob = /^\d{4}$/.test(params.get('yob') || '') ? params.get('yob') : '';
   const country = (params.get('country') || '').trim().slice(0, MAX_FIELD);
   const mods = (yob || country) ? { yob, country } : null;
@@ -151,9 +168,11 @@ function search(params) {
   const cached = queryCache.get(key);
   if (cached && Date.now() - cached.t < QCACHE_TTL) return cached.payload;
 
-  // The bigram prefilter is provably lossless at the default threshold (near-
-  // identical matches share their trigrams); for broader low-threshold sweeps we
-  // scan the full list so no fuzzy hit is ever silently dropped.
+  // At the default threshold the candidate index is recall-safe: every channel
+  // that can reach 0.95 is reproducible from it (see the invariant in
+  // lib/searchindex, checked by scripts/verify-recall.js). Below the default —
+  // an analyst deliberately widening the net — we scan the full list, because
+  // no cheap index covers what the scorer will accept down there.
   ensureIndex();
   const cand = threshold >= 0.95 ? searchIndex.candidates(index, q) : null;
   const pool = cand ? cand.map((i) => snapshot.entities[i]) : snapshot.entities;
@@ -176,7 +195,14 @@ function search(params) {
     });
   }
   results.sort((a, b) => b.score - a.score);
-  const payload = { query: q, threshold, count: results.length, results: results.slice(0, 200), snapshot: meta() };
+  // `count` is every hit above the threshold; `results` is the top slice. The
+  // UI must show the former and say when it is showing fewer — an analyst who
+  // reads "200 matches" when 573 cleared the threshold has been misinformed.
+  const payload = {
+    query: q, threshold, count: results.length,
+    returned: Math.min(results.length, MAX_RESULTS), truncated: results.length > MAX_RESULTS,
+    results: results.slice(0, MAX_RESULTS), snapshot: meta(),
+  };
 
   queryCache.set(key, { t: Date.now(), payload });
   if (queryCache.size > QCACHE_MAX) queryCache.delete(queryCache.keys().next().value);
@@ -220,31 +246,38 @@ function handle(req, res) {
     const rl = apiLimiter.check(ip);
     if (!rl.ok) return sendJson(res, 429, { error: 'rate limit exceeded' }, { 'Retry-After': String(rl.retryAfter) });
 
-    if (p === '/api/meta') return sendJson(res, 200, meta());
+    // Read-only endpoints: GET and HEAD only, uniformly.
+    const readOnly = req.method === 'GET' || req.method === 'HEAD';
+
+    if (p === '/api/meta') {
+      if (!readOnly) return sendJson(res, 405, { error: 'method not allowed' });
+      return sendJson(res, 200, meta(), null, req);
+    }
 
     // Aggregate list composition + most-recent designations. Memoized per
     // snapshot in lib/stats, so this is a map lookup after the first call.
     if (p === '/api/stats') {
-      if (req.method !== 'GET') return sendJson(res, 405, { error: 'method not allowed' });
+      if (!readOnly) return sendJson(res, 405, { error: 'method not allowed' });
       const s = snapshotStats(snapshot);
-      return sendJson(res, 200, Object.assign({ loading }, s));
+      return sendJson(res, 200, Object.assign({ loading }, s), null, req);
     }
 
     if (p === '/api/search') {
-      if (req.method !== 'GET') return sendJson(res, 405, { error: 'method not allowed' });
+      if (!readOnly) return sendJson(res, 405, { error: 'method not allowed' });
       const sr = searchLimiter.check(ip);
       if (!sr.ok) return sendJson(res, 429, { error: 'search rate limit exceeded' }, { 'Retry-After': String(sr.retryAfter) });
-      return sendJson(res, 200, search(url.searchParams));
+      return sendJson(res, 200, search(url.searchParams), null, req);
     }
 
     if (p === '/api/graph/ego-network') {
+      if (!readOnly) return sendJson(res, 405, { error: 'method not allowed' });
       const id = (url.searchParams.get('id') || '').slice(0, 40);
       const depth = Math.min(3, Math.max(1, parseInt(url.searchParams.get('depth')) || 2));
       if (!/^[\w:.-]+$/.test(id)) return sendJson(res, 400, { error: 'invalid id' });
       const g = egoNetwork(snapshot.entities, id, depth);
       if (!g) return sendJson(res, 404, { error: 'entity not found in snapshot' });
       g.snapshot = meta();
-      return sendJson(res, 200, g);
+      return sendJson(res, 200, g, null, req);
     }
 
     if (p === '/api/refresh') {
