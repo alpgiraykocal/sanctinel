@@ -789,9 +789,44 @@
   }
   const escapeHtml = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 
+  // Draw a failure into the stage rather than firing an alert() and leaving an
+  // empty modal behind: a rate-limited or failed load used to look identical to
+  // a party with no network at all, and the view controls silently did nothing
+  // afterwards because there was no data to redraw.
+  function drawLoadError(message) {
+    const canvas = cv();
+    canvas.style.height = '';
+    const ctx = canvas.getContext('2d');
+    const dpr = window.devicePixelRatio || 1;
+    const w = canvas.clientWidth, h = canvas.clientHeight;
+    canvas.width = Math.round(w * dpr); canvas.height = Math.round(h * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, w, h);
+    applyTheme();
+    blankGL();
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillStyle = C.label;
+    ctx.font = '13px "IBM Plex Sans", sans-serif';
+    ctx.fillText('Could not load the relationship network.', w / 2, h / 2 - 10);
+    ctx.fillStyle = C.labelDim;
+    ctx.font = '11px "IBM Plex Sans", sans-serif';
+    ctx.fillText(message, w / 2, h / 2 + 12);
+    const badge = document.getElementById('graphRenderer');
+    if (badge) badge.textContent = 'unavailable';
+  }
+
   async function load(id, depth) {
-    const res = await fetch(`/api/graph/ego-network?id=${encodeURIComponent(id)}&depth=${depth}`).then((r) => r.json());
-    if (res.error) { alert(res.error); return; }
+    let res;
+    try {
+      const r = await fetch(`/api/graph/ego-network?id=${encodeURIComponent(id)}&depth=${depth}`);
+      res = await r.json().catch(() => ({}));
+      if (!r.ok || res.error) {
+        const why = res.error || `server responded ${r.status}`;
+        return drawLoadError(r.status === 429 ? `${why} — wait a minute and reopen.` : why);
+      }
+    } catch (e) {
+      return drawLoadError(e.message);
+    }
     state.data = res; state.depth = res.depth; state.centerId = res.center.id; state.hover = null;
     renderMetrics(); draw();
   }
