@@ -282,6 +282,8 @@ input[type=range] { width: 100%; accent-color: var(--color-primary); height: 22p
 .tag.tag-auth.auth-ofac { border-color: #BFDBFE; background: #EFF6FF; color: var(--color-primary-hover); }
 .tag.tag-auth.auth-un { border-color: #A7C7E7; background: #EEF4FB; color: #1E4E8C; }
 .tag.tag-auth.auth-uk { border-color: #FBB6B6; background: #FEF2F2; color: #9B1C1C; }
+.tag.tag-auth.auth-eu { border-color: #FDE68A; background: #FFFBEB; color: #92400E; }
+:root[data-theme="dark"] .tag.tag-auth.auth-eu { background: #2A2410; border-color: #4A3E1A; color: #FCD34D; }
 :root[data-theme="dark"] .tag.tag-auth.auth-ofac { background: #142544; border-color: #2C4A7A; color: #93C5FD; }
 :root[data-theme="dark"] .tag.tag-auth.auth-un { background: #10233E; border-color: #2A4468; color: #93C5FD; }
 :root[data-theme="dark"] .tag.tag-auth.auth-uk { background: #2A1518; border-color: #7F2A2A; color: #FCA5A5; }

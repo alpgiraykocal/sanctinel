@@ -8,6 +8,7 @@ const GROUP_ORDER = ['Identity', 'Documents', 'Vessel / Aircraft', 'Digital & Co
 // Where a user must verify a hit, per issuing authority.
 const AUTHORITY_SOURCE = {
   OFAC: 'OFAC Sanctions List Search (sanctionssearch.ofac.treas.gov)',
+  EU: 'the EU Consolidated Financial Sanctions List (webgate.ec.europa.eu/fsd/fsf)',
   UN: 'the UN Security Council Consolidated List (un.org/securitycouncil)',
   UK: 'the UK OFSI Consolidated List (gov.uk/government/publications/financial-sanctions-consolidated-list-of-targets)',
 };
@@ -15,6 +16,7 @@ const AUTHORITY_SOURCE = {
 // Action guidance keyed to authority + list type. Triage hint, not a determination.
 function determinationHint(r) {
   const l = r.list || '';
+  if (r.authority === 'EU') return { label: 'EU asset freeze', text: 'EU designation: <strong>freeze funds and economic resources</strong> and make none available, directly or indirectly, to or for the listed person. Applies under the cited Council Regulation across all member states — EU regime, not OFAC doctrine.' };
   if (r.authority === 'UN') return { label: 'UN asset freeze', text: 'UN Security Council listing: member states must <strong>freeze funds and economic resources</strong> and bar their provision. Apply the implementing national/EU regulation; this is not OFAC doctrine.' };
   if (r.authority === 'UK') return { label: 'UK asset freeze', text: 'UK OFSI designation: <strong>freeze funds/economic resources</strong> and do not make them available to or for the designated person; report to OFSI. UK regime, not OFAC.' };
   if (/CMIC/i.test(l)) return { label: 'Securities restriction', text: 'Non-SDN CMIC: restricts securities transactions — <strong>not</strong> full blocking. Do not freeze an ordinary payment on this basis alone.' };
@@ -130,8 +132,8 @@ function render(data) {
     : '';
 
   if (!n) {
-    const scope = $('authority').value ? `the ${esc($('authority').value)} list` : 'the OFAC, UN and UK lists';
-    list.innerHTML = `<div class="no-hits clear"><strong>No match</strong> for “${esc(data.query)}” in ${scope} at threshold ${data.threshold}.<br>Absence of a hit is not a clearance — these lists do not cover every regime (EU and others are not included), so confirm the snapshot is current and consider lowering the threshold for a below-the-line check.</div>`;
+    const scope = $('authority').value ? `the ${esc($('authority').value)} list` : 'the OFAC, EU, UN and UK lists';
+    list.innerHTML = `<div class="no-hits clear"><strong>No match</strong> for “${esc(data.query)}” in ${scope} at threshold ${data.threshold}.<br>Absence of a hit is not a clearance — these lists do not cover every regime (national lists and export-control lists are not included), so confirm the snapshot is current and consider lowering the threshold for a below-the-line check.</div>`;
     return;
   }
 

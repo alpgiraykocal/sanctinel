@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>About & Methodology — Sanctinel</title>
-  <meta name="description" content="How Sanctinel screens against the U.S. OFAC, UN Security Council and UK OFSI sanctions lists: data sources, refresh cadence, the matching algorithms, coverage, and limitations." />
+  <meta name="description" content="How Sanctinel screens against the U.S. OFAC, EU, UN Security Council and UK OFSI sanctions lists: data sources, refresh cadence, the matching algorithms, coverage, and limitations." />
   <meta name="referrer" content="no-referrer" />
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
   <script src="/theme.js"></script>
@@ -39,13 +39,13 @@
 
   <main id="main" class="doc">
     <h1>About &amp; methodology</h1>
-    <p class="lede">Sanctinel screens names, entities, vessels and identifiers against the U.S. Treasury <abbr title="Office of Foreign Assets Control">OFAC</abbr>, <abbr title="United Nations Security Council">UN</abbr>, and UK <abbr title="Office of Financial Sanctions Implementation">OFSI</abbr> sanctions lists, with multilingual fuzzy matching, non-name identifier screening, and 50%-Rule ownership networks. It is an <strong>educational analysis tool</strong> — not legal advice, and not a system of record for compliance decisions.</p>
+    <p class="lede">Sanctinel screens names, entities, vessels and identifiers against the U.S. Treasury <abbr title="Office of Foreign Assets Control">OFAC</abbr>, <abbr title="European Union">EU</abbr>, <abbr title="United Nations Security Council">UN</abbr>, and UK <abbr title="Office of Financial Sanctions Implementation">OFSI</abbr> sanctions lists, with multilingual fuzzy matching, non-name identifier screening, and 50%-Rule ownership networks. It is an <strong>educational analysis tool</strong> — not legal advice, and not a system of record for compliance decisions.</p>
 
     <section class="doc-stats" id="stats" aria-label="Coverage summary"></section>
 
     <section>
       <h2>Data source &amp; freshness</h2>
-      <p>Data comes directly from the issuing authorities — OFAC's <a href="https://sanctionslistservice.ofac.treas.gov" rel="noreferrer noopener" target="_blank">Sanctions List Service</a>, the <a href="https://www.un.org/securitycouncil/content/un-sc-consolidated-list" rel="noreferrer noopener" target="_blank">UN Security Council Consolidated List</a>, and the <a href="https://www.gov.uk/government/publications/financial-sanctions-consolidated-list-of-targets" rel="noreferrer noopener" target="_blank">UK OFSI Consolidated List</a> (all government, public domain). The full dataset is rebuilt automatically every day and versioned to OFAC's publication id. Always confirm a hit against the issuing authority's own list before acting.</p>
+      <p>Data comes directly from the issuing authorities — OFAC's <a href="https://sanctionslistservice.ofac.treas.gov" rel="noreferrer noopener" target="_blank">Sanctions List Service</a>, the <a href="https://data.europa.eu/data/datasets/consolidated-list-of-persons-groups-and-entities-subject-to-eu-financial-sanctions" rel="noreferrer noopener" target="_blank">EU Consolidated Financial Sanctions List</a>, the <a href="https://www.un.org/securitycouncil/content/un-sc-consolidated-list" rel="noreferrer noopener" target="_blank">UN Security Council Consolidated List</a>, and the <a href="https://www.gov.uk/government/publications/financial-sanctions-consolidated-list-of-targets" rel="noreferrer noopener" target="_blank">UK OFSI Consolidated List</a> (all government, public domain). The full dataset is rebuilt automatically every day and versioned to OFAC's publication id. Always confirm a hit against the issuing authority's own list before acting.</p>
       <h3>Recent OFAC publications <span class="h3-note">(snapshot version marker)</span></h3>
       <div id="pubs" class="pub-list">Loading…</div>
     </section>
@@ -86,9 +86,9 @@
       <h2>Limitations</h2>
       <ul class="doc-list">
         <li>A hit is a <strong>lead to verify</strong>, not a determination; absence of a hit is not a clearance.</li>
-        <li>Covers <strong>U.S. OFAC, UN Security Council, and UK OFSI</strong> sanctions lists — not the EU list yet, and not export-control lists (BIS Entity List, etc.). The 50% Rule ownership graph is OFAC-specific.</li>
+        <li>Covers <strong>U.S. OFAC, EU, UN Security Council, and UK OFSI</strong> financial-sanctions lists — not every national regime, and not export-control lists (BIS Entity List, EU dual-use, etc.). The 50% Rule ownership graph is OFAC-specific.</li>
         <li>The snapshot may lag an authority by up to a day. Confirm anything material against the issuing authority directly.</li>
-        <li>Regimes differ: an OFAC blocking designation, a UN asset freeze and a UK OFSI designation carry <strong>different legal obligations</strong>. Each result states which authority listed the party — do not apply OFAC doctrine to a UN or UK hit.</li>
+        <li>Regimes differ: an OFAC blocking designation, an EU or UN asset freeze and a UK OFSI designation carry <strong>different legal obligations</strong>. Each result states which authority listed the party — do not apply OFAC doctrine to an EU, UN or UK hit.</li>
         <li>Queries are processed in memory and <strong>never stored or logged</strong>.</li>
       </ul>
     </section>
@@ -97,7 +97,7 @@
   <footer class="site-footer">
     <div class="foot-brand"><strong>Sanctinel</strong><span>Sanctions screening &amp; ownership intelligence</span></div>
     <div class="foot-meta">
-      <span>Data: U.S. OFAC · UN Security Council · UK OFSI — public domain, refreshed daily.</span>
+      <span>Data: U.S. OFAC · EU · UN Security Council · UK OFSI — public domain, refreshed daily.</span>
       <span>Educational analysis tool · not legal advice · <a href="/">screening tool</a></span>
     </div>
   </footer>

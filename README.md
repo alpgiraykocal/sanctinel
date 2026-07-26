@@ -1,14 +1,14 @@
 # Sanctinel — Sanctions Screening
 
 Web app that screens a party name / entity / vessel against the U.S. Treasury
-**OFAC**, the **UN Security Council**, and the **UK OFSI** consolidated sanctions
+**OFAC**, the **EU**, the **UN Security Council**, and the **UK OFSI** consolidated sanctions
 lists. Zero external dependencies — pure Node.js.
 
 Each source is fetched directly from the issuing authority (public-domain
 government data), tagged with its authority, and merged into one daily snapshot;
 the UI lets you filter by authority and shows an authority badge + regime-specific
-guidance per hit. Additional-source parsers live in `lib/sources/`. (EU is not yet
-included — its public feed lacks a stable endpoint.)
+guidance per hit. Additional-source parsers live in `lib/sources/` (`eu.js`, `un.js`,
+`uk.js`) — each is best-effort, so one unreachable feed never sinks the snapshot.
 
 ## Free deploy (GitHub + Render)
 
@@ -58,7 +58,7 @@ Health check: `GET /healthz`. Scaling note: screening is CPU-bound and single-th
 demo; for heavy traffic run multiple instances behind the proxy (each keeps its own
 cache) or move matching to a worker pool.
 
-**Data & legal.** All list data (OFAC, UN Security Council, UK OFSI) is government
+**Data & legal.** All list data (OFAC, EU, UN Security Council, UK OFSI) is government
 public-domain; the authoritative source for each hit is the issuing authority's own
 list. This app is an **educational/analysis tool, not legal advice**, and its snapshot
 may lag an authority by up to a day — the UI says so. Regimes carry different legal
@@ -104,9 +104,11 @@ strip corporate suffixes) and matches on primary names **and every alias** (with
 type and low-quality flag). Token similarity is **multi-algorithm** — the max of:
 
 - **Jaro-Winkler** (typo/prefix),
-- **Levenshtein** edit similarity,
-- **Sørensen–Dice** bigram overlap,
-- **Soundex** phonetic key (Mohammed↔Muhammad, Smith↔Smyth),
+- **Damerau-Levenshtein** edit similarity (adjacent transpositions cost one edit),
+- **Sørensen–Dice** bigram + **trigram Jaccard** overlap,
+- **Metaphone** phonetic key (Mohammed↔Muhammad, Smith↔Smyth, Philip↔Filip),
+- **IDF term weighting** (rare surnames outweigh words like "Company"),
+- **multilingual legal-form stripping** + **Cyrillic homoglyph folding**,
 - **transliteration folding** (Kadyrov↔Kadirov, Phillip↔Filip — gated so lossy folds
   can't match unrelated tokens),
 - **initial/abbreviation** (J ↔ John).
@@ -180,7 +182,7 @@ Any hit with relationships shows a **View network** button that opens a radial e
 
 - Ships with **fictional demo data** (`sample-data/sample.json`) so the UI runs offline
   with every field type populated. The header shows an amber **DEMO** dot.
-- Live snapshots merge **OFAC + UN + UK** (~25.8k parties). A green **LIVE** dot shows
+- Live snapshots merge **OFAC + EU + UN + UK** (~31.8k parties). A green **LIVE** dot shows
   the merged source and OFAC publication id; the **Authority** filter and per-result
   badge tell you which regime listed a party.
 
