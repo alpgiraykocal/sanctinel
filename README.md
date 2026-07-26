@@ -190,6 +190,16 @@ Any hit with relationships shows a **View network** button that opens a radial e
 - **Direction + type + ownership preserved.** 50%+ ownership edges are drawn red and
   thick; the panel flags them because they drive the 50 Percent Rule. External/unlisted
   related parties appear as dashed nodes (an unlisted 50%+ owner still blocks its chain).
+- **Two views of the same ego-network.** *Radial* answers "who is connected to this
+  party" across every relationship type. *Ownership* answers the question the 50 Percent
+  Rule actually asks — **owners above, holdings below**, so a chain reads top-down. The
+  radial ring cannot show that: fifty subsidiaries of one bank land as fifty equidistant
+  dots. The hierarchy is built only from edges whose direction the server resolved
+  (`edge.role`), because OFAC's wording flips between types — *"Owned or Controlled By"*
+  makes the source the subsidiary, *"Owns, controls, or operates"* makes it the owner —
+  and a tree built on the undirected "ownership" flag would invert half the chains.
+  Support, agency, family and association links are counted and reported, not drawn: the
+  50 Percent Rule does not reach them.
 - **Explainable metrics** — degree + weighted degree (ownership weighted double), top-5
   ranked in the side panel. Deterministic layout (sorted by name), hover for detail,
   click a node to recenter.

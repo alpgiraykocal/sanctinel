@@ -146,6 +146,10 @@
           <p id="graphSubtitle" class="graph-sub"></p>
         </div>
         <div class="graph-controls">
+          <div class="view-toggle" role="group" aria-label="Diagram view">
+            <button type="button" data-view="radial" class="active" title="Radial ego-network: every relationship type, ringed by hop distance">Radial</button>
+            <button type="button" data-view="ownership" title="Ownership hierarchy: owners above, owned below — the 50% Rule chain">Ownership</button>
+          </div>
           <div class="depth-toggle" role="group" aria-label="Hop depth">
             <button type="button" data-depth="1">1 hop</button>
             <button type="button" data-depth="2" class="active">2 hops</button>
@@ -167,7 +171,9 @@
             <span><i class="dot dot-restrict"></i> Restriction list</span>
             <span><i class="dot dot-ext"></i> External / unlisted</span>
             <span><i class="edge-own"></i> 50%+ ownership</span>
+            <span class="legend-ownership-only"><i class="edge-interest"></i> Beneficial interest</span>
           </div>
+          <p id="graphViewNote" class="graph-view-note" hidden></p>
           <h3>Top by weighted degree</h3>
           <ol id="graphMetrics" class="graph-metrics"></ol>
           <p class="graph-note">Triage/display aid over listed relationships only — not a suspicious-activity or blocking determination. Ownership edges drive OFAC’s 50% Rule (UN and UK listings publish no ownership data); verify chains against the live list.</p>
