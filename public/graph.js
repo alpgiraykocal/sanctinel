@@ -928,7 +928,7 @@
   async function load(id, depth) {
     let res;
     try {
-      const r = await fetch(`/api/graph/ego-network?id=${encodeURIComponent(id)}&depth=${depth}`);
+      const r = await fetch(`api/graph/ego-network?id=${encodeURIComponent(id)}&depth=${depth}`);
       res = await r.json().catch(() => ({}));
       if (!r.ok || res.error) {
         const why = res.error || `server responded ${r.status}`;

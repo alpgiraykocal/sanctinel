@@ -50,7 +50,7 @@ function scoreClass(t) {
 let pollTimer = null;
 async function loadMeta() {
   try {
-    const m = await fetch('/api/meta').then((r) => r.json());
+    const m = await fetch('api/meta').then((r) => r.json());
     applyMeta(m);
     pollIfLoading(m);
   } catch { $('snapSource').textContent = 'Snapshot unavailable'; }
@@ -70,7 +70,7 @@ function pollIfLoading(m) {
   clearTimeout(pollTimer);
   if (!m.loading) return;
   pollTimer = setTimeout(async () => {
-    try { const mm = await fetch('/api/meta').then((r) => r.json()); applyMeta(mm); pollIfLoading(mm); }
+    try { const mm = await fetch('api/meta').then((r) => r.json()); applyMeta(mm); pollIfLoading(mm); }
     catch { pollIfLoading(m); }
   }, 5000);
 }
@@ -123,7 +123,7 @@ async function runSearch(e) {
   $('resultList').innerHTML = '<div class="skeleton"></div><div class="skeleton" style="margin-top:14px"></div>';
 
   try {
-    const res = await fetch('/api/search?' + params, { signal: controller.signal });
+    const res = await fetch('api/search?' + params, { signal: controller.signal });
     const data = await res.json().catch(() => ({}));
     // Rate limits and server errors come back as {error}. Without this the
     // render path hit `data.results.length` on undefined and the analyst saw a
@@ -316,7 +316,7 @@ async function refreshLive() {
   const btn = $('refreshBtn');
   btn.disabled = true; btn.textContent = 'Refreshing…';
   try {
-    const res = await fetch('/api/refresh', { method: 'POST' }).then((r) => r.json());
+    const res = await fetch('api/refresh', { method: 'POST' }).then((r) => r.json());
     if (!res.ok) { alert('Live refresh unavailable: ' + res.error); applyMeta(res.meta); return; }
     applyMeta(res.meta); pollIfLoading(res.meta);
   } catch (e) { alert('Live refresh error: ' + e.message); }
