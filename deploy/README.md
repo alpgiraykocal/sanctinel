@@ -1,104 +1,144 @@
-# Serving Sanctinel at `yourdomain.com/sanctinel`
+# Putting Sanctinel on your own domain
 
-## Why this needs more than a DNS record
+Two ways, depending on the URL you want:
 
-A DNS record points a **hostname** at a server. It carries no path, so there is
-no CNAME or A record that can put an app at `/sanctinel` — DNS never sees that
-part of the URL. Something has to sit in front of the request and rewrite it.
-On Cloudflare that something is a **Worker**.
+| Goal | How | Effort |
+|---|---|---|
+| `sanctinel.yourdomain.com` | CNAME + Render custom domain | ~10 min, no code |
+| `yourdomain.com/sanctinel` | Cloudflare Worker reverse proxy | more moving parts |
 
-Two things are therefore required:
-
-1. **The app must not assume it lives at `/`.** Every same-origin reference in
-   `public/` is relative (`styles.css`, `api/search`, `./`), so the pages work
-   at the domain root *and* under any prefix. This is already done.
-2. **A Worker strips the prefix** before forwarding to Render, so the origin
-   still sees the paths it was written for.
-
-If you would accept `sanctinel.yourdomain.com` instead, skip all of this: add a
-CNAME to `sanctinel.onrender.com`, add the custom domain in Render, done. The
-path version is the one that needs a Worker.
+A **subdomain** is a hostname, and hostnames are exactly what DNS resolves — so
+a single CNAME does it. A **path** is not visible to DNS at all, so it needs
+something in front to rewrite the request. Start with the subdomain unless you
+specifically need the path; the path recipe is in [the appendix](#appendix-serving-under-a-path).
 
 ---
 
-## Step 1 — make sure the apex resolves through Cloudflare
+# Subdomain: `sanctinel.yourdomain.com`
 
-Cloudflare only runs a Worker on a hostname it proxies.
+You will touch two dashboards. Do them in this order — Render needs to see the
+DNS record before it can issue a certificate.
 
-1. Cloudflare dashboard → your domain → **DNS → Records**.
-2. If `alpgiraykocal.com` already has an A/AAAA/CNAME record, make sure its
-   proxy status is **Proxied** (orange cloud), not "DNS only".
-3. If the apex has no record at all, add a placeholder so the name resolves:
-   - Type `AAAA`, Name `@`, IPv6 address `100::`, Proxy status **Proxied**.
-   - `100::` is the IPv6 discard prefix. Nothing is hosted there; the Worker
-     answers before the origin is ever contacted.
+## Step 1 — tell Render the domain exists
 
-## Step 2 — create the Worker
+1. Go to [dashboard.render.com](https://dashboard.render.com) → click your
+   **sanctinel** web service.
+2. Left sidebar → **Settings**.
+3. Scroll to **Custom Domains** → **Add Custom Domain**.
+4. Type `sanctinel.yourdomain.com` → **Save**.
+5. Render now shows the domain as **unverified** along with the DNS record it
+   expects — a **CNAME** pointing at your service's `onrender.com` hostname.
+   **Copy that value exactly as Render displays it.** Do not assume it; use
+   what is on screen.
 
-1. Cloudflare dashboard → **Workers & Pages → Create → Create Worker**.
-2. Name it e.g. `sanctinel-proxy` → **Deploy** (it deploys the placeholder).
-3. **Edit code**, delete what is there, paste the contents of
-   [`cloudflare-worker.js`](./cloudflare-worker.js), then **Deploy**.
-4. If your Render URL or desired path differ, change the two constants at the
-   top of that file:
-   ```js
-   const ORIGIN = 'sanctinel.onrender.com';
-   const PREFIX = '/sanctinel';
-   ```
+Leave this tab open — you come back to it in step 3.
 
-## Step 3 — route the path to the Worker
+## Step 2 — add the DNS record in Cloudflare
 
-1. Still in the Worker → **Settings → Domains & Routes → Add → Route**.
-2. Zone: `alpgiraykocal.com`
-3. Route: `alpgiraykocal.com/sanctinel*`
-   - The trailing `*` matters: it must cover `/sanctinel/app.js`,
-     `/sanctinel/api/search`, and everything else under the prefix.
-   - Add `www.alpgiraykocal.com/sanctinel*` as a second route if you serve
-     `www` as well.
-4. Save.
+1. Go to [dash.cloudflare.com](https://dash.cloudflare.com) → click
+   **yourdomain.com**.
+2. Left sidebar → **DNS** → **Records** → **Add record**.
+3. Fill it in:
+   - **Type**: `CNAME`
+   - **Name**: `sanctinel` — just the label, not the full domain. Cloudflare
+     appends the rest, so this becomes `sanctinel.yourdomain.com`.
+   - **Target**: the value Render gave you in step 1
+     (e.g. `sanctinel.onrender.com`)
+   - **Proxy status**: click the cloud so it is **grey — "DNS only"**
+   - **TTL**: Auto
+4. **Save**.
 
-## Step 4 — check SSL mode
+> **The grey cloud matters.** Render issues its own free TLS certificate, and to
+> do that it must reach your domain directly. With Cloudflare's orange-cloud
+> proxy on, Render cannot complete the certificate challenge and the domain
+> stays unverified. Keep it grey at least until the certificate is issued —
+> see [Optional](#optional-turn-cloudflares-proxy-on-later) below if you want
+> the proxy afterwards.
 
-**SSL/TLS → Overview** must be **Full** or **Full (strict)**. On *Flexible*,
-Cloudflare talks to Render over plain HTTP; Render redirects to HTTPS, and the
-result is a redirect loop.
+## Step 3 — verify in Render
 
-## Step 5 — verify
+1. Back in the Render tab → **Custom Domains** → click **Verify** next to the
+   domain.
+2. It may say the DNS is not visible yet. That is normal; give it a few minutes
+   and click again. DNS changes take time to propagate.
+3. Once verified, Render issues the TLS certificate automatically. The domain
+   shows a green **Certificate Issued** state. This usually lands within a few
+   minutes of verification.
+
+## Step 4 — check it
+
+From a terminal:
 
 ```bash
-curl -sI https://alpgiraykocal.com/sanctinel | grep -i location   # → /sanctinel/
-curl -s -o /dev/null -w '%{http_code}\n' https://alpgiraykocal.com/sanctinel/
-curl -s 'https://alpgiraykocal.com/sanctinel/api/search?q=Sberbank' | head -c 120
+dig +short sanctinel.yourdomain.com
 ```
+Expect to see your `onrender.com` hostname (and the IPs behind it).
 
-Then open `https://alpgiraykocal.com/sanctinel/` and confirm the page is styled
-(CSS loaded), the status pill says **Live**, a search returns hits, and
-**Insights** and **View network** both work.
+```bash
+curl -sI https://sanctinel.yourdomain.com | head -1
+curl -s https://sanctinel.yourdomain.com/healthz
+```
+Expect `HTTP/2 200` and `{"status":"ok",...}`.
+
+Then open `https://sanctinel.yourdomain.com` in a browser and confirm:
+- the padlock is there and there is no certificate warning
+- the page is **styled** (CSS loaded)
+- the status pill reads **Live**
+- a search returns hits, **Insights** loads, **View network** opens
+
+## If something is wrong
+
+| Symptom | Cause | Fix |
+|---|---|---|
+| Render will not verify | proxy is on | set the record to **DNS only** (grey cloud) |
+| `ERR_TOO_MANY_REDIRECTS` | Cloudflare SSL mode is *Flexible* | **SSL/TLS → Overview → Full (strict)** |
+| Certificate warning | cert not issued yet | wait; re-check Render's Custom Domains panel |
+| `dig` returns nothing | record not saved, or wrong name | Name must be just `sanctinel`, not the full domain |
+| 30–60s first load | Render free instance was asleep | expected on the free plan; a paid instance does not sleep |
+
+## Optional: turn Cloudflare's proxy on later
+
+Once Render shows the certificate as issued, you *may* switch the record to
+**Proxied** (orange cloud) to get Cloudflare's CDN and DDoS protection. If you
+do, set **SSL/TLS → Overview** to **Full (strict)** first — on *Flexible*,
+Cloudflare talks to Render over plain HTTP, Render redirects to HTTPS, and you
+get a redirect loop.
+
+Nothing in the app needs changing either way: `server.js` reads the client IP
+from `X-Forwarded-For` for its per-IP rate limiting, which both Render and
+Cloudflare set correctly.
 
 ---
 
-## Notes
+# Appendix: serving under a path
 
-- **Rate limiting still works.** The Worker forwards the visitor's IP as
-  `X-Forwarded-For`, which is what `server.js` keys its per-IP limits on. Without
-  it every request would look like one client and legitimate users would be
-  throttled together.
-- **The trailing slash is load-bearing.** `/sanctinel` without it makes the
-  browser resolve `styles.css` against `/`, not `/sanctinel/`. The Worker 301s
-  to add it.
-- **`robots.txt` is not proxied.** Crawlers only read it at the domain root, so
-  add the disallow line to your apex `robots.txt` if you serve one:
-  ```
-  Disallow: /sanctinel/api/
-  ```
-- **Free plan limits.** Workers allow 100,000 requests/day, which this app will
-  not approach. Render's free instance still sleeps after inactivity, so the
-  first request after a quiet period takes 30–60s regardless of Cloudflare.
-- **Testing locally.** `deploy/pathproxy.js` in this directory mimics the Worker
-  against a local server, so the prefixed build can be checked before any DNS
-  change:
-  ```bash
-  node server.js &          # origin on :3000
-  node deploy/pathproxy.js  # prefixed on :3200
-  open http://127.0.0.1:3200/sanctinel/
-  ```
+`yourdomain.com/sanctinel` cannot be done with DNS. A record points a *hostname*
+at a server and never sees the path, so a proxy has to sit in front and rewrite
+the request. On Cloudflare that is a Worker.
+
+The app itself is already path-agnostic — every same-origin reference in
+`public/` is relative (`styles.css`, `api/search`, `./`), so the pages work at a
+domain root and under any prefix.
+
+1. **DNS**: the apex must resolve through Cloudflare — an existing **Proxied**
+   record, or a placeholder `AAAA @ 100::` set to **Proxied**.
+2. **Worker**: Workers & Pages → Create Worker → paste
+   [`cloudflare-worker.js`](./cloudflare-worker.js) → Deploy. Adjust the two
+   constants at the top if your origin or prefix differ.
+3. **Route**: Worker → Settings → Domains & Routes → Add Route →
+   `yourdomain.com/sanctinel*`. The trailing `*` is required so it covers
+   `/sanctinel/app.js`, `/sanctinel/api/search` and the rest.
+4. **SSL/TLS → Overview**: **Full** or **Full (strict)**.
+
+The Worker handles two things that are easy to miss: it redirects `/sanctinel`
+to `/sanctinel/` (without the trailing slash the browser resolves relative URLs
+one level too high) and forwards `CF-Connecting-IP` as `X-Forwarded-For` so
+per-IP rate limiting still sees individual visitors rather than one.
+
+Test it locally before touching DNS:
+
+```bash
+node server.js &          # origin on :3000
+node deploy/pathproxy.js  # prefixed on :3200
+open http://127.0.0.1:3200/sanctinel/
+```

@@ -16,8 +16,12 @@ Included `render.yaml` deploys this as a free Render web service (no card requir
 
 1. Push this repo to GitHub.
 2. On [render.com](https://render.com): **New + → Blueprint** → select the repo → Apply.
-3. Done — Render gives you `https://sanctinel.onrender.com` (TLS included). Add your own
-   domain under *Settings → Custom Domains* (CNAME).
+3. Done — Render gives you `https://sanctinel.onrender.com` (TLS included).
+
+To put it on your own domain, [`deploy/README.md`](deploy/README.md) walks through both
+shapes step by step: a **subdomain** (`sanctinel.yourdomain.com` — one CNAME, no code)
+and a **path** (`yourdomain.com/sanctinel` — needs a reverse proxy, since DNS cannot
+route a path; a ready Cloudflare Worker is in `deploy/`).
 
 Free-tier behavior: the service sleeps after 15 min idle and wakes in ~30s on the next
 visit; the disk is ephemeral, so on wake it boots with sample data and pulls the live
