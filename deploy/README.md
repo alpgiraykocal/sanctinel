@@ -22,10 +22,14 @@ DNS record before it can issue a certificate.
 ## Step 1 — tell Render the domain exists
 
 1. Go to [dashboard.render.com](https://dashboard.render.com) → click your
-   **sanctinel** web service.
-2. Left sidebar → **Settings**.
-3. Scroll to **Custom Domains** → **Add Custom Domain**.
-4. Type `sanctinel.yourdomain.com` → **Save**.
+   **sanctinel** web service. The address bar now reads
+   `https://dashboard.render.com/web/srv-…`.
+2. Open the service's **Settings** page — the tab along the top of the service,
+   not the account settings in the top-right avatar menu. If you cannot find it,
+   append `/settings` to that URL directly.
+3. Scroll to the **Custom Domains** section. It sits well down a long page; use
+   ⌘F / Ctrl+F for "Custom Domains" rather than hunting for it.
+4. Click **+ Add Custom Domain**, type `sanctinel.yourdomain.com` → **Save**.
 5. Render now shows the domain as **unverified** along with the DNS record it
    expects — a **CNAME** pointing at your service's `onrender.com` hostname.
    **Copy that value exactly as Render displays it.** Do not assume it; use
@@ -91,7 +95,8 @@ Then open `https://sanctinel.yourdomain.com` in a browser and confirm:
 | Symptom | Cause | Fix |
 |---|---|---|
 | Render will not verify | proxy is on | set the record to **DNS only** (grey cloud) |
-| `ERR_TOO_MANY_REDIRECTS` | Cloudflare SSL mode is *Flexible* | **SSL/TLS → Overview → Full (strict)** |
+| `ERR_TOO_MANY_REDIRECTS` | Cloudflare SSL mode is *Flexible* | **SSL/TLS → Overview → Full** |
+| No **Custom Domains** section | on the account settings page, or on Overview | it is on the *service's* Settings page — `dashboard.render.com/web/srv-…/settings` |
 | Certificate warning | cert not issued yet | wait; re-check Render's Custom Domains panel |
 | `dig` returns nothing | record not saved, or wrong name | Name must be just `sanctinel`, not the full domain |
 | 30–60s first load | Render free instance was asleep | expected on the free plan; a paid instance does not sleep |
@@ -100,7 +105,8 @@ Then open `https://sanctinel.yourdomain.com` in a browser and confirm:
 
 Once Render shows the certificate as issued, you *may* switch the record to
 **Proxied** (orange cloud) to get Cloudflare's CDN and DDoS protection. If you
-do, set **SSL/TLS → Overview** to **Full (strict)** first — on *Flexible*,
+do, set **SSL/TLS → Overview** to **Full** first (Render's own guide specifies
+Full; Full (strict) also works once its certificate is issued) — on *Flexible*,
 Cloudflare talks to Render over plain HTTP, Render redirects to HTTPS, and you
 get a redirect loop.
 
