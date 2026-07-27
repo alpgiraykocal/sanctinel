@@ -83,7 +83,7 @@ function renderRecentRow(r) {
         ${measures}${progs}
       </div>
     </div>
-    <a class="recent-screen btn-ghost" href="/?q=${encodeURIComponent(r.name)}" title="Screen this party">Screen →</a>
+    <a class="recent-screen btn-ghost" href="./?q=${encodeURIComponent(r.name)}" title="Screen this party">Screen →</a>
   </article>`;
 }
 
@@ -164,7 +164,7 @@ $('moreBtn').addEventListener('click', () => renderRecent(false));
 
 (async () => {
   try {
-    const s = await fetch('/api/stats').then((r) => { if (!r.ok) throw new Error(r.status); return r.json(); });
+    const s = await fetch('api/stats').then((r) => { if (!r.ok) throw new Error(r.status); return r.json(); });
     render(s);
     // A background refresh swaps the snapshot; re-pull once it finishes so the
     // page does not sit on numbers from the previous publication.

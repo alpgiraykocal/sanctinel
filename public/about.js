@@ -5,7 +5,7 @@ const fmtDate = (iso) => { const t = Date.parse(iso); return t ? new Date(t).toL
 
 (async () => {
   let m;
-  try { m = await fetch('/api/meta').then((r) => r.json()); }
+  try { m = await fetch('api/meta').then((r) => r.json()); }
   catch { document.getElementById('pubs').textContent = 'Coverage data unavailable.'; return; }
 
   const stat = (n, l) => `<div class="stat"><span class="stat-num">${n}</span><span class="stat-lbl">${l}</span></div>`;
