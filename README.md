@@ -320,6 +320,41 @@ chain reaches a blocked person.
   Absence of a chain is likewise not a clearance — OFAC lists only designated parties, so
   an unlisted intermediate owner never appears.
 
+## Ranking, near-misses and ownership groups
+
+**Ties are disclosed, not faked.** A single-token query is capped at exactly 0.96 by the
+scorer, so `Putin` returns 16 hits of which 15 share that one score — every one a
+three-token name matching on one token. Only one tiebreak is real evidence (a hit on the
+party's own primary name beats a hit on an alias); beyond that the remaining differences
+are 21 characters versus 29 and a patronymic spelled -itj rather than -ich, which are not
+relevance. Sorting on them would manufacture a ranking the reader believes, so the order
+falls back to id — stable and reproducible — and the UI says outright that the leaders are
+indistinguishable and points at the date of birth, nationality and corroborating-identifier
+inputs that do separate them.
+
+**A zero result now shows its evidence.** `Gasprom` — one character off one of the most
+sanctioned names in the world — returned nothing, while the server already knew 5 parties
+scored ≥0.88 and 80 ≥0.80. That screen is the one users most readily read as "clean", so
+the below-the-line scan now runs *automatically* when a search returns no hits, and reports
+three things from the single pass:
+
+- **near-misses** — everything scoring between 0.80 and the active threshold;
+- **prefix matches** — a literal "starts with" test, because the matcher has no prefix
+  channel and `Gazpr` therefore scores nothing against GAZPROM. Deliberately outside the
+  score, so it cannot disturb the threshold or the candidate index's recall invariant;
+- **identifier context** — if the query reads as an IMO, MMSI or wallet address, how many
+  parties in the snapshot carry that identifier at all. An IMO search returning nothing
+  means something very different when 41 of 31,954 parties have an IMO, and the user
+  cannot tell without being told.
+
+**Results group by ownership structure.** `Gazprom` returns 67 hits; the count alone will
+not say whether that is 67 companies or one group. Connected components over ownership
+edges (`lib/ownership.clusters`, ~70ms over the snapshot) collapse them to 6 — 42 under
+PJSC Gazprom. Components are undirected on purpose: direction answers "who owns whom",
+but the question here is only "same structure", and siblings sharing a parent belong
+together. Each heading also says how many group members the query did *not* match, which
+is the 50 Percent Rule question in another form.
+
 ## What changed (snapshot delta)
 
 `cache/changes.json`, `GET /api/changes`, page at `/changes.html`.

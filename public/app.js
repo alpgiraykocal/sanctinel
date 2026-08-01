@@ -177,13 +177,60 @@ function renderActiveFilters() {
 // Sorting is applied client-side over the slice the server returned, so it
 // reorders what is on screen — it does not reach past the truncation point.
 // The summary says how many were withheld, so that stays honest.
+// Ownership groups first (largest first), unaffiliated parties last; within a
+// group, the usual ranking.
+function clusterKey(r) { return (r.cluster && r.cluster.id) || ''; }
+
 function sortResults(rows) {
   const mode = $('sortBy').value;
   const copy = rows.slice();
   if (mode === 'name') copy.sort((a, b) => a.name.localeCompare(b.name));
   else if (mode === 'date') copy.sort((a, b) => (Date.parse(b.datePublished) || 0) - (Date.parse(a.datePublished) || 0));
-  else copy.sort((a, b) => b.score - a.score);
+  else if (mode === 'cluster') {
+    const seen = new Map();
+    for (const r of copy) { const k = clusterKey(r); seen.set(k, (seen.get(k) || 0) + 1); }
+    copy.sort((a, b) => {
+      const ka = clusterKey(a), kb = clusterKey(b);
+      if (!ka !== !kb) return ka ? -1 : 1;              // unaffiliated last
+      if (ka !== kb) return (seen.get(kb) - seen.get(ka)) || ka.localeCompare(kb);
+      return rankResults(a, b);
+    });
+  }
+  // Same comparator the server ranks with. Sorting on score alone here would
+  // undo the tiebreak and put the arbitrary order back: a single-token query
+  // caps every hit at 0.96, so ties are the normal case, not the edge case.
+  else copy.sort(rankResults);
   return copy;
+}
+
+/*
+ * Say when the leading hits are tied.
+ *
+ * The scorer caps a single-token query against a multi-token name at exactly
+ * 0.96, so "Putin" produces 15 hits on one score — all three-token names
+ * matching on one token, genuinely indistinguishable on the name alone. A
+ * reader takes row one for the best answer regardless, so the ordering has to
+ * disclaim itself and point at what does separate these parties: the
+ * corroborating identifiers, and the DOB/nationality already on each card.
+ */
+function tieNote(data) {
+  const n = data.topScoreTies || 0;
+  if (n < 3) return '';
+  return `<span class="tie-note">
+    <strong>${n} hits share the top score of ${Number(data.topScore).toFixed(2)}.</strong>
+    The name alone cannot separate them and their order here is not a ranking —
+    compare the date of birth, nationality and country on each card, or add a
+    year of birth / country above to score the corroborating identifiers.
+  </span>`;
+}
+
+// Mirror of server.js rankResults — primary name over alias, then id. Anything
+// finer would invent a ranking the data does not support.
+function rankResults(a, b) {
+  if (b.score !== a.score) return b.score - a.score;
+  const primary = (r) => (r.matchedField === "primary name" ? 0 : 1);
+  if (primary(a) !== primary(b)) return primary(a) - primary(b);
+  return String(a.id).localeCompare(String(b.id));
 }
 
 function render(data) {
@@ -207,12 +254,22 @@ function render(data) {
   summary.hidden = !total;
   summary.innerHTML = total
     ? `<strong>${total.toLocaleString()}</strong> potential match${total === 1 ? '' : 'es'} for <strong>“${esc(data.query)}”</strong> <span class="summary-sub">· screened against ${(data.snapshot.count || 0).toLocaleString()} listed parties at threshold ${data.threshold}</span>${
-        truncated ? `<span class="truncation-note">Showing the ${shown.toLocaleString()} highest-scoring — narrow the query or raise the threshold to see the rest.</span>` : ''}`
+        truncated ? `<span class="truncation-note">Showing the ${shown.toLocaleString()} highest-scoring — narrow the query or raise the threshold to see the rest.</span>` : ''}${
+        tieNote(data)}`
     : '';
 
   if (!total) {
     const scope = $('authority').value ? `the ${esc($('authority').value)} list` : 'the sanctions and export-control lists';
-    list.innerHTML = `<div class="no-hits clear"><strong>No match</strong> for “${esc(data.query)}” in ${scope} at threshold ${data.threshold}.<br>Absence of a hit is not a clearance — these lists do not cover every regime (other national and dual-use lists are not included), so confirm the snapshot is current and consider lowering the threshold for a below-the-line check.</div>`;
+    list.innerHTML = `<div class="no-hits clear"><strong>No match</strong> for “${esc(data.query)}” in ${scope} at threshold ${data.threshold}.<br>Absence of a hit is not a clearance — these lists do not cover every regime (other national and dual-use lists are not included), so confirm the snapshot is current before relying on this.</div>`;
+    /*
+     * A zero-result screen is the one a user is most likely to read as "clean",
+     * and it was the one offering the least. The server can already say whether
+     * anything scored just under the line, whether any party's name starts with
+     * what was typed, and whether the query looks like an identifier the
+     * snapshot barely carries — so run that automatically here instead of
+     * waiting for someone to think of pressing the button.
+     */
+    runBelowTheLine({ auto: true });
     return;
   }
 
@@ -220,7 +277,7 @@ function render(data) {
   // must be the one that was rendered — sort first, then keep that order.
   const rows = sortResults(data.results);
   lastResults = rows;
-  list.innerHTML = rows.map((r, i) => card(r, i)).join('');
+  list.innerHTML = $('sortBy').value === 'cluster' ? groupedHtml(rows) : rows.map((r, i) => card(r, i)).join('');
   list.querySelectorAll('.rc-toggle').forEach((btn) => btn.addEventListener('click', () => {
     const d = btn.closest('.result-card').querySelector('.rc-detail');
     const open = d.hasAttribute('hidden');
@@ -252,6 +309,44 @@ function render(data) {
   list.querySelectorAll('.rc-print').forEach((btn) => btn.addEventListener('click', () => printMemo(lastResults[Number(btn.dataset.i)])));
 }
 
+
+/*
+ * Results under ownership-group headings.
+ *
+ * The heading says how many of THESE HITS fall in the group and how large the
+ * group is in the whole snapshot — because "12 of your hits, out of a 44-party
+ * structure" tells the analyst there are 32 more members they have not seen,
+ * which is the 50 Percent Rule question wearing a different hat.
+ *
+ * Card indices must stay aligned with lastResults, so cards are numbered from
+ * the flat sorted array rather than restarting per group.
+ */
+function groupedHtml(rows) {
+  const groups = [];
+  let cur = null;
+  rows.forEach((r, i) => {
+    const key = clusterKey(r);
+    if (!cur || cur.key !== key) { cur = { key, cluster: r.cluster, items: [] }; groups.push(cur); }
+    cur.items.push({ r, i });
+  });
+
+  return groups.map((g) => {
+    const head = g.cluster
+      ? `<div class="grp-head">
+           <h3 class="grp-name">${esc(g.cluster.label || 'Ownership group')}</h3>
+           <p class="grp-meta">
+             ${g.items.length} of your hits ${g.items.length === 1 ? 'is' : 'are'} in this structure ·
+             ${g.cluster.size.toLocaleString()} listed ${g.cluster.size === 1 ? 'party' : 'parties'} in it overall${
+               g.cluster.size > g.items.length ? ` · ${(g.cluster.size - g.items.length).toLocaleString()} more not matched by this query` : ''}
+           </p>
+         </div>`
+      : `<div class="grp-head grp-head-none">
+           <h3 class="grp-name">No ownership link in the list data</h3>
+           <p class="grp-meta">${g.items.length} ${g.items.length === 1 ? 'party' : 'parties'} with no ownership relationship published — which is not evidence they have none.</p>
+         </div>`;
+    return `<section class="grp">${head}${g.items.map(({ r, i }) => card(r, i)).join('')}</section>`;
+  }).join('');
+}
 
 function card(r, i) {
   const hint = determinationHint(r);
@@ -476,7 +571,8 @@ $('exportAllBtn').addEventListener('click', () => {
  * Opt-in because it costs a full scan of the list. The default search keeps
  * using the recall-safe index.
  */
-async function runBelowTheLine() {
+async function runBelowTheLine(opts) {
+  const auto = !!(opts && opts.auto);
   const q = $('q').value.trim();
   if (!q) return;
   const btn = $('btlBtn');
@@ -485,7 +581,9 @@ async function runBelowTheLine() {
   const label = btn.textContent;
   btn.textContent = 'Scoring…';
   panel.hidden = false;
-  panel.innerHTML = '<div class="skeleton"></div>';
+  // A full scan takes a second or two locally and noticeably longer on a small
+  // instance. Say what is happening rather than showing a bare skeleton.
+  panel.innerHTML = `<p class="btl-loading">Scoring every listed party down to 0.80 — looking for near-misses, names starting with “${esc(q)}”, and identifier coverage…</p><div class="skeleton"></div>`;
 
   const params = new URLSearchParams({
     q, authority: $('authority').value, list: $('list').value, program: $('program').value,
@@ -498,7 +596,7 @@ async function runBelowTheLine() {
       panel.innerHTML = `<div class="no-hits"><strong>Below-the-line check unavailable:</strong> ${esc(d.error || 'server responded ' + res.status)}.</div>`;
       return;
     }
-    renderBelowTheLine(d);
+    renderBelowTheLine(d, auto);
   } catch (e) {
     panel.innerHTML = `<div class="no-hits">Below-the-line check failed: ${esc(e.message)}</div>`;
   } finally {
@@ -507,7 +605,15 @@ async function runBelowTheLine() {
   }
 }
 
-function renderBelowTheLine(d) {
+/*
+ * Everything the full scan learned, in three sections.
+ *
+ * `auto` means this ran because the search returned nothing, so the panel leads
+ * with what a zero result does and does not mean rather than with threshold
+ * mechanics. The sections themselves are identical either way — the evidence
+ * does not change depending on why it was asked for.
+ */
+function renderBelowTheLine(d, auto) {
   const max = Math.max(1, ...d.steps.map((s) => s.count));
   const atActive = (d.steps.find((s) => s.threshold === d.active) || {}).count || 0;
 
@@ -519,37 +625,81 @@ function renderBelowTheLine(d) {
               <span class="sr-only">Threshold ${s.threshold.toFixed(2)}: ${s.count} hits</span></div>`;
   }).join('');
 
-  const rows = d.marginal.map((m) => `
+  const marginalRows = d.marginal.map((m) => `
     <li class="btl-row">
       <span class="btl-score">${m.score.toFixed(3)}</span>
       <span class="btl-name"><a href="${permalink(m.id)}">${esc(m.name)}</a></span>
       <span class="btl-meta">${esc(m.authority || 'OFAC')} · ${esc(listsOf(m)[0] || '')} · ${esc(m.matchType.replace('_', ' '))}${m.explain ? ` · ${esc(m.explain)}` : ''}</span>
     </li>`).join('');
 
+  const prefixRows = (d.prefix || []).map((p) => `
+    <li class="btl-row btl-row-prefix">
+      <span class="btl-score">·</span>
+      <span class="btl-name"><a href="${permalink(p.id)}">${esc(p.matchedName || p.name)}</a></span>
+      <span class="btl-meta">${esc(p.authority || 'OFAC')} · ${esc(listsOf(p)[0] || '')}${p.matchedName && p.matchedName !== p.name ? ` · listed as ${esc(p.name)}` : ''}</span>
+    </li>`).join('');
+
+  /*
+   * Identifier context. A number that looks like an IMO returning nothing means
+   * one of two very different things — the vessel is not listed, or the
+   * snapshot barely carries IMOs — and the user cannot tell which without this.
+   */
+  // "a IMO" / "an MMSI" — the article follows how the abbreviation is READ, not
+  // how it is spelled, so go by the initial sound.
+  const article = (w) => (/^[AEFHILMNORSX]/i.test(w) ? 'an' : 'a');
+  const idBlock = d.identifier ? `
+    <h4 class="btl-h4 btl-h4-info">Read as ${esc(d.identifier.shape)}</h4>
+    <p class="btl-note">
+      This query was screened as ${article(d.identifier.shape)} <strong>${esc(d.identifier.shape)}</strong> against every structured identifier.
+      <strong>${d.identifier.carriers.toLocaleString()}</strong> of ${d.identifier.total.toLocaleString()} parties in this snapshot
+      carry ${article(d.identifier.shape)} ${esc(d.identifier.shape)}${
+        d.identifier.carriers === 0 ? ' — so this search could not have matched one' : ''}.
+      A miss here is not evidence the party is unlisted; it may simply be an identifier the authority did not publish.
+    </p>
+    <details class="btl-details">
+      <summary>Identifier coverage in this snapshot</summary>
+      <ul class="btl-idlist">
+        ${d.identifier.types.map((t) => `<li><span>${esc(t.type)}</span><span>${t.count.toLocaleString()}</span></li>`).join('')}
+      </ul>
+    </details>` : '';
+
+  const lede = auto
+    ? `<p class="btl-lede">
+         Nothing cleared ${d.active.toFixed(2)}, so every party was scored down to ${d.floor.toFixed(2)} to show what is
+         <em>near</em> the query. <strong>${d.marginalCount}</strong> score between ${d.floor.toFixed(2)} and ${d.active.toFixed(2)}${
+           d.prefixCount ? `, and <strong>${d.prefixCount}</strong> ${d.prefixCount === 1 ? 'name starts' : 'names start'} with “${esc(d.query)}”` : ''}.
+         Read these before concluding anything — a typo or a shortened name lands here, not in the results above.
+       </p>`
+    : `<p class="btl-lede">
+         Every party scored down to ${d.floor.toFixed(2)}. At your threshold of <strong>${d.active.toFixed(2)}</strong>
+         the search returns <strong>${atActive}</strong>; <strong>${d.marginalCount}</strong> more score between
+         ${d.floor.toFixed(2)} and ${d.active.toFixed(2)} and are <strong>not shown</strong> in your results.
+       </p>`;
+
   $('btlPanel').innerHTML = `
     <div class="btl-head">
-      <h3>Below-the-line check <span class="btl-sub">for “${esc(d.query)}”</span></h3>
-      <button class="btl-close" type="button" id="btlClose" aria-label="Close below-the-line panel">×</button>
+      <h3>${auto ? 'Nothing matched — what was close' : 'Below-the-line check'} <span class="btl-sub">for “${esc(d.query)}”</span></h3>
+      <button class="btl-close" type="button" id="btlClose" aria-label="Close this panel">×</button>
     </div>
-    <p class="btl-lede">
-      Every party scored down to ${d.floor.toFixed(2)}. At your threshold of
-      <strong>${d.active.toFixed(2)}</strong> the search returns <strong>${atActive}</strong>;
-      <strong>${d.marginalCount}</strong> more score between ${d.floor.toFixed(2)} and ${d.active.toFixed(2)}
-      and are <strong>not shown</strong> in your results.
-    </p>
+    ${lede}
+    ${idBlock}
     <div class="btl-chart" role="img" aria-label="Hit count by threshold from ${d.floor.toFixed(2)} to 1.00">
       ${bars}
     </div>
     <div class="btl-axis"><span>${d.floor.toFixed(2)}</span><span>lenient ← threshold → strict</span><span>1.00</span></div>
     ${d.marginalCount ? `
-      <h4 class="btl-h4">Excluded at ${d.active.toFixed(2)}${d.truncated ? ` — highest ${d.marginal.length} of ${d.marginalCount}` : ''}</h4>
-      <ol class="btl-list">${rows}</ol>
-      <p class="btl-note">
-        Read these before moving the line. If they are namesakes, the threshold is doing its job;
-        if any is a plausible counterparty, the threshold is producing false negatives.
-        Document whichever conclusion you reach — that record is the point of the exercise.
-      </p>`
-      : `<p class="btl-note">Nothing scores between ${d.floor.toFixed(2)} and ${d.active.toFixed(2)} for this query — lowering the threshold would add no hits.</p>`}`;
+      <h4 class="btl-h4">Scoring below ${d.active.toFixed(2)}${d.truncated ? ` — highest ${d.marginal.length} of ${d.marginalCount}` : ''}</h4>
+      <ol class="btl-list">${marginalRows}</ol>`
+      : `<p class="btl-note">Nothing scores between ${d.floor.toFixed(2)} and ${d.active.toFixed(2)} for this query.</p>`}
+    ${d.prefixCount ? `
+      <h4 class="btl-h4 btl-h4-prefix">Names starting with “${esc(d.query)}”${d.prefixTruncated ? ` — first ${d.prefix.length} of ${d.prefixCount}` : ''}</h4>
+      <p class="btl-note">A literal prefix match, not a score. The matcher has no prefix channel, so a half-typed name never reaches the results above.</p>
+      <ol class="btl-list">${prefixRows}</ol>` : ''}
+    <p class="btl-note">
+      Read these before moving the line. If they are namesakes, the threshold is doing its job;
+      if any is a plausible counterparty, the threshold is producing false negatives.
+      Document whichever conclusion you reach — that record is the point of the exercise.
+    </p>`;
 
   $('btlClose').addEventListener('click', () => { $('btlPanel').hidden = true; });
 }

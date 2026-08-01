@@ -439,6 +439,33 @@ a.btn-ghost { text-decoration: none; display: inline-block; }
 /* A removed party has no record page — say so instead of offering a dead link. */
 .chg-gone { font-size: .68rem; color: var(--color-muted-fg); font-style: italic; }
 
+/* Ownership-group headings. Sticky so the group you are reading stays named
+   while you scroll a long structure. */
+.grp { margin-bottom: 20px; }
+.grp-head {
+  position: sticky; top: 62px; z-index: 2;
+  margin-bottom: 10px; padding: 9px 14px;
+  border-radius: var(--radius-sm);
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  border-left: 3px solid var(--color-accent);
+  backdrop-filter: blur(6px);
+}
+.grp-head-none { border-left-color: var(--color-muted); }
+.grp-name { font-size: .88rem; font-weight: 600; margin: 0; overflow-wrap: anywhere; }
+.grp-meta { font-size: .72rem; color: var(--color-muted-fg); margin: 3px 0 0; }
+@media (max-width: 640px) { .grp-head { position: static; } }
+
+/* Tied top scores — the ordering disclaiming itself. */
+.tie-note {
+  display: block; margin-top: 8px; padding: 8px 11px;
+  border-radius: var(--radius-sm); font-size: .76rem; line-height: 1.5;
+  background: var(--color-warn-bg); border: 1px solid rgba(217, 119, 6, .3);
+  color: var(--color-body); font-weight: 400;
+}
+.tie-note strong { color: var(--color-warn-fg); }
+:root[data-theme="dark"] .tie-note { border-color: rgba(251, 191, 36, .3); }
+
 /* Below-the-line testing panel. */
 .btl-btn { width: 100%; justify-content: center; margin-top: 4px; }
 .btl-panel {
@@ -491,6 +518,28 @@ a.btn-ghost { text-decoration: none; display: inline-block; }
 .btl-name a:hover { text-decoration: underline; }
 .btl-meta { grid-column: 2; font-size: .72rem; color: var(--color-muted-fg); overflow-wrap: anywhere; }
 .btl-note { font-size: .76rem; color: var(--color-body); margin: 12px 0 0; }
+.btl-loading { font-size: .8rem; color: var(--color-muted-fg); margin: 0 0 12px; }
+
+/* Prefix matches are not scored, so they get a quieter heading and a dot in
+   place of the score column — the row must not look like a near-miss. */
+.btl-h4-prefix { color: var(--color-secondary); }
+.btl-h4-info { color: var(--color-muted-fg); }
+.btl-row-prefix { border-style: dotted; }
+.btl-row-prefix .btl-score { color: var(--color-muted-fg); text-align: center; }
+
+.btl-details { margin-top: 8px; }
+.btl-details summary {
+  font-size: .74rem; color: var(--color-primary); cursor: pointer;
+  padding: 4px 0; list-style: revert;
+}
+.btl-details summary:focus-visible { outline: none; box-shadow: var(--ring); border-radius: 6px; }
+.btl-idlist { list-style: none; margin: 8px 0 0; padding: 0; display: grid; gap: 3px; max-width: 420px; }
+.btl-idlist li {
+  display: flex; justify-content: space-between; gap: 12px;
+  font-size: .74rem; font-family: var(--mono);
+  padding: 4px 8px; border-radius: 6px; background: var(--color-surface-2);
+  color: var(--color-body);
+}
 
 @media (max-width: 640px) {
   .btl-row { grid-template-columns: 1fr; }
