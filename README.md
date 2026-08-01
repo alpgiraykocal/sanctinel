@@ -33,6 +33,12 @@ The server is hardened for a single-instance public deployment, but **terminate 
 reverse proxy** (Caddy / nginx / a platform load balancer) in front of it — it speaks
 plain HTTP.
 
+**No third-party requests.** The CSP is `default-src 'self'` with no external host allowed —
+fonts are served from `public/fonts/` rather than fonts.googleapis.com, which used to hand
+Google the IP and User-Agent of everyone who opened the tool. On a screening app, *who is
+searching* is the sensitive part, so a typeface was the wrong thing to leak it for.
+IBM Plex is SIL OFL 1.1 (`public/fonts/LICENSE.txt`).
+
 Built-in protections: strict security headers (CSP, `X-Frame-Options: DENY`, nosniff,
 `no-referrer`), per-IP rate limiting (API + a tighter search limit), input length caps,
 a 60s query-result cache, path-traversal-safe static serving, gzip, top-level error
@@ -314,6 +320,51 @@ chain reaches a blocked person.
   Absence of a chain is likewise not a clearance — OFAC lists only designated parties, so
   an unlisted intermediate owner never appears.
 
+## What changed (snapshot delta)
+
+`cache/changes.json`, `GET /api/changes`, page at `/changes.html`.
+
+`scripts/build-cache.js` already reads the snapshot it is about to replace (for the
+coverage baseline), so it diffs the two and writes the added/removed parties beside the
+new snapshot. Both files are committed together.
+
+The delta is computed **at build time on purpose**. "Designated since date X" can be read
+off a single snapshot, but a **delisting leaves no trace in it** — the party is simply
+gone — and a delisting is the event that lets a firm release blocked funds. A view that
+could only ever show additions would be telling half the story, and the missing half is
+the one with money attached.
+
+- Added parties link to their record; removed ones do not, because their permalink would
+  404 — the page says so rather than offering a dead link.
+- A removal is **not self-executing**: the page says to confirm the delisting with the
+  issuing authority before releasing anything.
+- If an authority drops out of the snapshot entirely its parties appear as a mass
+  removal. The coverage banner is what distinguishes that from a real delisting.
+
+## Threshold testing (below the line)
+
+`GET /api/below-the-line?q=&threshold=`, panel on the search page.
+
+This README told analysts that below-the-line testing was required before any threshold
+change, and the app gave them no way to do it. One full scan at the slider floor returns
+the hit count at every 0.01 step **and the actual records** scoring between the floor and
+the active threshold — because a count tells you the cost of widening, but only the
+records tell you whether what you are excluding is a namesake or your counterparty.
+
+Opt-in: it cannot use the recall-safe candidate index (that invariant only holds at
+≥0.95), so the default search stays on the fast path.
+
+## Record permalinks
+
+`GET /api/entity?id=`, page at `/entity.html?id=`.
+
+A search URL is not a citation — it re-runs the matcher, so it resolves differently as
+the snapshot moves or the threshold changes, and it can never point at one party
+unambiguously. Records are addressed by the authority's own entity id. Related-party ids
+inside a record link through to their own pages, so an ownership chain can be walked by
+clicking. The record body is rendered by `public/record.js`, shared with the search
+results, so the two views cannot give different compliance guidance for the same party.
+
 ## Relationship network (ego graph)
 
 Any hit with relationships shows a **View network** button that opens a radial ego-graph
@@ -393,13 +444,21 @@ sanctions compliance.
 
 | Path | Role |
 |------|------|
-| `server.js` | HTTP server, static hosting, `/api/search`, `/api/meta`, `/api/stats`, `/api/refresh` |
-| `lib/ingest.js` | SLS fetch, CSV parse, snapshot build, poison-pill guard |
-| `lib/matcher.js` | Normalization + fuzzy scoring + match classification |
+| `server.js` | HTTP server, static hosting, `/api/search`, `/api/entity`, `/api/changes`, `/api/below-the-line`, `/api/ownership`, `/api/meta`, `/api/stats`, `/api/refresh` |
+| `lib/ingest.js` | SLS fetch, CSV parse, snapshot build, poison-pill + authority-coverage guards |
+| `lib/fetch.js` | Redirect-following, retrying HTTPS GET (TLS verification never bypassed) |
+| `lib/matcher.js` | Script-aware normalization + fuzzy scoring + match classification |
 | `lib/searchindex.js` | Candidate prefilter (trigram / bigram / acronym / identifier lanes) |
+| `lib/ownership.js` | 50% Rule: ownership chains to a blocked person, and the aggregate-test flag |
 | `lib/stats.js` | Snapshot analytics: composition, timeline, recent designations |
 | `lib/countries.js` | Cross-authority country normalization (ISO codes, long forms) |
-| `scripts/verify-recall.js` | Proves the prefilter returns what a full scan would |
+| `scripts/verify-recall.js` | Proves the prefilter returns what a full scan would, non-Latin scripts included |
+| `cache/changes.json` | What the last rebuild added and removed; written beside the snapshot |
+| `public/record.js` | How a listed party renders — shared by the results and the permalink page so they cannot disagree |
+| `public/chrome.js` | Shared chrome: missing-authority banner, keyboard shortcuts |
+| `public/entity.html` · `entity.js` | Permalink page for one record |
+| `public/changes.html` · `changes.js` | What changed between snapshot builds |
+| `public/fonts/` | Self-hosted IBM Plex (SIL OFL 1.1) — no third-party font requests |
 | `public/` | Frontend (HTML / CSS / JS) |
 | `ios/` | Native SwiftUI iPhone app; screens on-device via `ios/SanctinelCore`, a Swift port of `lib/` |
 | `scripts/gen-conformance-fixtures.js` | Freezes the JS scorer's output so the Swift port can be proved identical |

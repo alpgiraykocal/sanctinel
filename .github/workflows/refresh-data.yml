@@ -39,7 +39,9 @@ jobs:
         run: |
           git config user.name "ofac-data-bot"
           git config user.email "actions@github.com"
-          git add cache/snapshot.json.gz
+          # The delta ships with the snapshot — a removal cannot be recovered
+          # from the snapshot alone once the previous one is gone.
+          git add cache/snapshot.json.gz cache/changes.json
           if git diff --cached --quiet; then
             echo "No data change."
           else

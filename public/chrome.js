@@ -56,10 +56,14 @@ window.SS = (function () {
     bar.hidden = false;
   }
 
-  // Pages other than the search page have no meta of their own to piggyback on,
-  // so they fetch it once themselves. app.js passes in the meta it already has.
+  /*
+   * Pages other than the search page have no meta of their own to piggyback on,
+   * so they fetch it once themselves. The search page already fetches meta to
+   * populate its filters and calls renderCoverage with that response — it sets
+   * `ownsMeta` so this does not issue a second identical request per page load.
+   */
   async function autoCoverage() {
-    if (!document.getElementById('coverageBar')) return;
+    if (!document.getElementById('coverageBar') || window.SS.ownsMeta) return;
     try { renderCoverage(await fetch('api/meta').then((r) => r.json())); } catch { /* banner stays hidden */ }
   }
 

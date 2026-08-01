@@ -1,7 +1,10 @@
-# Runtime snapshot cache — plain JSON stays local; the gzipped snapshot is
-# committed (built daily by the refresh-data GitHub Action)
+# Runtime snapshot cache — plain JSON stays local; the gzipped snapshot and the
+# delta beside it are committed (built daily by the refresh-data GitHub Action).
+# changes.json has to ship with the snapshot: it records what the rebuild added
+# and removed, and a removal cannot be recomputed from the snapshot afterwards.
 cache/*
 !cache/snapshot.json.gz
+!cache/changes.json
 
 # Node
 node_modules/
@@ -13,3 +16,9 @@ npm-debug.log*
 
 # Local tooling
 .claude/
+
+# Xcode — per-user state and build output; the project and sources are committed
+ios/**/xcuserdata/
+ios/**/*.xcuserstate
+ios/build/
+DerivedData/

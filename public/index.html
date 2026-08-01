@@ -87,8 +87,13 @@
           <label class="field">
             <span class="field-label">Match threshold <output id="threshOut">0.95</output></span>
             <input id="threshold" name="threshold" type="range" min="0.8" max="1" step="0.01" value="0.95" />
-            <span class="field-help">Lower = more hits (more noise). Below-the-line testing required before any production change.</span>
+            <span class="field-help">Lower = more hits (more noise). Never change a production threshold without looking at what falls just under it.</span>
           </label>
+
+          <button class="btn-ghost btl-btn" type="button" id="btlBtn" hidden
+                  title="Score the whole list down to 0.80 and show what your current threshold is excluding">
+            Below-the-line check
+          </button>
 
           <fieldset class="corrob">
             <legend>Corroborating identifiers <span class="opt">optional</span></legend>
@@ -133,6 +138,10 @@
            A filter left on from an earlier query silently shrinks the next one,
            and a shrunken result set reads like a clean one. -->
       <div id="activeFilters" class="active-filters" hidden></div>
+      <!-- Threshold evidence: the hit curve and the records sitting just under
+           the active line. Populated on demand by app.js. -->
+      <section id="btlPanel" class="btl-panel" hidden aria-label="Below-the-line testing"></section>
+
       <div id="resultList" class="result-list"></div>
       <div id="emptyState" class="empty-state">
         <svg viewBox="0 0 24 24" width="44" height="44" aria-hidden="true"><path fill="currentColor" d="M15.5 14h-.8l-.3-.3a6.5 6.5 0 1 0-.7.7l.3.3v.8l5 5 1.5-1.5-5-5Zm-6 0A4.5 4.5 0 1 1 14 9.5 4.5 4.5 0 0 1 9.5 14Z"/></svg>
@@ -155,7 +164,7 @@
     </div>
     <div class="foot-meta">
       <span>Data: OFAC · EU · UN · UK OFSI · BIS · State Dept — public domain, refreshed daily.</span>
-      <span><a href="insights.html">List insights</a> · <a href="about.html">About &amp; methodology</a> · not legal advice · verify with the issuing authority</span>
+      <span><a href="changes.html">What changed</a> · <a href="insights.html">List insights</a> · <a href="about.html">About &amp; methodology</a> · not legal advice · verify with the issuing authority</span>
     </div>
   </footer>
 
@@ -210,6 +219,7 @@
   <div id="printArea" aria-hidden="true"></div>
 
   <script src="chrome.js"></script>
+  <script src="record.js"></script>
   <script src="graph.js"></script>
   <script src="app.js"></script>
 </body>
