@@ -18,17 +18,42 @@ jobs:
         with:
           node-version: "22"
 
+      # Exit codes:
+      #   0  clean build, full authority coverage
+      #   3  published, but an authority is still missing (a gap that predates
+      #      this build). The snapshot IS written and must be committed — the
+      #      other authorities are fresh — so this failure is deferred to the
+      #      last step, after the commit.
+      #   1  build failed, or a source regressed since the last good snapshot.
+      #      Nothing was written; the previous, more complete snapshot stands.
       - name: Build fresh snapshot from OFAC SLS
-        run: node scripts/build-cache.js
+        id: build
+        run: |
+          set +e
+          node scripts/build-cache.js
+          code=$?
+          echo "code=$code" >> "$GITHUB_OUTPUT"
+          if [ "$code" -ne 0 ] && [ "$code" -ne 3 ]; then exit "$code"; fi
 
       - name: Commit and push if changed
         run: |
           git config user.name "ofac-data-bot"
           git config user.email "actions@github.com"
-          git add cache/snapshot.json.gz
+          # The delta ships with the snapshot — a removal cannot be recovered
+          # from the snapshot alone once the previous one is gone.
+          git add cache/snapshot.json.gz cache/changes.json
           if git diff --cached --quiet; then
             echo "No data change."
           else
             git commit -m "data: refresh OFAC snapshot ($(date -u +%Y-%m-%d))"
             git push
           fi
+
+      # Runs last so the data still lands. A red run is the point: a screening
+      # list that covers less than it claims is a false-negative source, and
+      # nobody would otherwise notice it going quiet.
+      - name: Fail if authority coverage is incomplete
+        if: steps.build.outputs.code == '3'
+        run: |
+          echo "::error::Snapshot published with incomplete authority coverage — see the build log for which source failed."
+          exit 1

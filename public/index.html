@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Sanctinel — Sanctions &amp; Export-Control Screening</title>
+  <title>Sanctions Search — OFAC, EU, UN, UK &amp; U.S. Export-Control Screening</title>
   <meta name="description" content="Search the OFAC, EU, UN and UK sanctions lists plus the U.S. BIS and State Department export-control restricted-party lists by name, alias, or identifier, with multilingual fuzzy matching, the 50% Rule ownership network, and full entity records. Educational tool — not legal advice." />
   <meta name="referrer" content="no-referrer" />
   <meta name="robots" content="index, nofollow" />
-  <meta property="og:title" content="Sanctinel — Sanctions &amp; Export-Control Screening" />
+  <meta property="og:title" content="Sanctions Search — OFAC, EU, UN, UK &amp; U.S. Export-Control Screening" />
   <meta property="og:description" content="Multilingual fuzzy name + identifier screening across the OFAC, EU, UN and UK sanctions lists and the U.S. BIS / State export-control lists, with ownership-network visualization. Educational — not legal advice." />
   <meta property="og:type" content="website" />
   <link rel="icon" href="favicon.svg" type="image/svg+xml" />
@@ -18,7 +18,7 @@
   <a class="skip-link" href="#main">Skip to search</a>
 
   <header class="site-header">
-    <a class="brand" href="./" aria-label="Sanctinel home">
+    <a class="brand" href="./" aria-label="Sanctions Search home">
       <span class="brand-logo" aria-hidden="true">
         <svg viewBox="0 0 24 24" width="34" height="34">
           <rect width="24" height="24" rx="7" fill="url(#lg)"/>
@@ -28,7 +28,7 @@
         </svg>
       </span>
       <span class="wordmark">
-        <span class="brand-name">Sanctinel</span>
+        <span class="brand-name">Sanctions Search</span>
         <span class="brand-tag">Sanctions screening &amp; ownership intelligence</span>
       </span>
     </a>
@@ -49,6 +49,13 @@
     </div>
   </header>
 
+  <!-- Shown only when the snapshot is missing an authority it normally carries.
+       Populated by chrome.js from /api/meta; hidden by default. -->
+  <div class="coverage-bar" id="coverageBar" role="alert" hidden>
+    <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M12 2 1 21h22L12 2Zm1 15h-2v-2h2v2Zm0-4h-2V9h2v4Z"/></svg>
+    <p id="coverageText"></p>
+  </div>
+
   <div class="notice-bar" role="note">
     <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M11 7h2v2h-2V7Zm0 4h2v6h-2v-6Zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2Zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8Z"/></svg>
     <p><strong>Screening intelligence, not legal advice.</strong> Hits are leads to verify, not determinations. Confirm against the issuing authority — <a href="https://sanctionssearch.ofac.treas.gov" rel="noreferrer noopener" target="_blank">OFAC</a>, <a href="https://webgate.ec.europa.eu/fsd/fsf" rel="noreferrer noopener" target="_blank">EU</a>, <a href="https://www.un.org/securitycouncil/content/un-sc-consolidated-list" rel="noreferrer noopener" target="_blank">UN</a> or <a href="https://www.gov.uk/government/publications/financial-sanctions-consolidated-list-of-targets" rel="noreferrer noopener" target="_blank">UK OFSI</a>, <a href="https://www.bis.gov/regulations/ear/744" rel="noreferrer noopener" target="_blank">BIS</a> or <a href="https://www.pmddtc.state.gov" rel="noreferrer noopener" target="_blank">DDTC</a> — before any compliance decision. Export-control listings carry licence obligations, not asset freezes. Your queries are never stored.</p>
@@ -61,7 +68,7 @@
           <span class="field-label">Screen a name, entity, or vessel</span>
           <input id="q" name="q" type="search" placeholder="Name, alias, IMO, passport, tax ID, or crypto address"
                  enterkeyhint="search" autofocus aria-describedby="q-help" />
-          <span id="q-help" class="field-help">Screens primary names and all aliases across the sanctions lists (OFAC, EU, UN, UK) and the U.S. export-control lists (BIS, State) (multilingual: phonetic, transliteration and legal-form variants normalized), plus exact non-name identifiers: passport, national/tax/registration IDs, IMO, MMSI, call sign, digital-currency address.</span>
+          <span id="q-help" class="field-help">Screens primary names and all aliases across the sanctions lists (OFAC, EU, UN, UK) and the U.S. export-control lists (BIS, State) (multilingual: phonetic, transliteration and legal-form variants normalized — paste a name in its own script too: Cyrillic, Arabic, Hebrew, Greek, Chinese, Japanese or Korean), plus exact non-name identifiers: passport, national/tax/registration IDs, IMO, MMSI, call sign, digital-currency address.</span>
         </label>
 
         <div class="filters">
@@ -80,8 +87,13 @@
           <label class="field">
             <span class="field-label">Match threshold <output id="threshOut">0.95</output></span>
             <input id="threshold" name="threshold" type="range" min="0.8" max="1" step="0.01" value="0.95" />
-            <span class="field-help">Lower = more hits (more noise). Below-the-line testing required before any production change.</span>
+            <span class="field-help">Lower = more hits (more noise). Never change a production threshold without looking at what falls just under it.</span>
           </label>
+
+          <button class="btn-ghost btl-btn" type="button" id="btlBtn" hidden
+                  title="Score the whole list down to 0.80 and show what your current threshold is excluding">
+            Below-the-line check
+          </button>
 
           <fieldset class="corrob">
             <legend>Corroborating identifiers <span class="opt">optional</span></legend>
@@ -109,8 +121,27 @@
     <section class="results" aria-label="Screening results" aria-live="polite">
       <div class="results-head">
         <div id="resultSummary" class="result-summary" hidden></div>
-        <button id="copyLinkBtn" class="btn-ghost" type="button" hidden title="Copy a shareable link to this search">Copy link</button>
+        <div class="results-actions">
+          <label class="sort-field" id="sortWrap" hidden>
+            <span class="sr-only">Sort results</span>
+            <select id="sortBy" aria-label="Sort results">
+              <option value="score">Best match</option>
+              <option value="name">Name A–Z</option>
+              <option value="date">Most recently listed</option>
+            </select>
+          </label>
+          <button id="exportAllBtn" class="btn-ghost" type="button" hidden title="Download every result on this page as one CSV">Export CSV</button>
+          <button id="copyLinkBtn" class="btn-ghost" type="button" hidden title="Copy a shareable link to this search">Copy link</button>
+        </div>
       </div>
+      <!-- Which filters are narrowing the result set, and a way out of them.
+           A filter left on from an earlier query silently shrinks the next one,
+           and a shrunken result set reads like a clean one. -->
+      <div id="activeFilters" class="active-filters" hidden></div>
+      <!-- Threshold evidence: the hit curve and the records sitting just under
+           the active line. Populated on demand by app.js. -->
+      <section id="btlPanel" class="btl-panel" hidden aria-label="Below-the-line testing"></section>
+
       <div id="resultList" class="result-list"></div>
       <div id="emptyState" class="empty-state">
         <svg viewBox="0 0 24 24" width="44" height="44" aria-hidden="true"><path fill="currentColor" d="M15.5 14h-.8l-.3-.3a6.5 6.5 0 1 0-.7.7l.3.3v.8l5 5 1.5-1.5-5-5Zm-6 0A4.5 4.5 0 1 1 14 9.5 4.5 4.5 0 0 1 9.5 14Z"/></svg>
@@ -128,12 +159,12 @@
 
   <footer class="site-footer">
     <div class="foot-brand">
-      <strong>Sanctinel</strong>
+      <strong>Sanctions Search</strong>
       <span>Sanctions screening &amp; ownership intelligence</span>
     </div>
     <div class="foot-meta">
       <span>Data: OFAC · EU · UN · UK OFSI · BIS · State Dept — public domain, refreshed daily.</span>
-      <span><a href="insights.html">List insights</a> · <a href="about.html">About &amp; methodology</a> · not legal advice · verify with the issuing authority</span>
+      <span><a href="changes.html">What changed</a> · <a href="insights.html">List insights</a> · <a href="about.html">About &amp; methodology</a> · not legal advice · verify with the issuing authority</span>
     </div>
   </footer>
 
@@ -187,6 +218,8 @@
 
   <div id="printArea" aria-hidden="true"></div>
 
+  <script src="chrome.js"></script>
+  <script src="record.js"></script>
   <script src="graph.js"></script>
   <script src="app.js"></script>
 </body>

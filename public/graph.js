@@ -941,8 +941,51 @@
     renderMetrics(); draw();
   }
 
-  function open(id) { modal().hidden = false; document.getElementById('graphTitle').textContent = 'Relationship network'; setDepthButtons(2); setView('radial'); load(id, 2); document.body.style.overflow = 'hidden'; }
-  function close() { modal().hidden = true; document.body.style.overflow = ''; state.data = null; }
+  /*
+   * Focus management for the dialog.
+   *
+   * It declares role="dialog" aria-modal="true", which promises keyboard users
+   * that focus is inside it and cannot wander out. It was doing neither: focus
+   * stayed on the body, so Tab walked the search form behind the backdrop —
+   * invisible, unreachable by mouse, and still operable by keyboard. Remember
+   * the trigger, move focus in on open, keep Tab inside, and hand focus back on
+   * close so the user returns to the button they came from.
+   */
+  let lastFocus = null;
+  const FOCUSABLE = 'button:not([disabled]), [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
+
+  function focusables() {
+    return [...modal().querySelectorAll(FOCUSABLE)].filter((el) => el.offsetParent !== null);
+  }
+
+  function trapTab(e) {
+    if (e.key !== 'Tab' || modal().hidden) return;
+    const items = focusables();
+    if (!items.length) return;
+    const first = items[0], last = items[items.length - 1];
+    if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+  }
+
+  function open(id) {
+    lastFocus = document.activeElement;
+    modal().hidden = false;
+    document.getElementById('graphTitle').textContent = 'Relationship network';
+    setDepthButtons(2);
+    setView('radial');
+    load(id, 2);
+    document.body.style.overflow = 'hidden';
+    const close$ = document.getElementById('graphClose');
+    if (close$) close$.focus();
+  }
+
+  function close() {
+    modal().hidden = true;
+    document.body.style.overflow = '';
+    state.data = null;
+    if (lastFocus && document.contains(lastFocus)) lastFocus.focus();
+    lastFocus = null;
+  }
   function setDepthButtons(d) { modal().querySelectorAll('.depth-toggle button').forEach((b) => b.classList.toggle('active', Number(b.dataset.depth) === d)); }
 
   function setView(view) {
@@ -979,7 +1022,11 @@
       const id = hitTest(e.clientX - rect.left, e.clientY - rect.top);
       if (id && id !== state.centerId) { const n = state.data.nodes.find((x) => x.id === id); if (n && n.inSnapshot) load(id, state.depth); }
     });
-    window.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !m.hidden) close(); });
+    window.addEventListener('keydown', (e) => {
+      if (m.hidden) return;
+      if (e.key === 'Escape') close();
+      else trapTab(e);
+    });
     let rt; window.addEventListener('resize', () => { if (!m.hidden && state.data) { clearTimeout(rt); rt = setTimeout(draw, 100); } });
   }
 

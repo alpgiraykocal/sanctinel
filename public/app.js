@@ -3,43 +3,15 @@
 const $ = (id) => document.getElementById(id);
 const esc = (s) => String(s == null ? '' : s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 
-const GROUP_ORDER = ['Identity', 'Documents', 'Vessel / Aircraft', 'Digital & Contact', 'Program', 'Other'];
 
-// Where a user must verify a hit, per issuing authority.
-const AUTHORITY_SOURCE = {
-  OFAC: 'OFAC Sanctions List Search (sanctionssearch.ofac.treas.gov)',
-  EU: 'the EU Consolidated Financial Sanctions List (webgate.ec.europa.eu/fsd/fsf)',
-  UN: 'the UN Security Council Consolidated List (un.org/securitycouncil)',
-  UK: 'the UK OFSI Consolidated List (gov.uk/government/publications/financial-sanctions-consolidated-list-of-targets)',
-  BIS: "BIS's own list in EAR Supplement No. 4 to Part 744 (bis.gov/regulations/ear/744)",
-  State: 'the State Department / DDTC debarred and nonproliferation notices (pmddtc.state.gov)',
-};
 
-// Action guidance keyed to authority + list type. Triage hint, not a determination.
-function determinationHint(r) {
-  const l = r.list || '';
-  // U.S. export-control lists: the obligation is a licence requirement or loss
-  // of export privileges — NOT an asset freeze. Never blend these with the
-  // financial-sanctions doctrine above.
-  if (r.authority === 'BIS' || r.authority === 'State') {
-    if (/Denied Persons/i.test(l)) return { label: 'Export privileges denied', text: 'BIS Denied Persons List: the party’s export privileges are <strong>denied</strong> — do not participate in any export, reexport or transfer subject to the EAR involving them. This is export control, <strong>not</strong> an asset freeze; funds are not blocked.' };
-    if (/Unverified/i.test(l)) return { label: 'Unverified end-user', text: 'BIS Unverified List: BIS could not verify the party’s bona fides. <strong>No licence exceptions</strong> may be used and a UVL statement is required before shipping items subject to the EAR. Export control only — not an asset freeze.' };
-    if (/Military End-User/i.test(l)) return { label: 'Military end-user licence', text: 'BIS Military End-User List: a <strong>licence is required</strong> for the items specified in EAR §744.21 destined for this party. Export control only — not an asset freeze.' };
-    if (/ITAR Debarred/i.test(l)) return { label: 'ITAR debarred', text: 'State/DDTC debarment: the party is <strong>barred from participating in defence-article exports</strong> under the AECA/ITAR. Export control only — not an asset freeze. Confirm the current debarment status with DDTC.' };
-    if (/Nonproliferation/i.test(l)) return { label: 'Nonproliferation measures', text: 'State Department nonproliferation sanctions: <strong>measures vary by determination</strong> (procurement/import bans, licence denials). Read the specific measures imposed; this is not an asset freeze.' };
-    return { label: 'Export licence required', text: 'BIS Entity List: a <strong>licence is required</strong> for exports, reexports or in-country transfers subject to the EAR, usually with a presumption of denial. This is export control, <strong>not</strong> a financial sanction — funds are not blocked and this is separate from any OFAC designation.' };
-  }
-  if (r.authority === 'EU') return { label: 'EU asset freeze', text: 'EU designation: <strong>freeze funds and economic resources</strong> and make none available, directly or indirectly, to or for the listed person. Applies under the cited Council Regulation across all member states — EU regime, not OFAC doctrine.' };
-  if (r.authority === 'UN') return { label: 'UN asset freeze', text: 'UN Security Council listing: member states must <strong>freeze funds and economic resources</strong> and bar their provision. Apply the implementing national/EU regulation; this is not OFAC doctrine.' };
-  if (r.authority === 'UK') return { label: 'UK asset freeze', text: 'UK OFSI designation: <strong>freeze funds/economic resources</strong> and do not make them available to or for the designated person; report to OFSI. UK regime, not OFAC.' };
-  if (/CMIC/i.test(l)) return { label: 'Securities restriction', text: 'Non-SDN CMIC: restricts securities transactions — <strong>not</strong> full blocking. Do not freeze an ordinary payment on this basis alone.' };
-  if (/CAPTA/i.test(l)) return { label: 'Correspondent account restriction', text: 'CAPTA: restricts or prohibits U.S. <strong>correspondent / payable-through accounts</strong> for the listed institution — not full blocking. Verify the specific restriction imposed.' };
-  if (/FSE/i.test(l)) return { label: 'Foreign sanctions evader', text: 'FSE List: transactions and dealings with this party are <strong>prohibited</strong> for U.S. persons; property is not blocked. Reject rather than freeze.' };
-  if (/Sectoral/i.test(l)) return { label: 'Sectoral directive', text: 'SSI: directive-based debt/equity tenor limits — <strong>not</strong> blocked. Verify the specific directive before acting.' };
-  if (/Palestinian/i.test(l)) return { label: 'Reject', text: 'NS-PLC drives <strong>rejection</strong> rather than blocking. Return the transaction; do not hold funds.' };
-  if (/Menu-Based/i.test(l)) return { label: 'Menu-based', text: 'Read the per-record measures — the imposed prohibition varies by entry.' };
-  return { label: 'Potential block', text: 'SDN / Consolidated blocking list: if confirmed, <strong>block and freeze</strong>, then file the blocking report within the OFAC deadline. Apply the 50% Rule to owned entities.' };
-}
+// Verification links live in chrome.js so the banner renders identically on the
+// insights and about pages, which have no app.js.
+const AUTHORITY_URL = window.SS.AUTHORITY_URL;
+
+
+
+
 
 function scoreClass(t) {
   if (t === 'exact' || t === 'strong' || t === 'strong_alias' || t === 'identifier') return 's-hi';
@@ -58,11 +30,24 @@ async function loadMeta() {
 
 function applyMeta(m) {
   renderSnapshot(m);
+  renderCoverage(m);
   if ((m.authorities || []).length > 1) fillSelect($('authority'), m.authorities, 'All authorities (' + m.authorities.join(' · ') + ')');
   fillSelect($('list'), m.lists, 'All lists');
   fillSelect($('program'), m.programs, 'All programs');
   $('refreshBtn').hidden = !m.canRefresh; // hidden unless server has admin refresh enabled
 }
+
+const renderCoverage = window.SS.renderCoverage;
+
+// Record rendering is shared with the permalink page (record.js) so the two
+// views can never give different compliance guidance for the same party.
+const {
+  AUTHORITY_SOURCE, listsOf, determinationHint,
+  factsHtml, tagsHtml, detailHtml, permalink,
+} = window.SSRecord;
+// This page fetches /api/meta itself (loadMeta) and hands the result to
+// renderCoverage, so chrome.js must not fetch the same thing again.
+window.SS.ownsMeta = true;
 
 // While a background live refresh runs, poll until it completes, then swap in
 // the real snapshot metadata + filters without a page reload.
@@ -108,7 +93,8 @@ function renderSnapshot(m) {
 }
 
 let controller = null;
-let lastResults = [];
+let lastResults = [];   // rows as rendered (sorted) — card handlers index into this
+let lastData = null;    // last server payload, so re-sorting needs no refetch
 async function runSearch(e) {
   if (e) e.preventDefault();
   const q = $('q').value.trim();
@@ -135,7 +121,7 @@ async function runSearch(e) {
       $('resultList').innerHTML = `<div class="no-hits"><strong>Search unavailable:</strong> ${esc(reason)}.${retry}</div>`;
       return;
     }
-    lastResults = data.results;
+    lastData = data;
     render(data);
     syncUrl(q);
   } catch (err) {
@@ -145,10 +131,66 @@ async function runSearch(e) {
   }
 }
 
+/*
+ * Every filter currently narrowing the result set, as removable chips.
+ *
+ * The filters live in a side panel that scrolls out of view, so a value left
+ * over from an earlier query keeps trimming later ones invisibly — and a result
+ * set that is short because of a filter looks exactly like one that is short
+ * because the party is clean. Naming them next to the count removes the
+ * ambiguity, and each chip is also the way to undo it.
+ */
+function renderActiveFilters() {
+  const box = $('activeFilters');
+  const chips = [];
+  const add = (id, label, value, reset) => { if (value) chips.push({ id, label, value, reset }); };
+  add('authority', 'Authority', $('authority').value, '');
+  add('list', 'List', $('list').value, '');
+  add('program', 'Program', $('program').value, '');
+  add('yob', 'Year of birth', $('yob').value.trim(), '');
+  add('country', 'Country', $('country').value.trim(), '');
+  if ($('threshold').value !== '0.95') chips.push({ id: 'threshold', label: 'Threshold', value: $('threshold').value, reset: '0.95' });
+
+  if (!chips.length) { box.hidden = true; box.innerHTML = ''; return; }
+  box.innerHTML = `<span class="af-label">Filtered by</span>` + chips.map((c) =>
+    `<button class="af-chip" type="button" data-id="${esc(c.id)}" data-reset="${esc(c.reset)}" title="Remove this filter">
+       <span class="af-key">${esc(c.label)}</span> ${esc(c.value)} <span aria-hidden="true">×</span>
+       <span class="sr-only">— remove filter</span>
+     </button>`).join('') +
+    `<button class="af-clear" type="button" id="clearFiltersBtn">Clear all</button>`;
+  box.hidden = false;
+
+  box.querySelectorAll('.af-chip').forEach((b) => b.addEventListener('click', () => {
+    const el = $(b.dataset.id);
+    el.value = b.dataset.reset;
+    if (b.dataset.id === 'threshold') $('threshOut').textContent = parseFloat(el.value).toFixed(2);
+    runSearch();
+  }));
+  $('clearFiltersBtn').addEventListener('click', () => {
+    for (const id of ['authority', 'list', 'program', 'yob', 'country']) $(id).value = '';
+    $('threshold').value = '0.95';
+    $('threshOut').textContent = '0.95';
+    runSearch();
+  });
+}
+
+// Sorting is applied client-side over the slice the server returned, so it
+// reorders what is on screen — it does not reach past the truncation point.
+// The summary says how many were withheld, so that stays honest.
+function sortResults(rows) {
+  const mode = $('sortBy').value;
+  const copy = rows.slice();
+  if (mode === 'name') copy.sort((a, b) => a.name.localeCompare(b.name));
+  else if (mode === 'date') copy.sort((a, b) => (Date.parse(b.datePublished) || 0) - (Date.parse(a.datePublished) || 0));
+  else copy.sort((a, b) => b.score - a.score);
+  return copy;
+}
+
 function render(data) {
   const list = $('resultList');
   const summary = $('resultSummary');
   const shown = data.results.length;
+  renderActiveFilters();
   // The server caps the payload at the top-scoring slice. Report the number of
   // parties that actually cleared the threshold, and say plainly when the list
   // below is only part of it — an under-reported hit count is a compliance
@@ -156,6 +198,12 @@ function render(data) {
   const total = typeof data.count === 'number' ? data.count : shown;
   const truncated = data.truncated || total > shown;
   $('copyLinkBtn').hidden = false;
+  $('exportAllBtn').hidden = !total;
+  // Offered on any completed search, including one with no hits — "nothing at
+  // 0.95" is exactly when an analyst needs to see whether something sits at 0.92.
+  $('btlBtn').hidden = false;
+  $('btlPanel').hidden = true;
+  $('sortWrap').hidden = total < 2;
   summary.hidden = !total;
   summary.innerHTML = total
     ? `<strong>${total.toLocaleString()}</strong> potential match${total === 1 ? '' : 'es'} for <strong>“${esc(data.query)}”</strong> <span class="summary-sub">· screened against ${(data.snapshot.count || 0).toLocaleString()} listed parties at threshold ${data.threshold}</span>${
@@ -168,7 +216,11 @@ function render(data) {
     return;
   }
 
-  list.innerHTML = data.results.map((r, i) => card(r, i)).join('');
+  // Card action handlers address rows by index, so the array they index into
+  // must be the one that was rendered — sort first, then keep that order.
+  const rows = sortResults(data.results);
+  lastResults = rows;
+  list.innerHTML = rows.map((r, i) => card(r, i)).join('');
   list.querySelectorAll('.rc-toggle').forEach((btn) => btn.addEventListener('click', () => {
     const d = btn.closest('.result-card').querySelector('.rc-detail');
     const open = d.hasAttribute('hidden');
@@ -188,123 +240,43 @@ function render(data) {
   }));
   list.querySelectorAll('.rc-csv').forEach((btn) => btn.addEventListener('click', () => {
     const r = lastResults[Number(btn.dataset.i)];
-    download(`sanctinel-${r.id}.csv`, toCsv(r), 'text/csv;charset=utf-8');
+    download(`sanctions-search-${r.id}.csv`, toCsv(r), 'text/csv;charset=utf-8');
   }));
   list.querySelectorAll('.rc-print').forEach((btn) => btn.addEventListener('click', () => printMemo(lastResults[Number(btn.dataset.i)])));
 }
 
-function attrGroups(attributes) {
-  const groups = {};
-  for (const a of attributes || []) (groups[a.group] ||= []).push(a);
-  return GROUP_ORDER.filter((g) => groups[g]).map((g) => ({ group: g, rows: groups[g] }));
-}
 
 function card(r, i) {
   const hint = determinationHint(r);
-  const idHit = r.matchType === 'identifier';
-  const sc = scoreClass(r.matchType);
+  const idHit = r.matchType === "identifier";
   const primary = (r.names || []).find((n) => n.primary) || { name: r.name };
-  const aliases = (r.names || []).filter((n) => !n.primary);
-  const sanctionsTypes = r.sanctionsTypes || [];
-  const owns = (r.relationships || []).filter((x) => /own|control|subsid|parent/i.test(x.type));
-
-  const nativeLine = primary.native ? `<div class="detail-row"><dt>Primary (native)</dt><dd class="native">${esc(primary.native)}${primary.script ? ` <span class="script-tag">${esc(primary.script)}</span>` : ''}</dd></div>` : '';
-  const partsLine = (primary.parts || []).length ? `<div class="detail-row"><dt>Name parts</dt><dd>${primary.parts.map(esc).join(' · ')}</dd></div>` : '';
-  const aliasHtml = aliases.length
-    ? `<ul class="name-list">${aliases.map((a) => `<li><span class="alias-type">${esc(a.type)}</span> ${esc(a.name)}${a.native ? ` <span class="native">${esc(a.native)}</span>` : ''}${a.lowQuality ? ' <span class="lowq">low-quality</span>' : ''}</li>`).join('')}</ul>`
-    : '<em>none</em>';
-
-  const addrHtml = (r.addresses || []).length
-    ? `<ul>${r.addresses.map((a) => `<li>${esc(a.full || a)}</li>`).join('')}</ul>` : '<em>—</em>';
-
-  const groupsHtml = attrGroups(r.attributes).map((g) => `
-    <div class="attr-group">
-      <h4 class="attr-group-title">${esc(g.group)}</h4>
-      <dl class="attr-grid">
-        ${g.rows.map((row) => `<div class="detail-row"><dt>${esc(row.label)}</dt><dd>${esc(row.value)}</dd></div>`).join('')}
-      </dl>
-    </div>`).join('');
-
-  const docsHtml = (r.idDocuments || []).length ? `
-    <div class="attr-group">
-      <h4 class="attr-group-title">Identity Documents</h4>
-      <div class="doc-table">
-        ${r.idDocuments.map((d) => `<div class="doc-row">
-          <span class="doc-type">${esc(d.type)}</span>
-          <span class="doc-num">${esc(d.number || '—')}</span>
-          <span class="doc-meta">${[d.issuingCountry && `issued by ${esc(d.issuingCountry)}`, d.issueDate && `issued ${esc(d.issueDate)}`, d.expirationDate && `expires ${esc(d.expirationDate)}`].filter(Boolean).join(' · ') || ''}</span>
-        </div>`).join('')}
-      </div>
-    </div>` : '';
-
-  const relHtml = (r.relationships || []).length ? `
-    <div class="attr-group">
-      <h4 class="attr-group-title">Relationships & Ownership</h4>
-      <ul class="name-list">
-        ${r.relationships.map((x) => `<li><span class="rel-type">${esc(x.type)}</span> ${esc(x.relatedName)}${x.relatedId ? ` <span class="rel-id">#${esc(x.relatedId)}</span>` : ''}</li>`).join('')}
-      </ul>
-      ${owns.length ? '<p class="rel-note">50% Rule: entities owned 50%+ (individually or in aggregate) by a blocked person are themselves blocked, listed or not. Trace this chain.</p>' : ''}
-    </div>` : '';
-
-  const idsHtml = (r.identifiers || []).length
-    ? `<div class="rc-tags ids">${r.identifiers.map((id) => `<span class="tag tag-id"><span class="id-type">${esc(id.type)}</span> ${esc(id.value)}</span>`).join('')}</div>`
-    : '';
-
   return `
   <article class="result-card mt-${esc(r.matchType)}">
     <div class="rc-head">
       <div>
-        <h3 class="rc-name">${esc(primary.name)}</h3>
-        <p class="rc-sub">${esc(r.type)} · ID ${esc(r.id)} · matched on <span class="matched-alias">${esc(r.matchedField)}</span>${idHit || r.matchedField.indexOf('primary') === -1 ? ` — “${esc(r.matchedName)}”` : ''}</p>
+        <h3 class="rc-name"><a class="rc-permalink" href="${permalink(r.id)}" title="Open this record on its own page">${esc(primary.name)}</a></h3>
+        <p class="rc-sub">${esc(r.type)} · ID ${esc(r.id)} · matched on <span class="matched-alias">${esc(r.matchedField)}</span>${idHit || r.matchedField.indexOf("primary") === -1 ? ` — “${esc(r.matchedName)}”` : ""}</p>
       </div>
-      <div class="score-badge ${sc}">
+      <div class="score-badge ${scoreClass(r.matchType)}">
         <span class="score-num">${r.score.toFixed(2)}</span>
-        <span class="score-type">${esc(r.matchType.replace('_', ' '))}</span>
-        ${r.corroborated ? '<span class="corrob-flag ok">ID ✓</span>' : ''}
-        ${r.conflict ? '<span class="corrob-flag bad">ID ✗</span>' : ''}
+        <span class="score-type">${esc(r.matchType.replace("_", " "))}</span>
+        ${r.corroborated ? '<span class="corrob-flag ok">ID ✓</span>' : ""}
+        ${r.conflict ? '<span class="corrob-flag bad">ID ✗</span>' : ""}
       </div>
     </div>
 
-    <div class="rc-tags">
-      <span class="tag tag-auth auth-${esc((r.authority || 'OFAC').toLowerCase())}">${esc(r.authority || 'OFAC')}</span>
-      <span class="tag tag-list">${esc(r.list)}</span>
-      ${(r.programs || []).map((p) => `<span class="tag tag-prog">${esc(p)}</span>`).join('')}
-      ${sanctionsTypes.map((t) => `<span class="tag tag-type">${esc(t)}</span>`).join('')}
-      ${owns.length ? '<span class="tag tag-own">50% Rule</span>' : ''}
-    </div>
+    ${factsHtml(r)}
+    ${tagsHtml(r)}
 
-    ${r.explain ? `<p class="rc-explain"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm1 15h-2v-6h2v6Zm0-8h-2V7h2v2Z"/></svg> Matched on ${esc(r.explain)}</p>` : ''}
+    ${r.explain ? `<p class="rc-explain"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm1 15h-2v-6h2v6Zm0-8h-2V7h2v2Z"/></svg> Matched on ${esc(r.explain)}</p>` : ""}
 
     <div class="determination"><strong>${esc(hint.label)}:</strong> ${hint.text}</div>
 
-    <div class="rc-detail" hidden>
-      <div class="attr-group">
-        <h4 class="attr-group-title">Names & Aliases</h4>
-        <dl class="attr-grid">
-          ${nativeLine}${partsLine}
-          <div class="detail-row"><dt>Aliases</dt><dd>${aliasHtml}</dd></div>
-        </dl>
-      </div>
-      ${groupsHtml}
-      ${docsHtml}
-      ${relHtml}
-      ${idsHtml ? `<div class="attr-group"><h4 class="attr-group-title">Screening Identifiers</h4>${idsHtml}</div>` : ''}
-      <div class="attr-group">
-        <h4 class="attr-group-title">Program & Provenance</h4>
-        <dl class="attr-grid">
-          ${r.title ? `<div class="detail-row"><dt>Title</dt><dd>${esc(r.title)}</dd></div>` : ''}
-          <div class="detail-row"><dt>Programs</dt><dd>${(r.programs || []).map(esc).join(', ') || '—'}</dd></div>
-          ${sanctionsTypes.length ? `<div class="detail-row"><dt>Sanctions Type</dt><dd>${sanctionsTypes.map(esc).join(', ')}</dd></div>` : ''}
-          ${(r.legalAuthorities || []).length ? `<div class="detail-row"><dt>Legal Authority</dt><dd>${r.legalAuthorities.map(esc).join('; ')}</dd></div>` : ''}
-          ${r.datePublished ? `<div class="detail-row"><dt>Date Published</dt><dd>${esc(r.datePublished)}</dd></div>` : ''}
-          <div class="detail-row"><dt>Addresses</dt><dd>${addrHtml}</dd></div>
-          ${r.remarks ? `<div class="detail-row"><dt>Raw Remarks</dt><dd class="raw">${esc(r.remarks)}</dd></div>` : ''}
-        </dl>
-      </div>
-    </div>
+    <div class="rc-detail" hidden>${detailHtml(r)}</div>
     <div class="rc-actions">
       <button class="rc-toggle" type="button" aria-expanded="false"><span>Show full record</span></button>
-      ${(r.relationships || []).length ? `<button class="rc-graph" type="button" data-id="${esc(r.id)}">View network</button>` : ''}
+      ${(r.relationships || []).length ? `<button class="rc-graph" type="button" data-id="${esc(r.id)}">View network</button>` : ""}
+      <a class="rc-link" href="${permalink(r.id)}">Permalink</a>
       <button class="rc-print" type="button" data-i="${i}">Print / PDF</button>
       <button class="rc-csv" type="button" data-i="${i}">CSV</button>
       <button class="rc-copy" type="button" data-i="${i}">Copy JSON</button>
@@ -336,16 +308,22 @@ function toCsv(r) {
   const aliases = (r.names || []).filter((n) => !n.primary).map((n) => `${n.type}: ${n.name}`).join(' | ');
   const rows = [
     ['Field', 'Value'],
-    ['Name', r.name], ['Type', r.type], ['Authority', r.authority || 'OFAC'], ['Entity ID', r.id], ['List', r.list],
+    ['Name', r.name], ['Type', r.type], ['Authority', r.authority || 'OFAC'], ['Entity ID', r.id], ['Lists', listsOf(r).join('; ')],
     ['Programs', (r.programs || []).join('; ')], ['Sanctions types', (r.sanctionsTypes || []).join('; ')],
     ['Legal authorities', (r.legalAuthorities || []).join('; ')], ['Date published', r.datePublished || ''],
     ['Aliases', aliases], ['Addresses', (r.addresses || []).map((a) => a.full || a).join(' | ')],
     ['Identifiers', (r.identifiers || []).map((i) => `${i.type} ${i.value}`).join(' | ')],
     ['Relationships', (r.relationships || []).map((x) => `${x.type} ${x.relatedName}`).join(' | ')],
+    // The 50% Rule findings belong in the exported record too — this file is
+    // what ends up in the compliance folder, and the caveat has to travel with
+    // the finding rather than only living in the UI.
+    ['Blocked owners in chain', r.derivative ? String(r.derivative.distinctBlockedOwners) : '0'],
+    ['50% aggregate test applies', r.derivative && r.derivative.aggregationCandidate ? 'Yes — multiple blocked owners' : 'No'],
+    ['50% Rule caveat', 'OFAC publishes no ownership percentages; the threshold cannot be computed from list data. Confirm stakes against corporate registry / KYC records.'],
     ...(r.attributes || []).map((a) => [a.label, a.value]),
     ['Match score', r.score], ['Match type', r.matchType], ['Matched on', `${r.matchedField}${r.explain ? ' — ' + r.explain : ''}`],
     ['Screened at', new Date().toISOString()],
-    ['Source', `${r.authority || 'OFAC'} official list via Sanctinel — educational analysis, not legal advice`],
+    ['Source', `${r.authority || 'OFAC'} official list via Sanctions Search — educational analysis, not legal advice`],
   ];
   return '﻿' + rows.map((row) => row.map((c) => `"${String(c == null ? '' : c).replace(/"/g, '""')}"`).join(',')).join('\r\n');
 }
@@ -356,9 +334,9 @@ function memoHtml(r) {
   const aliases = (r.names || []).filter((n) => !n.primary);
   return `
     <h1>Sanctions screening record</h1>
-    <p class="memo-sub">Generated ${new Date().toLocaleString()} · Sanctinel · educational analysis, not legal advice</p>
+    <p class="memo-sub">Generated ${new Date().toLocaleString()} · Sanctions Search · educational analysis, not legal advice</p>
     <h2>${esc(r.name)}</h2>
-    <p>${esc(r.type)} · ${esc(r.authority || 'OFAC')} entity ID ${esc(r.id)} · <strong>${esc(r.list)}</strong></p>
+    <p>${esc(r.type)} · ${esc(r.authority || 'OFAC')} entity ID ${esc(r.id)} · <strong>${esc(listsOf(r).join(' · '))}</strong></p>
     <table>
       <tr><th>Determination guidance</th><td><strong>${esc(hint.label)}.</strong> ${hint.text.replace(/<[^>]+>/g, '')}</td></tr>
       <tr><th>Match</th><td>score ${r.score.toFixed(2)} (${esc(r.matchType.replace('_', ' '))}) · matched on ${esc(r.matchedField)}${r.explain ? ' — ' + esc(r.explain) : ''}</td></tr>
@@ -419,6 +397,149 @@ $('authority').addEventListener('change', () => $('q').value.trim() && runSearch
 $('list').addEventListener('change', () => $('q').value.trim() && runSearch());
 $('program').addEventListener('change', () => $('q').value.trim() && runSearch());
 $('refreshBtn').addEventListener('click', refreshLive);
+// Re-sorting is a pure reorder of the payload already in hand — no refetch, so
+// it cannot change WHICH parties are shown, only their order.
+$('sortBy').addEventListener('change', () => { if (lastData) render(lastData); });
+
+/*
+ * One CSV covering every result on screen — a row per party rather than the
+ * per-party file the card exports. This is the artifact that goes into a
+ * screening file, so it carries the query, threshold and snapshot version that
+ * produced it: a hit list without the list version it was run against cannot be
+ * reproduced later, which is the whole point of keeping it.
+ */
+function resultsCsv(rows, meta) {
+  const cell = (v) => `"${String(v == null ? '' : v).replace(/"/g, '""')}"`;
+  const head = ['Name', 'Type', 'Authority', 'Lists', 'Entity ID', 'Score', 'Match type', 'Matched on',
+    'Programs', 'Sanctions types', 'Date published', 'Blocked owners in chain', '50% aggregate test', 'Addresses', 'Identifiers'];
+  const body = rows.map((r) => [
+    r.name, r.type, r.authority || 'OFAC', listsOf(r).join('; '), r.id,
+    r.score.toFixed(4), r.matchType, `${r.matchedField}${r.explain ? ' — ' + r.explain : ''}`,
+    (r.programs || []).join('; '), (r.sanctionsTypes || []).join('; '), r.datePublished || '',
+    r.derivative ? r.derivative.distinctBlockedOwners : 0,
+    r.derivative && r.derivative.aggregationCandidate ? 'Yes' : 'No',
+    (r.addresses || []).map((a) => a.full || a).join(' | '),
+    (r.identifiers || []).map((i) => `${i.type}: ${i.value}`).join(' | '),
+  ]);
+  const provenance = [
+    [], ['Query', meta.query], ['Threshold', meta.threshold],
+    ['Matches above threshold', meta.total], ['Rows in this file', rows.length],
+    ['Snapshot', `${meta.snapshot.source || ''} · OFAC publication ${meta.snapshot.publicationId || 'unknown'}`],
+    ['Snapshot retrieved', meta.snapshot.retrievedAt || ''],
+    ['Authorities screened', (meta.snapshot.authorities || []).join('; ')],
+    ['Authorities NOT screened', (meta.snapshot.missingAuthorities || []).join('; ') || 'none'],
+    ['Generated', new Date().toISOString()],
+    ['Note', 'Screening leads, not determinations. Verify against the issuing authority before any compliance decision.'],
+  ];
+  return '﻿' + [head, ...body, ...provenance].map((row) => row.map(cell).join(',')).join('\r\n');
+}
+
+$('exportAllBtn').addEventListener('click', () => {
+  if (!lastData || !lastResults.length) return;
+  const stamp = new Date().toISOString().slice(0, 10);
+  const slug = (lastData.query || 'search').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 40);
+  download(`sanctions-search-${slug || 'results'}-${stamp}.csv`, resultsCsv(lastResults, {
+    query: lastData.query, threshold: lastData.threshold, total: lastData.count, snapshot: lastData.snapshot || {},
+  }), 'text/csv;charset=utf-8');
+});
+
+/* ---- below-the-line testing ---- */
+
+/*
+ * Show the analyst what their threshold is throwing away.
+ *
+ * The panel answers two questions the slider alone cannot: how the hit count
+ * moves across the whole range, and — the one that matters — WHICH records sit
+ * between the floor and the active line. A count tells you the cost of widening;
+ * only the records tell you whether the ones being excluded are namesakes or
+ * your counterparty.
+ *
+ * Opt-in because it costs a full scan of the list. The default search keeps
+ * using the recall-safe index.
+ */
+async function runBelowTheLine() {
+  const q = $('q').value.trim();
+  if (!q) return;
+  const btn = $('btlBtn');
+  const panel = $('btlPanel');
+  btn.disabled = true;
+  const label = btn.textContent;
+  btn.textContent = 'Scoring…';
+  panel.hidden = false;
+  panel.innerHTML = '<div class="skeleton"></div>';
+
+  const params = new URLSearchParams({
+    q, authority: $('authority').value, list: $('list').value, program: $('program').value,
+    threshold: $('threshold').value, yob: $('yob').value.trim(), country: $('country').value.trim(),
+  });
+  try {
+    const res = await fetch('api/below-the-line?' + params);
+    const d = await res.json().catch(() => ({}));
+    if (!res.ok || !Array.isArray(d.steps)) {
+      panel.innerHTML = `<div class="no-hits"><strong>Below-the-line check unavailable:</strong> ${esc(d.error || 'server responded ' + res.status)}.</div>`;
+      return;
+    }
+    renderBelowTheLine(d);
+  } catch (e) {
+    panel.innerHTML = `<div class="no-hits">Below-the-line check failed: ${esc(e.message)}</div>`;
+  } finally {
+    btn.disabled = false;
+    btn.textContent = label;
+  }
+}
+
+function renderBelowTheLine(d) {
+  const max = Math.max(1, ...d.steps.map((s) => s.count));
+  const atActive = (d.steps.find((s) => s.threshold === d.active) || {}).count || 0;
+
+  const bars = d.steps.map((s) => {
+    const isActive = s.threshold === d.active;
+    const h = Math.max(2, Math.round((s.count / max) * 100));
+    return `<div class="btl-bar${isActive ? ' active' : ''}" style="--h:${h}%"
+              title="threshold ${s.threshold.toFixed(2)} → ${s.count} hit${s.count === 1 ? '' : 's'}">
+              <span class="sr-only">Threshold ${s.threshold.toFixed(2)}: ${s.count} hits</span></div>`;
+  }).join('');
+
+  const rows = d.marginal.map((m) => `
+    <li class="btl-row">
+      <span class="btl-score">${m.score.toFixed(3)}</span>
+      <span class="btl-name"><a href="${permalink(m.id)}">${esc(m.name)}</a></span>
+      <span class="btl-meta">${esc(m.authority || 'OFAC')} · ${esc(listsOf(m)[0] || '')} · ${esc(m.matchType.replace('_', ' '))}${m.explain ? ` · ${esc(m.explain)}` : ''}</span>
+    </li>`).join('');
+
+  $('btlPanel').innerHTML = `
+    <div class="btl-head">
+      <h3>Below-the-line check <span class="btl-sub">for “${esc(d.query)}”</span></h3>
+      <button class="btl-close" type="button" id="btlClose" aria-label="Close below-the-line panel">×</button>
+    </div>
+    <p class="btl-lede">
+      Every party scored down to ${d.floor.toFixed(2)}. At your threshold of
+      <strong>${d.active.toFixed(2)}</strong> the search returns <strong>${atActive}</strong>;
+      <strong>${d.marginalCount}</strong> more score between ${d.floor.toFixed(2)} and ${d.active.toFixed(2)}
+      and are <strong>not shown</strong> in your results.
+    </p>
+    <div class="btl-chart" role="img" aria-label="Hit count by threshold from ${d.floor.toFixed(2)} to 1.00">
+      ${bars}
+    </div>
+    <div class="btl-axis"><span>${d.floor.toFixed(2)}</span><span>lenient ← threshold → strict</span><span>1.00</span></div>
+    ${d.marginalCount ? `
+      <h4 class="btl-h4">Excluded at ${d.active.toFixed(2)}${d.truncated ? ` — highest ${d.marginal.length} of ${d.marginalCount}` : ''}</h4>
+      <ol class="btl-list">${rows}</ol>
+      <p class="btl-note">
+        Read these before moving the line. If they are namesakes, the threshold is doing its job;
+        if any is a plausible counterparty, the threshold is producing false negatives.
+        Document whichever conclusion you reach — that record is the point of the exercise.
+      </p>`
+      : `<p class="btl-note">Nothing scores between ${d.floor.toFixed(2)} and ${d.active.toFixed(2)} for this query — lowering the threshold would add no hits.</p>`}`;
+
+  $('btlClose').addEventListener('click', () => { $('btlPanel').hidden = true; });
+}
+
+$('btlBtn').addEventListener('click', runBelowTheLine);
+
+// `/` and Ctrl/Cmd-K focus the query box from anywhere on the page.
+window.SS.bindSearchShortcuts('q');
+
 $('copyLinkBtn').addEventListener('click', () => {
   navigator.clipboard.writeText(location.href).then(() => {
     const b = $('copyLinkBtn'); b.textContent = 'Link copied'; setTimeout(() => (b.textContent = 'Copy link'), 1500);

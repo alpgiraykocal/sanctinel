@@ -1,4 +1,4 @@
-# Sanctinel — Sanctions Screening
+# Sanctions Search
 
 Web app that screens a party name / entity / vessel against the U.S. Treasury
 **OFAC**, the **EU**, the **UN Security Council** and the **UK OFSI** consolidated sanctions
@@ -33,6 +33,12 @@ The server is hardened for a single-instance public deployment, but **terminate 
 reverse proxy** (Caddy / nginx / a platform load balancer) in front of it — it speaks
 plain HTTP.
 
+**No third-party requests.** The CSP is `default-src 'self'` with no external host allowed —
+fonts are served from `public/fonts/` rather than fonts.googleapis.com, which used to hand
+Google the IP and User-Agent of everyone who opened the tool. On a screening app, *who is
+searching* is the sensitive part, so a typeface was the wrong thing to leak it for.
+IBM Plex is SIL OFL 1.1 (`public/fonts/LICENSE.txt`).
+
 Built-in protections: strict security headers (CSP, `X-Frame-Options: DENY`, nosniff,
 `no-referrer`), per-IP rate limiting (API + a tighter search limit), input length caps,
 a 60s query-result cache, path-traversal-safe static serving, gzip, top-level error
@@ -48,6 +54,39 @@ Environment variables:
 | `CACHE_TTL_MS` | `43200000` (12h) | background refresh when the cache is older than this |
 | `RATE_MAX` / `SEARCH_RATE_MAX` | `120` / `30` per min | per-IP limits |
 | `TRUST_PROXY` | `true` | read client IP from `X-Forwarded-For` (set `false` if not behind a proxy) |
+| `SANCTIONS_SEARCH_CONTACT` | *(unset)* | mailbox put in the outgoing `User-Agent`. OFAC asks data consumers to identify themselves; set this to an address you read, so a publisher can reach you instead of silently throttling |
+| `ALLOW_AUTHORITY_DROP` | *(unset)* | build-cache escape hatch: publish a snapshot even if it lost an authority. Only for an authority that is genuinely retired — see "Coverage guard" below |
+
+### Coverage guard
+
+`scripts/build-cache.js` (and the background refresh worker) checks that the new
+snapshot still covers every authority it should, and treats two cases differently:
+
+| Case | Publish? | Exit |
+|---|---|---|
+| **Regression** — the previous snapshot had this authority, this build lost it | **No.** The snapshot on disk covers more; keep serving it | `1` |
+| **Standing gap** — the authority was already missing last build too | **Yes.** The other authorities are fresh and withholding them just adds missed designations on top of a known gap | `3`, after the commit step, so the run still goes red |
+
+This exists because of a real incident: the `api.trade.gov` TLS certificate
+expired on 2026-07-28, the CSL fetch threw, the daily build reported success, and
+**6,256 BIS + State export-control records silently disappeared** from the
+published snapshot while the UI still offered both as filters. A screening list
+that quietly gets smaller produces false negatives, and an empty result reads
+identically to a clean one.
+
+The standing-gap check compares against the source list in `lib/ingest.js`, not
+against the last snapshot — comparing only to the last one *ratchets*, since a
+single degraded publish makes the shrunken set the new floor and the alarm goes
+quiet forever. Retiring an authority is therefore a code change (remove its entry
+from `EXTRA_SOURCES`), which is reviewable.
+
+When the snapshot is missing an authority, the app shows a red banner naming it
+and linking to the authority's own list. `GET /api/meta` reports it as
+`missingAuthorities` with `sourceFailures` explaining why.
+
+Note that the fix for an expired certificate is for the publisher to renew it.
+Do not disable TLS verification to work around this: these responses **are** the
+screening list, so an unverified one invites list tampering.
 
 Example behind Caddy:
 
@@ -88,6 +127,32 @@ Offline / fictional-demo mode (no network):
 node server.js --demo
 ```
 
+## iPhone app
+
+`ios/` holds a native SwiftUI app that screens **entirely on the device** — no
+server, no query leaving the phone, works with no network at all. It downloads
+`cache/snapshot.json.gz` (the same file the GitHub Action rebuilds nightly),
+builds its own search index on the device, and does the rest locally.
+
+```bash
+open ios/Sanctinel.xcodeproj
+```
+
+`ios/SanctinelCore` is a line-by-line Swift port of `lib/matcher.js`,
+`lib/searchindex.js`, `lib/graph.js`, `lib/stats.js` and `lib/countries.js`. Two
+scorers that drift apart would let the phone clear a party the web app flags, so
+the JavaScript is the reference and CI proves the port reproduces it exactly —
+4,909 frozen screening cases, 21 end-to-end queries over the full snapshot, and
+the recall invariant. Change the JS scorer without regenerating the fixtures and
+[the build fails](.github/workflows/ios-conformance.yml).
+
+```bash
+node scripts/gen-conformance-fixtures.js   # freeze the JS output
+cd ios/SanctinelCore && swift test         # prove Swift reproduces it
+```
+
+See [ios/README.md](ios/README.md).
+
 ## Why a backend (not a browser-only page)
 
 The SLS API has **no name-search endpoint** — you can only fetch entities by
@@ -112,7 +177,7 @@ type and low-quality flag). Token similarity is **multi-algorithm** — the max 
 - **Sørensen–Dice** bigram + **trigram Jaccard** overlap,
 - **Metaphone** phonetic key (Mohammed↔Muhammad, Smith↔Smyth, Philip↔Filip),
 - **IDF term weighting** (rare surnames outweigh words like "Company"),
-- **multilingual legal-form stripping** + **Cyrillic homoglyph folding**,
+- **multilingual legal-form stripping** + **script-aware normalization** (below),
 - **transliteration folding** (Kadyrov↔Kadirov, Phillip↔Filip — gated so lossy folds
   can't match unrelated tokens),
 - **initial/abbreviation** (J ↔ John).
@@ -129,6 +194,32 @@ recur relentlessly across 38k records; Damerau-Levenshtein runs on three rolling
 rows instead of allocating a matrix per call; and the edit and Dice channels are skipped
 when their own exact upper bounds cannot beat the score already in hand. None of this
 changes a single score — verified pair-by-pair against the previous implementation.
+
+### Non-Latin scripts
+
+A name is normalized **per token, by script**, and own-script names are searchable:
+
+- **Cyrillic, Greek, Arabic and Hebrew are transliterated**, not deleted. Cyrillic
+  follows BGN/PCGN — the scheme OFAC, the EU and the UK themselves romanize with — so
+  `ГУСЕВ` lands on `GUSEV`, the list's own spelling. Arabic and Hebrew romanize to a
+  consonant skeleton (`مصرف` → `MSRF`), which the existing transliteration fold then
+  collapses onto the list's vowelled spelling.
+- **Han, kana and hangul are kept and matched as characters.** There is no romanization
+  without a pronunciation dictionary, and deleting them meant a CJK query matched
+  nothing at all.
+- **Homoglyph folding is applied only to mixed-script tokens.** Folding Cyrillic
+  lookalikes to Latin defeats `сompany`-style evasion, but applied to a genuinely
+  Cyrillic name it was destroying it: `ГУСЕВ` became `YCEB`, and `Сбербанк` scored a
+  perfect **1.00 against `Альфа-Банк`** because both collapsed to noise. Per-token script
+  detection keeps the evasion defence while leaving real names intact.
+- **`names[].native` is indexed.** The own-script forms published alongside the romanized
+  ones — 9k of them — were parsed, stored and rendered, but never handed to the scorer or
+  the index, so pasting a name in its own script returned nothing.
+
+Self-recall across the snapshot is **100% on all 15,424 non-Latin name strings** and
+unchanged on the 86,792 Latin ones. `scripts/verify-recall.js` carries a `native` query
+family so this stays covered — the other families run through a `[A-Za-z ]` filter and
+could never have caught a script being dropped.
 
 **Secondary-identifier corroboration:** optional year-of-birth and country/nationality
 inputs act as **score modifiers** — they raise a fuzzy hit they confirm and lower one
@@ -201,6 +292,78 @@ demo data. Surfaced in full:
   organization type/date, vessel + aircraft data, digital-currency addresses, contact —
   known types are grouped, unknown types fall through to "Other" so nothing is dropped.
 - **Multiple** sanctions types and legal authorities, plus programs, list, date published.
+
+## 50 Percent Rule (derivative blocking)
+
+`lib/ownership.js`, `GET /api/ownership?id=`, plus a panel on every hit whose ownership
+chain reaches a blocked person.
+
+- **Walks the chain, not just the parent.** The rule reaches entities owned 50%+
+  *indirectly*, so ownership edges are traversed breadth-first (cycle-guarded, depth
+  capped at 6) rather than checked one hop deep. In the current snapshot 4,860 parties
+  have a blocked owner somewhere above them and **661 of those are reachable only
+  through a multi-hop chain** — invisible to a direct-parent check.
+- **Counts distinct blocked owners**, because the rule aggregates. 808 parties have more
+  than one, and those are flagged `aggregationCandidate`: the threshold can be met by
+  combined stakes even where no single owner reaches 50%. This is the limb screening
+  systems most often miss.
+- **Only full blocking propagates.** A CMIC, SSI, CAPTA or NS-PLC listing imposes a
+  narrower prohibition and does not seed a derivative chain, so it never does.
+- **Control is tracked separately** from ownership. Control alone does not trigger
+  derivative blocking; it is reported in its own field as a risk factor rather than
+  blended into the chain.
+- **It does not invent percentages.** OFAC's list service publishes *no* ownership
+  percentages — zero occurrences across the ~108MB SDN feed — so the 50% threshold
+  **cannot be computed from list data**, and the tool says so on every panel and in every
+  export. What it produces is the step before the arithmetic: the chain, the owner count,
+  and a prompt to confirm actual stakes against corporate-registry or KYC records.
+  Absence of a chain is likewise not a clearance — OFAC lists only designated parties, so
+  an unlisted intermediate owner never appears.
+
+## What changed (snapshot delta)
+
+`cache/changes.json`, `GET /api/changes`, page at `/changes.html`.
+
+`scripts/build-cache.js` already reads the snapshot it is about to replace (for the
+coverage baseline), so it diffs the two and writes the added/removed parties beside the
+new snapshot. Both files are committed together.
+
+The delta is computed **at build time on purpose**. "Designated since date X" can be read
+off a single snapshot, but a **delisting leaves no trace in it** — the party is simply
+gone — and a delisting is the event that lets a firm release blocked funds. A view that
+could only ever show additions would be telling half the story, and the missing half is
+the one with money attached.
+
+- Added parties link to their record; removed ones do not, because their permalink would
+  404 — the page says so rather than offering a dead link.
+- A removal is **not self-executing**: the page says to confirm the delisting with the
+  issuing authority before releasing anything.
+- If an authority drops out of the snapshot entirely its parties appear as a mass
+  removal. The coverage banner is what distinguishes that from a real delisting.
+
+## Threshold testing (below the line)
+
+`GET /api/below-the-line?q=&threshold=`, panel on the search page.
+
+This README told analysts that below-the-line testing was required before any threshold
+change, and the app gave them no way to do it. One full scan at the slider floor returns
+the hit count at every 0.01 step **and the actual records** scoring between the floor and
+the active threshold — because a count tells you the cost of widening, but only the
+records tell you whether what you are excluding is a namesake or your counterparty.
+
+Opt-in: it cannot use the recall-safe candidate index (that invariant only holds at
+≥0.95), so the default search stays on the fast path.
+
+## Record permalinks
+
+`GET /api/entity?id=`, page at `/entity.html?id=`.
+
+A search URL is not a citation — it re-runs the matcher, so it resolves differently as
+the snapshot moves or the threshold changes, and it can never point at one party
+unambiguously. Records are addressed by the authority's own entity id. Related-party ids
+inside a record link through to their own pages, so an ownership chain can be walked by
+clicking. The record body is rendered by `public/record.js`, shared with the search
+results, so the two views cannot give different compliance guidance for the same party.
 
 ## Relationship network (ego graph)
 
@@ -281,12 +444,22 @@ sanctions compliance.
 
 | Path | Role |
 |------|------|
-| `server.js` | HTTP server, static hosting, `/api/search`, `/api/meta`, `/api/stats`, `/api/refresh` |
-| `lib/ingest.js` | SLS fetch, CSV parse, snapshot build, poison-pill guard |
-| `lib/matcher.js` | Normalization + fuzzy scoring + match classification |
+| `server.js` | HTTP server, static hosting, `/api/search`, `/api/entity`, `/api/changes`, `/api/below-the-line`, `/api/ownership`, `/api/meta`, `/api/stats`, `/api/refresh` |
+| `lib/ingest.js` | SLS fetch, CSV parse, snapshot build, poison-pill + authority-coverage guards |
+| `lib/fetch.js` | Redirect-following, retrying HTTPS GET (TLS verification never bypassed) |
+| `lib/matcher.js` | Script-aware normalization + fuzzy scoring + match classification |
 | `lib/searchindex.js` | Candidate prefilter (trigram / bigram / acronym / identifier lanes) |
+| `lib/ownership.js` | 50% Rule: ownership chains to a blocked person, and the aggregate-test flag |
 | `lib/stats.js` | Snapshot analytics: composition, timeline, recent designations |
 | `lib/countries.js` | Cross-authority country normalization (ISO codes, long forms) |
-| `scripts/verify-recall.js` | Proves the prefilter returns what a full scan would |
+| `scripts/verify-recall.js` | Proves the prefilter returns what a full scan would, non-Latin scripts included |
+| `cache/changes.json` | What the last rebuild added and removed; written beside the snapshot |
+| `public/record.js` | How a listed party renders — shared by the results and the permalink page so they cannot disagree |
+| `public/chrome.js` | Shared chrome: missing-authority banner, keyboard shortcuts |
+| `public/entity.html` · `entity.js` | Permalink page for one record |
+| `public/changes.html` · `changes.js` | What changed between snapshot builds |
+| `public/fonts/` | Self-hosted IBM Plex (SIL OFL 1.1) — no third-party font requests |
 | `public/` | Frontend (HTML / CSS / JS) |
+| `ios/` | Native SwiftUI iPhone app; screens on-device via `ios/SanctinelCore`, a Swift port of `lib/` |
+| `scripts/gen-conformance-fixtures.js` | Freezes the JS scorer's output so the Swift port can be proved identical |
 | `sample-data/` | Fictional offline demo dataset |

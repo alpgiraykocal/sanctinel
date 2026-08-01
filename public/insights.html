@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>List Insights — Sanctinel</title>
+  <title>List Insights — Sanctions Search</title>
   <meta name="description" content="Composition of the loaded OFAC, EU, UN, UK OFSI, BIS and State Department lists: counts by authority, list, party type and restriction, the designation timeline, and the most recently designated parties." />
   <meta name="referrer" content="no-referrer" />
   <meta name="robots" content="index, nofollow" />
@@ -15,7 +15,7 @@
   <a class="skip-link" href="#main">Skip to content</a>
 
   <header class="site-header">
-    <a class="brand" href="./" aria-label="Sanctinel home">
+    <a class="brand" href="./" aria-label="Sanctions Search home">
       <span class="brand-logo" aria-hidden="true">
         <svg viewBox="0 0 24 24" width="34" height="34">
           <rect width="24" height="24" rx="7" fill="url(#lg)"/>
@@ -25,7 +25,7 @@
         </svg>
       </span>
       <span class="wordmark">
-        <span class="brand-name">Sanctinel</span>
+        <span class="brand-name">Sanctions Search</span>
         <span class="brand-tag">Sanctions screening &amp; ownership intelligence</span>
       </span>
     </a>
@@ -37,6 +37,13 @@
       </button>
     </div>
   </header>
+
+  <!-- Missing-authority alarm, rendered by chrome.js. Present on every page:
+       a count on this page is wrong in the same way a search result is. -->
+  <div class="coverage-bar" id="coverageBar" role="alert" hidden>
+    <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M12 2 1 21h22L12 2Zm1 15h-2v-2h2v2Zm0-4h-2V9h2v4Z"/></svg>
+    <p id="coverageText"></p>
+  </div>
 
   <main id="main" class="doc doc-wide">
     <h1>List insights</h1>
@@ -124,7 +131,7 @@
       <h2>Reading these numbers</h2>
       <ul class="doc-list">
         <li>Counts describe <strong>this snapshot</strong>, not the live list. The snapshot version and retrieval time are shown at the top of this page.</li>
-        <li>The date is the <strong>authority's own designation/publication date</strong>, not when Sanctinel ingested the record. A party can appear in a recent snapshot with an old date.</li>
+        <li>The date is the <strong>authority's own designation/publication date</strong>, not when Sanctions Search ingested the record. A party can appear in a recent snapshot with an old date.</li>
         <li>A party listed by more than one authority is counted once <strong>per authority</strong> — the totals here are records, not unique real-world parties.</li>
         <li>Program labels are the authority's own codes and are not harmonised across regimes; the same conduct carries different codes at OFAC, the EU and the UK.</li>
         <li>None of this is a determination. Verify any specific party against the issuing authority before acting — see <a href="about.html">about &amp; methodology</a>.</li>
@@ -133,13 +140,14 @@
   </main>
 
   <footer class="site-footer">
-    <div class="foot-brand"><strong>Sanctinel</strong><span>Sanctions screening &amp; ownership intelligence</span></div>
+    <div class="foot-brand"><strong>Sanctions Search</strong><span>Sanctions screening &amp; ownership intelligence</span></div>
     <div class="foot-meta">
       <span>Data: OFAC · EU · UN · UK OFSI · BIS · State Dept — public domain, refreshed daily.</span>
-      <span><a href="./">Screening tool</a> · <a href="about.html">About &amp; methodology</a> · not legal advice</span>
+      <span><a href="./">Screening tool</a> · <a href="changes.html">What changed</a> · <a href="about.html">About &amp; methodology</a> · not legal advice</span>
     </div>
   </footer>
 
+  <script src="chrome.js"></script>
   <script src="insights.js"></script>
 </body>
 </html>

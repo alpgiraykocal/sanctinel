@@ -12,6 +12,10 @@
  *   GET  /api/stats                      list composition, designation timeline, recent additions
  *   GET  /api/search?q=&authority=&list=&program=&threshold=&yob=&country=  screening
  *   GET  /api/graph/ego-network?id=&depth=   relationship ego-network
+ *   GET  /api/ownership?id=              50% Rule: chains to a blocked owner
+ *   GET  /api/entity?id=                 one party by id (permalink target)
+ *   GET  /api/below-the-line?q=&threshold=   hit counts per threshold + the marginal hits
+ *   GET  /api/changes                    parties added/removed by the last rebuild
  *   POST /api/refresh                    trigger a background live refresh (admin-gated)
  *
  * Public-facing hardening: security headers, per-IP rate limiting, input caps,
@@ -30,8 +34,11 @@ const path = require('path');
 const zlib = require('zlib');
 const { Worker } = require('worker_threads');
 const { screenEntity } = require('./lib/matcher');
-const { finalizeSnapshot, readCache } = require('./lib/ingest');
+const { finalizeSnapshot, readCache, EXPECTED_AUTHORITIES } = require('./lib/ingest');
 const { egoNetwork } = require('./lib/graph');
+const { profile: ownershipProfile, summary: ownershipSummary } = require('./lib/ownership');
+// Written by scripts/build-cache.js when it replaces the snapshot.
+const CHANGES_PATH = path.join(__dirname, 'cache', 'changes.json');
 const { createLimiter } = require('./lib/ratelimit');
 const { snapshotStats } = require('./lib/stats');
 const searchIndex = require('./lib/searchindex');
@@ -82,13 +89,19 @@ function startRefresh() {
 }
 
 // ---- helpers ----
-const MIME = { '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8', '.js': 'application/javascript; charset=utf-8', '.json': 'application/json; charset=utf-8', '.svg': 'image/svg+xml', '.txt': 'text/plain; charset=utf-8', '.ico': 'image/x-icon' };
+const MIME = { '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8', '.js': 'application/javascript; charset=utf-8', '.json': 'application/json; charset=utf-8', '.svg': 'image/svg+xml', '.txt': 'text/plain; charset=utf-8', '.ico': 'image/x-icon', '.woff2': 'font/woff2' };
 
 function securityHeaders() {
   return {
+    // No third-party origins at all. The fonts used to come from
+    // fonts.googleapis.com / fonts.gstatic.com, which handed Google the IP and
+    // User-Agent of everyone who opened a sanctions-screening tool. They are
+    // served from public/fonts/ now, so the policy has no external host left to
+    // allow — and anything that tries to add one fails loudly instead of
+    // quietly phoning home.
     'Content-Security-Policy':
-      "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; " +
-      "font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; object-src 'none'; " +
+      "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; " +
+      "font-src 'self'; img-src 'self' data:; connect-src 'self'; object-src 'none'; " +
       "base-uri 'none'; form-action 'none'; frame-ancestors 'none'",
     'X-Content-Type-Options': 'nosniff',
     'X-Frame-Options': 'DENY',
@@ -121,7 +134,24 @@ function sendJson(res, code, obj, extra, req) {
   res.end(body);
 }
 
+/*
+ * Authorities a complete snapshot carries, minus the ones this snapshot
+ * actually has. Reported to the client so the UI can say WHICH lists are not
+ * being screened right now — a screening tool that quietly covers less than it
+ * claims is worse than one that is visibly down, because the user reads an
+ * empty result as "clear" either way.
+ *
+ * Computed from the entities present rather than from the source log, so a
+ * snapshot built before source tracking existed still reports its gaps.
+ */
+function missingAuthorities() {
+  if (!snapshot.isLive) return [];
+  const have = new Set(snapshot.authorities || []);
+  return EXPECTED_AUTHORITIES.filter((a) => !have.has(a));
+}
+
 function meta() {
+  const missing = missingAuthorities();
   return {
     source: snapshot.source, isLive: !!snapshot.isLive, loading,
     canRefresh: !!ADMIN_TOKEN && !DEMO_ONLY,
@@ -129,6 +159,9 @@ function meta() {
     publications: snapshot.publications || [],
     retrievedAt: snapshot.retrievedAt,
     count: snapshot.count, lists: snapshot.lists, programs: snapshot.programs, authorities: snapshot.authorities || [],
+    missingAuthorities: missing,
+    // Why each one is missing, when the snapshot recorded it.
+    sourceFailures: (snapshot.sources || []).filter((s) => !s.ok).map((s) => ({ label: s.label, authorities: s.authorities, error: s.error })),
   };
 }
 
@@ -166,6 +199,83 @@ function warmIndex() {
   }, INDEX_WARM_DELAY_MS).unref();
 }
 
+/*
+ * Below-the-line testing.
+ *
+ * Tuning a match threshold without seeing what falls just under it is exactly
+ * the practice regulators criticise: the false-positive side of the trade costs
+ * review time, but the false-negative side is a strict-liability violation, so
+ * a threshold change has to be justified by looking at the hits it would drop.
+ * The app told analysts to do this ("below-the-line testing required before any
+ * production change") while giving them no way to actually do it.
+ *
+ * One full scan at the slider's floor produces both halves of the answer: a
+ * count at every step, and the actual records sitting between the floor and the
+ * active threshold. It is deliberately a separate, opt-in request — the default
+ * search stays on the recall-safe fast index, and this one cannot use it.
+ */
+const BTL_FLOOR = 0.8;      // the slider minimum
+const BTL_STEP = 0.01;
+const BTL_MAX_MARGINAL = 50;
+
+function belowTheLine(params) {
+  const q = (params.get('q') || '').trim().slice(0, MAX_Q);
+  const listFilter = (params.get('list') || '').slice(0, MAX_FIELD);
+  const programFilter = (params.get('program') || '').slice(0, MAX_FIELD);
+  const authorityFilter = (params.get('authority') || '').slice(0, MAX_FIELD);
+  const parsed = Number((params.get('threshold') || '').trim());
+  const active = Number.isFinite(parsed) ? Math.min(1, Math.max(BTL_FLOOR, parsed)) : 0.95;
+  const yob = /^\d{4}$/.test(params.get('yob') || '') ? params.get('yob') : '';
+  const country = (params.get('country') || '').trim().slice(0, MAX_FIELD);
+  const mods = (yob || country) ? { yob, country } : null;
+
+  if (!q) return { query: q, active, floor: BTL_FLOOR, steps: [], marginal: [], marginalCount: 0, snapshot: meta() };
+
+  const buckets = new Map();  // threshold step -> number of hits at or above it
+  const marginal = [];
+  let marginalCount = 0;
+
+  for (const e of snapshot.entities) {
+    if (authorityFilter && e.authority !== authorityFilter) continue;
+    if (listFilter && !(e.lists || [e.list]).includes(listFilter)) continue;
+    if (programFilter && !e.programs.includes(programFilter)) continue;
+    const m = screenEntity(q, e, BTL_FLOOR, mods);
+    if (!m) continue;
+    // One score, counted into every step it clears — so the counts are a real
+    // cumulative curve, not independent re-runs that could disagree.
+    for (let t = BTL_FLOOR; t <= 1.0001; t += BTL_STEP) {
+      const step = Number(t.toFixed(2));
+      if (m.score >= step) buckets.set(step, (buckets.get(step) || 0) + 1);
+    }
+    if (m.score < active) {
+      marginalCount++;
+      if (marginal.length < BTL_MAX_MARGINAL) {
+        marginal.push({
+          id: e.id, name: e.name, authority: e.authority, list: e.list, lists: e.lists || [e.list],
+          type: e.type, programs: e.programs, sanctionsTypes: e.sanctionsTypes || [],
+          datePublished: e.datePublished, attributes: e.attributes, addresses: e.addresses,
+          names: e.names,
+          score: m.score, matchType: m.matchType, matchedName: m.matchedName,
+          matchedField: m.matchedField, explain: m.explain || '',
+        });
+      }
+    }
+  }
+
+  const steps = [];
+  for (let t = BTL_FLOOR; t <= 1.0001; t += BTL_STEP) {
+    const step = Number(t.toFixed(2));
+    steps.push({ threshold: step, count: buckets.get(step) || 0 });
+  }
+  marginal.sort((a, b) => b.score - a.score);
+
+  return {
+    query: q, active, floor: BTL_FLOOR, steps,
+    marginal, marginalCount, truncated: marginalCount > marginal.length,
+    snapshot: meta(),
+  };
+}
+
 function search(params) {
   const q = (params.get('q') || '').trim().slice(0, MAX_Q);
   const listFilter = (params.get('list') || '').slice(0, MAX_FIELD);
@@ -198,18 +308,24 @@ function search(params) {
   const results = [];
   for (const e of pool) {
     if (authorityFilter && e.authority !== authorityFilter) continue;
-    if (listFilter && e.list !== listFilter) continue;
+    // Membership, not primary label: an entity on both the Consolidated List
+    // and the CMIC list must be reachable through either filter.
+    if (listFilter && !(e.lists || [e.list]).includes(listFilter)) continue;
     if (programFilter && !e.programs.includes(programFilter)) continue;
     const m = screenEntity(q, e, threshold, mods);
     if (!m) continue;
     results.push({
-      id: e.id, name: e.name, authority: e.authority, list: e.list, type: e.type, title: e.title,
+      id: e.id, name: e.name, authority: e.authority, list: e.list, lists: e.lists || [e.list], type: e.type, title: e.title,
       programs: e.programs, sanctionsTypes: e.sanctionsTypes || (e.sanctionsType ? [e.sanctionsType] : []),
       legalAuthorities: e.legalAuthorities || [], datePublished: e.datePublished,
       names: e.names, addresses: e.addresses, idDocuments: e.idDocuments || [],
       relationships: e.relationships || [], attributes: e.attributes, identifiers: e.identifiers, remarks: e.remarks,
       score: m.score, matchType: m.matchType, matchedName: m.matchedName, matchedField: m.matchedField,
       explain: m.explain || '', corroborated: !!m.corroborated, conflict: !!m.conflict,
+      // 50 Percent Rule lead: does this party's ownership chain reach a blocked
+      // person, and are there several of them (the aggregate case). Null when
+      // there is nothing to report, so the row stays quiet unless it matters.
+      derivative: ownershipSummary(snapshot.entities, e.id),
     });
   }
   results.sort((a, b) => b.score - a.score);
@@ -241,7 +357,11 @@ function serveStatic(req, res, pathname) {
     const ext = path.extname(filePath);
     // HTML/CSS/JS revalidate each load (unhashed filenames → avoid stale-after-deploy);
     // static assets (icons/text) may be cached.
-    const cache = ['.html', '.css', '.js'].includes(ext) ? 'no-cache' : 'public, max-age=86400';
+    // Font files never change under a given name (family-weight-subset), so
+    // they can be cached hard; markup and code must revalidate every load.
+    const cache = ['.html', '.css', '.js'].includes(ext) ? 'no-cache'
+      : ext === '.woff2' ? 'public, max-age=31536000, immutable'
+      : 'public, max-age=86400';
     const headers = Object.assign({ 'Content-Type': MIME[ext] || 'application/octet-stream', 'Cache-Control': cache }, securityHeaders());
     const enc = req.headers['accept-encoding'] || '';
     if (/\bgzip\b/.test(enc) && /text|javascript|json|svg/.test(headers['Content-Type']) && data.length > 1024) {
@@ -285,6 +405,68 @@ function handle(req, res) {
       const sr = searchLimiter.check(ip);
       if (!sr.ok) return sendJson(res, 429, { error: 'search rate limit exceeded' }, { 'Retry-After': String(sr.retryAfter) });
       return sendJson(res, 200, search(url.searchParams), null, req);
+    }
+
+    /*
+     * One party by id — the record behind a permalink.
+     *
+     * A search URL is not a stable reference to a hit: it re-runs the matcher,
+     * so the same link resolves to a different set as the snapshot moves or the
+     * threshold changes, and it can never point at one party unambiguously.
+     * A compliance file needs to cite the record, not the query that found it.
+     */
+    if (p === '/api/entity') {
+      if (!readOnly) return sendJson(res, 405, { error: 'method not allowed' });
+      const id = (url.searchParams.get('id') || '').slice(0, 40);
+      if (!/^[\w:.-]+$/.test(id)) return sendJson(res, 400, { error: 'invalid id' });
+      const e = snapshot.entities.find((x) => String(x.id) === id);
+      if (!e) return sendJson(res, 404, { error: 'not found in this snapshot' });
+      return sendJson(res, 200, {
+        entity: Object.assign({}, e, {
+          lists: e.lists || [e.list],
+          derivative: ownershipSummary(snapshot.entities, e.id),
+        }),
+        ownership: ownershipProfile(snapshot.entities, e.id),
+        snapshot: meta(),
+      }, null, req);
+    }
+
+    // Full derivative-blocking profile for one party: the ownership chains that
+    // reach a blocked person, plus its own subsidiaries and control-only links.
+    if (p === '/api/ownership') {
+      if (!readOnly) return sendJson(res, 405, { error: 'method not allowed' });
+      const id = (url.searchParams.get('id') || '').slice(0, 40);
+      if (!/^[\w:.-]+$/.test(id)) return sendJson(res, 400, { error: 'invalid id' });
+      const prof = ownershipProfile(snapshot.entities, id);
+      if (!prof) return sendJson(res, 404, { error: 'entity not found in snapshot' });
+      prof.snapshot = meta();
+      return sendJson(res, 200, prof, null, req);
+    }
+
+    /*
+     * What the last snapshot rebuild added and removed.
+     *
+     * Computed at build time (scripts/build-cache.js) because a removal cannot
+     * be derived from the current snapshot — a delisted party simply is not
+     * there. Additions alone would be half the picture, and the missing half is
+     * the one that lets a firm release blocked funds.
+     */
+    if (p === '/api/changes') {
+      if (!readOnly) return sendJson(res, 405, { error: 'method not allowed' });
+      try {
+        const raw = fs.readFileSync(CHANGES_PATH, 'utf8');
+        return sendJson(res, 200, Object.assign(JSON.parse(raw), { snapshot: meta() }), null, req);
+      } catch {
+        return sendJson(res, 200, { unavailable: true, snapshot: meta() }, null, req);
+      }
+    }
+
+    // Full scan by design; shares the tighter search rate limit.
+    if (p === '/api/below-the-line') {
+      if (!readOnly) return sendJson(res, 405, { error: 'method not allowed' });
+      const sr = searchLimiter.check(ip);
+      if (!sr.ok) return sendJson(res, 429, { error: 'search rate limit exceeded' }, { 'Retry-After': String(sr.retryAfter) });
+      return sendJson(res, 200, belowTheLine(url.searchParams), null, req);
     }
 
     if (p === '/api/graph/ego-network') {

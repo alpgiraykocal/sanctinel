@@ -14,6 +14,11 @@
  *   acronym   — initials of multi-token names ("CCC" for China Communications
  *               Construction Company), which share no trigram with the name
  *   verbatim  — names copied exactly, incl. aliases
+ *   native    — names in their own script (Cyrillic, Arabic, Hebrew, Greek,
+ *               Han, kana, hangul), pasted as published. These are the ones the
+ *               other families cannot reach: every query above is filtered
+ *               through cleanName, which keeps only [A-Za-z ] and so could
+ *               never have caught a script being dropped or mangled.
  *
  *   node scripts/verify-recall.js [sampleSize]
  *
@@ -21,7 +26,7 @@
  */
 
 const { readCache } = require('../lib/ingest');
-const { screenEntity, tokens } = require('../lib/matcher');
+const { screenEntity, tokens, searchableNames, hasNonLatinScript } = require('../lib/matcher');
 const searchIndex = require('../lib/searchindex');
 
 const THRESHOLD = 0.95; // the default; below it server.js full-scans anyway
@@ -62,6 +67,12 @@ function buildQueries(entities) {
     const n = cleanName(pick(names).name);
     if (n.length >= 4) qs.push({ kind: 'verbatim', q: n });
   }
+  // Own-script names, pasted verbatim — deliberately NOT run through cleanName.
+  const native = [];
+  for (const e of entities) {
+    for (const n of searchableNames(e)) if (hasNonLatinScript(n)) native.push(n);
+  }
+  for (let i = 0; i < SAMPLE / 3 && native.length; i++) qs.push({ kind: 'native', q: pick(native) });
   return qs;
 }
 
