@@ -36,7 +36,7 @@ const { Worker } = require('worker_threads');
 const { screenEntity } = require('./lib/matcher');
 const { finalizeSnapshot, readCache, EXPECTED_AUTHORITIES } = require('./lib/ingest');
 const { egoNetwork } = require('./lib/graph');
-const { profile: ownershipProfile, summary: ownershipSummary } = require('./lib/ownership');
+const { profile: ownershipProfile, summary: ownershipSummary, clusterOf: ownershipCluster } = require('./lib/ownership');
 // Written by scripts/build-cache.js when it replaces the snapshot.
 const CHANGES_PATH = path.join(__dirname, 'cache', 'changes.json');
 const { createLimiter } = require('./lib/ratelimit');
@@ -217,6 +217,47 @@ function warmIndex() {
 const BTL_FLOOR = 0.8;      // the slider minimum
 const BTL_STEP = 0.01;
 const BTL_MAX_MARGINAL = 50;
+const BTL_MAX_PREFIX = 25;
+
+/*
+ * What kind of identifier the query looks like.
+ *
+ * A vessel screened by IMO that returns nothing reads as "not listed". The
+ * truth may be that the snapshot carries an IMO for 41 of 31,954 parties, which
+ * is a completely different statement. Naming the interpretation and its
+ * coverage turns a silent miss into a fact the user can act on.
+ */
+function identifierShape(q) {
+  const raw = q.trim();
+  const bare = raw.replace(/[^A-Za-z0-9]/g, '');
+  if (/^IMO/i.test(raw) && /^\d{7}$/.test(bare.replace(/^IMO/i, ''))) return 'IMO';
+  if (/^\d{7}$/.test(bare)) return 'IMO';
+  if (/^\d{9}$/.test(bare)) return 'MMSI';
+  if (/^0x[a-fA-F0-9]{40}$/.test(raw)) return 'Digital currency address';
+  if (/^[13bA-Za-z][a-km-zA-HJ-NP-Z0-9]{25,60}$/.test(raw) && /\d/.test(raw) && /[A-Z]/.test(raw) && /[a-z]/.test(raw)) return 'Digital currency address';
+  return null;
+}
+
+// How many parties in this snapshot carry each identifier type. Memoized per
+// snapshot object; a refresh swaps the array and the cache falls away with it.
+let idCoverageFor = null, idCoverageCache = null;
+function identifierCoverage() {
+  if (idCoverageFor !== snapshot.entities) {
+    const counts = new Map();
+    for (const e of snapshot.entities) {
+      const seen = new Set();
+      for (const id of e.identifiers || []) {
+        const t = String(id.type || '').trim();
+        if (!t || seen.has(t)) continue;
+        seen.add(t);
+        counts.set(t, (counts.get(t) || 0) + 1);
+      }
+    }
+    idCoverageCache = counts;
+    idCoverageFor = snapshot.entities;
+  }
+  return idCoverageCache;
+}
 
 function belowTheLine(params) {
   const q = (params.get('q') || '').trim().slice(0, MAX_Q);
@@ -235,10 +276,48 @@ function belowTheLine(params) {
   const marginal = [];
   let marginalCount = 0;
 
+  /*
+   * Literal "starts with", collected in the same pass.
+   *
+   * The scorer has no prefix channel — "Gazpr" scores nothing against GAZPROM
+   * because a truncated token is not a near-miss under any of its similarity
+   * measures — yet typing half a company name is what people actually do. This
+   * is deliberately a plain string test rather than a new scoring channel: it
+   * stays outside the score, so it cannot disturb the threshold or the
+   * candidate index's recall invariant, and it is labelled as what it is.
+   */
+  const prefixQ = q.trim().toUpperCase();
+  const usePrefix = /^[^\s]+$/.test(prefixQ) && prefixQ.length >= 3;
+  const prefixHits = [];
+  let prefixCount = 0;
+  const startsWithQuery = (name) => {
+    const n = String(name || '').toUpperCase();
+    if (n.startsWith(prefixQ)) return true;
+    // A token boundary inside the name, so "GAZPR" reaches
+    // "PUBLIC JOINT STOCK COMPANY GAZPROM NEFT".
+    const at = n.indexOf(prefixQ);
+    return at > 0 && /[^A-Z0-9]/.test(n[at - 1]);
+  };
+
   for (const e of snapshot.entities) {
     if (authorityFilter && e.authority !== authorityFilter) continue;
     if (listFilter && !(e.lists || [e.list]).includes(listFilter)) continue;
     if (programFilter && !e.programs.includes(programFilter)) continue;
+
+    if (usePrefix) {
+      const names = (e.names && e.names.length) ? e.names : [{ name: e.name }];
+      const hit = names.find((n) => startsWithQuery(n.name));
+      if (hit) {
+        prefixCount++;
+        if (prefixHits.length < BTL_MAX_PREFIX) {
+          prefixHits.push({
+            id: e.id, name: e.name, authority: e.authority, list: e.list, lists: e.lists || [e.list],
+            type: e.type, matchedName: hit.name, datePublished: e.datePublished,
+          });
+        }
+      }
+    }
+
     const m = screenEntity(q, e, BTL_FLOOR, mods);
     if (!m) continue;
     // One score, counted into every step it clears — so the counts are a real
@@ -267,13 +346,61 @@ function belowTheLine(params) {
     const step = Number(t.toFixed(2));
     steps.push({ threshold: step, count: buckets.get(step) || 0 });
   }
-  marginal.sort((a, b) => b.score - a.score);
+  marginal.sort(rankResults);
+  prefixHits.sort((a, b) => String(a.name).localeCompare(String(b.name)));
+
+  // If the query reads as an identifier, say so and say how much of the
+  // snapshot could possibly have answered it.
+  const shape = identifierShape(q);
+  const coverage = identifierCoverage();
+  const identifier = shape ? {
+    shape,
+    carriers: coverage.get(shape) || 0,
+    total: snapshot.count,
+    // Every identifier type present, so "we hold almost no IMOs" is visible
+    // rather than inferred.
+    types: [...coverage.entries()].sort((a, b) => b[1] - a[1]).slice(0, 12).map(([type, n]) => ({ type, count: n })),
+  } : null;
 
   return {
     query: q, active, floor: BTL_FLOOR, steps,
     marginal, marginalCount, truncated: marginalCount > marginal.length,
+    prefix: prefixHits, prefixCount, prefixTruncated: prefixCount > prefixHits.length,
+    identifier,
     snapshot: meta(),
   };
+}
+
+/*
+ * Rank hits that score identically.
+ *
+ * A single-token query against a multi-token name is capped at exactly 0.96 by
+ * the scorer, so a surname search flattens: "Putin" returns 16 hits of which 15
+ * score 0.96, sorting by score alone does nothing, and the order falls out of
+ * whatever the scan produced. Vladimir Putin came third, behind two of his
+ * daughters matched on their PUTINA aliases.
+ *
+ * One tiebreak is real evidence: a hit on the party's own primary name is
+ * stronger than a hit on an alias, so primaries come first.
+ *
+ * Beyond that the tie is genuine and the ordering must not pretend otherwise.
+ * Every 0.96 hit for "Putin" is a three-token name matching on one token; the
+ * differences left — 21 characters versus 29, a patronymic spelled -itj rather
+ * than -ich — are not relevance, and sorting on them manufactures a ranking a
+ * reader will believe. So the remaining order is by id: arbitrary, but stable
+ * and reproducible, which is what matters when a result gets cited later.
+ *
+ * The honest half of this fix is `topScoreTies` below, which lets the UI say
+ * the leaders are indistinguishable and point at what actually separates them.
+ *
+ * Scores are untouched — this only orders ties, so nothing crosses the
+ * threshold that did not before.
+ */
+function rankResults(a, b) {
+  if (b.score !== a.score) return b.score - a.score;
+  const primary = (r) => (r.matchedField === 'primary name' ? 0 : 1);
+  if (primary(a) !== primary(b)) return primary(a) - primary(b);
+  return String(a.id).localeCompare(String(b.id));
 }
 
 function search(params) {
@@ -326,15 +453,27 @@ function search(params) {
       // person, and are there several of them (the aggregate case). Null when
       // there is nothing to report, so the row stays quiet unless it matters.
       derivative: ownershipSummary(snapshot.entities, e.id),
+      // Which ownership structure this party belongs to. A 67-hit result set is
+      // a different amount of work depending on whether it is 67 companies or
+      // one group — and the count alone never says which.
+      cluster: ownershipCluster(snapshot.entities, e.id),
     });
   }
-  results.sort((a, b) => b.score - a.score);
+  results.sort(rankResults);
   // `count` is every hit above the threshold; `results` is the top slice. The
   // UI must show the former and say when it is showing fewer — an analyst who
   // reads "200 matches" when 573 cleared the threshold has been misinformed.
+  // How many hits share the top score. A surname query flattens everything to
+  // one value, and a reader takes the first row for the best answer unless told
+  // the leaders are indistinguishable — so tell them, and say what separates
+  // them (date of birth, nationality, the corroborating-identifier inputs).
+  const topScore = results.length ? results[0].score : 0;
+  const topScoreTies = results.filter((r) => r.score === topScore).length;
+
   const payload = {
     query: q, threshold, count: results.length,
     returned: Math.min(results.length, MAX_RESULTS), truncated: results.length > MAX_RESULTS,
+    topScore, topScoreTies,
     results: results.slice(0, MAX_RESULTS), snapshot: meta(),
   };
 
