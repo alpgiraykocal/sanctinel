@@ -1,4 +1,4 @@
-# Putting Sanctinel on your own domain
+# Putting Sanctions Search on your own domain
 
 Two ways, depending on the URL you want:
 

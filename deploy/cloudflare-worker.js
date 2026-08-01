@@ -1,5 +1,5 @@
 /*
- * Cloudflare Worker: serve Sanctinel under a PATH on your own domain, e.g.
+ * Cloudflare Worker: serve Sanctions Search under a PATH on your own domain, e.g.
  *   https://alpgiraykocal.com/sanctinel/  →  https://sanctinel.onrender.com/
  *
  * Why a Worker at all: DNS records point a HOSTNAME at a server. They cannot

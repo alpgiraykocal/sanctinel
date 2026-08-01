@@ -12,6 +12,7 @@
  *   GET  /api/stats                      list composition, designation timeline, recent additions
  *   GET  /api/search?q=&authority=&list=&program=&threshold=&yob=&country=  screening
  *   GET  /api/graph/ego-network?id=&depth=   relationship ego-network
+ *   GET  /api/ownership?id=              50% Rule: chains to a blocked owner
  *   POST /api/refresh                    trigger a background live refresh (admin-gated)
  *
  * Public-facing hardening: security headers, per-IP rate limiting, input caps,
@@ -30,8 +31,9 @@ const path = require('path');
 const zlib = require('zlib');
 const { Worker } = require('worker_threads');
 const { screenEntity } = require('./lib/matcher');
-const { finalizeSnapshot, readCache } = require('./lib/ingest');
+const { finalizeSnapshot, readCache, EXPECTED_AUTHORITIES } = require('./lib/ingest');
 const { egoNetwork } = require('./lib/graph');
+const { profile: ownershipProfile, summary: ownershipSummary } = require('./lib/ownership');
 const { createLimiter } = require('./lib/ratelimit');
 const { snapshotStats } = require('./lib/stats');
 const searchIndex = require('./lib/searchindex');
@@ -121,7 +123,24 @@ function sendJson(res, code, obj, extra, req) {
   res.end(body);
 }
 
+/*
+ * Authorities a complete snapshot carries, minus the ones this snapshot
+ * actually has. Reported to the client so the UI can say WHICH lists are not
+ * being screened right now — a screening tool that quietly covers less than it
+ * claims is worse than one that is visibly down, because the user reads an
+ * empty result as "clear" either way.
+ *
+ * Computed from the entities present rather than from the source log, so a
+ * snapshot built before source tracking existed still reports its gaps.
+ */
+function missingAuthorities() {
+  if (!snapshot.isLive) return [];
+  const have = new Set(snapshot.authorities || []);
+  return EXPECTED_AUTHORITIES.filter((a) => !have.has(a));
+}
+
 function meta() {
+  const missing = missingAuthorities();
   return {
     source: snapshot.source, isLive: !!snapshot.isLive, loading,
     canRefresh: !!ADMIN_TOKEN && !DEMO_ONLY,
@@ -129,6 +148,9 @@ function meta() {
     publications: snapshot.publications || [],
     retrievedAt: snapshot.retrievedAt,
     count: snapshot.count, lists: snapshot.lists, programs: snapshot.programs, authorities: snapshot.authorities || [],
+    missingAuthorities: missing,
+    // Why each one is missing, when the snapshot recorded it.
+    sourceFailures: (snapshot.sources || []).filter((s) => !s.ok).map((s) => ({ label: s.label, authorities: s.authorities, error: s.error })),
   };
 }
 
@@ -198,18 +220,24 @@ function search(params) {
   const results = [];
   for (const e of pool) {
     if (authorityFilter && e.authority !== authorityFilter) continue;
-    if (listFilter && e.list !== listFilter) continue;
+    // Membership, not primary label: an entity on both the Consolidated List
+    // and the CMIC list must be reachable through either filter.
+    if (listFilter && !(e.lists || [e.list]).includes(listFilter)) continue;
     if (programFilter && !e.programs.includes(programFilter)) continue;
     const m = screenEntity(q, e, threshold, mods);
     if (!m) continue;
     results.push({
-      id: e.id, name: e.name, authority: e.authority, list: e.list, type: e.type, title: e.title,
+      id: e.id, name: e.name, authority: e.authority, list: e.list, lists: e.lists || [e.list], type: e.type, title: e.title,
       programs: e.programs, sanctionsTypes: e.sanctionsTypes || (e.sanctionsType ? [e.sanctionsType] : []),
       legalAuthorities: e.legalAuthorities || [], datePublished: e.datePublished,
       names: e.names, addresses: e.addresses, idDocuments: e.idDocuments || [],
       relationships: e.relationships || [], attributes: e.attributes, identifiers: e.identifiers, remarks: e.remarks,
       score: m.score, matchType: m.matchType, matchedName: m.matchedName, matchedField: m.matchedField,
       explain: m.explain || '', corroborated: !!m.corroborated, conflict: !!m.conflict,
+      // 50 Percent Rule lead: does this party's ownership chain reach a blocked
+      // person, and are there several of them (the aggregate case). Null when
+      // there is nothing to report, so the row stays quiet unless it matters.
+      derivative: ownershipSummary(snapshot.entities, e.id),
     });
   }
   results.sort((a, b) => b.score - a.score);
@@ -285,6 +313,18 @@ function handle(req, res) {
       const sr = searchLimiter.check(ip);
       if (!sr.ok) return sendJson(res, 429, { error: 'search rate limit exceeded' }, { 'Retry-After': String(sr.retryAfter) });
       return sendJson(res, 200, search(url.searchParams), null, req);
+    }
+
+    // Full derivative-blocking profile for one party: the ownership chains that
+    // reach a blocked person, plus its own subsidiaries and control-only links.
+    if (p === '/api/ownership') {
+      if (!readOnly) return sendJson(res, 405, { error: 'method not allowed' });
+      const id = (url.searchParams.get('id') || '').slice(0, 40);
+      if (!/^[\w:.-]+$/.test(id)) return sendJson(res, 400, { error: 'invalid id' });
+      const prof = ownershipProfile(snapshot.entities, id);
+      if (!prof) return sendJson(res, 404, { error: 'entity not found in snapshot' });
+      prof.snapshot = meta();
+      return sendJson(res, 200, prof, null, req);
     }
 
     if (p === '/api/graph/ego-network') {
