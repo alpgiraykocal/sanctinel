@@ -233,9 +233,16 @@ function render(data) {
   }));
   list.querySelectorAll('.rc-copy').forEach((btn) => btn.addEventListener('click', () => {
     const rec = lastResults[Number(btn.dataset.i)];
-    navigator.clipboard.writeText(JSON.stringify(rec, null, 2)).then(() => {
-      btn.textContent = 'Copied JSON';
-      setTimeout(() => (btn.textContent = 'Copy JSON'), 1500);
+    // Write into the label span, not the button: btn.textContent would also
+    // delete the icon that sits beside it.
+    const label = btn.querySelector('span');
+    // The clipboard API rejects without a permission or a trusted gesture, and
+    // an unhandled rejection here would look exactly like a successful copy —
+    // the user walks away with an empty clipboard. Say which one happened.
+    copyText(JSON.stringify(rec, null, 2)).then((ok) => {
+      label.textContent = ok ? 'Copied' : 'Copy failed';
+      btn.classList.add(ok ? 'is-done' : 'is-failed');
+      setTimeout(() => { label.textContent = 'JSON'; btn.classList.remove('is-done', 'is-failed'); }, 1800);
     });
   }));
   list.querySelectorAll('.rc-csv').forEach((btn) => btn.addEventListener('click', () => {
@@ -274,12 +281,16 @@ function card(r, i) {
 
     <div class="rc-detail" hidden>${detailHtml(r)}</div>
     <div class="rc-actions">
-      <button class="rc-toggle" type="button" aria-expanded="false"><span>Show full record</span></button>
-      ${(r.relationships || []).length ? `<button class="rc-graph" type="button" data-id="${esc(r.id)}">View network</button>` : ""}
-      <a class="rc-link" href="${permalink(r.id)}">Permalink</a>
-      <button class="rc-print" type="button" data-i="${i}">Print / PDF</button>
-      <button class="rc-csv" type="button" data-i="${i}">CSV</button>
-      <button class="rc-copy" type="button" data-i="${i}">Copy JSON</button>
+      <div class="rc-act-group">
+        <button class="rc-act rc-act-view rc-toggle" type="button" aria-expanded="false"><svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" d="m6 9 6 6 6-6"/></svg><span>Show full record</span></button>
+        ${(r.relationships || []).length ? `<button class="rc-act rc-act-view rc-graph" type="button" data-id="${esc(r.id)}"><svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path fill="currentColor" d="M17 14a3 3 0 0 0-2.6 1.5l-3.6-2a3 3 0 0 0 0-3l3.6-2A3 3 0 1 0 13.5 6l-3.6 2a3 3 0 1 0 0 8l3.6 2A3 3 0 1 0 17 14Z"/></svg><span>Network</span></button>` : ""}
+      </div>
+      <div class="rc-act-group rc-act-export">
+        <a class="rc-act rc-link" href="${permalink(r.id)}" title="Stable link to this record"><svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path fill="currentColor" d="M10.6 13.4a1 1 0 0 1 0-1.4l1.4-1.4a1 1 0 0 1 1.4 1.4l-1.4 1.4a1 1 0 0 1-1.4 0Zm-3 4.4a4 4 0 0 1 0-5.7l2.1-2.1 1.4 1.4-2.1 2.1a2 2 0 0 0 2.9 2.9l2.1-2.1 1.4 1.4-2.1 2.1a4 4 0 0 1-5.7 0Zm9-9a4 4 0 0 0-5.7 0l-2.1 2.1 1.4 1.4 2.1-2.1a2 2 0 0 1 2.9 2.9l-2.1 2.1 1.4 1.4 2.1-2.1a4 4 0 0 0 0-5.7Z"/></svg><span>Permalink</span></a>
+        <button class="rc-act rc-print" type="button" data-i="${i}" title="Printable screening memo"><svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path fill="currentColor" d="M7 3h10v4H7V3Zm12 6H5a2 2 0 0 0-2 2v6h4v4h10v-4h4v-6a2 2 0 0 0-2-2Zm-4 10H9v-5h6v5Z"/></svg><span>Print</span></button>
+        <button class="rc-act rc-csv" type="button" data-i="${i}" title="Download this record as CSV"><svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path fill="currentColor" d="M12 3v10m0 0 4-4m-4 4-4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path fill="currentColor" d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2h-2v2H6v-2H4Z"/></svg><span>CSV</span></button>
+        <button class="rc-act rc-copy" type="button" data-i="${i}" title="Copy the raw record as JSON"><svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M9 4H8a2 2 0 0 0-2 2v3a2 2 0 0 1-2 2 2 2 0 0 1 2 2v3a2 2 0 0 0 2 2h1m6-14h1a2 2 0 0 1 2 2v3a2 2 0 0 0 2 2 2 2 0 0 0-2 2v3a2 2 0 0 1-2 2h-1"/></svg><span>JSON</span></button>
+      </div>
     </div>
   </article>`;
 }
@@ -296,6 +307,14 @@ async function refreshLive() {
 }
 
 // ---- export helpers ----
+
+// Resolves true/false rather than throwing, so every caller can report the
+// outcome instead of silently assuming the copy worked.
+function copyText(text) {
+  if (!navigator.clipboard) return Promise.resolve(false);
+  return navigator.clipboard.writeText(text).then(() => true, () => false);
+}
+
 function download(name, text, type) {
   const b = new Blob([text], { type });
   const u = URL.createObjectURL(b);
@@ -541,8 +560,10 @@ $('btlBtn').addEventListener('click', runBelowTheLine);
 window.SS.bindSearchShortcuts('q');
 
 $('copyLinkBtn').addEventListener('click', () => {
-  navigator.clipboard.writeText(location.href).then(() => {
-    const b = $('copyLinkBtn'); b.textContent = 'Link copied'; setTimeout(() => (b.textContent = 'Copy link'), 1500);
+  const b = $('copyLinkBtn');
+  copyText(location.href).then((ok) => {
+    b.textContent = ok ? 'Link copied' : 'Copy failed';
+    setTimeout(() => (b.textContent = 'Copy link'), 1800);
   });
 });
 loadMeta().then(initFromUrl);

@@ -519,12 +519,8 @@ a.btn-ghost { text-decoration: none; display: inline-block; }
 .rc-permalink { color: inherit; text-decoration: none; }
 .rc-permalink:hover { text-decoration: underline; text-underline-offset: 3px; }
 .rc-permalink:focus-visible { outline: none; box-shadow: var(--ring); border-radius: 4px; }
-.rc-link {
-  font: inherit; font-size: .78rem; color: var(--color-primary);
-  text-decoration: none; align-self: center;
-}
-.rc-link:hover { text-decoration: underline; }
-.rc-link:focus-visible { outline: none; box-shadow: var(--ring); border-radius: 6px; }
+/* .rc-link now inherits everything from .rc-act; the old standalone rule set a
+   third font size and an align-self that lifted it off the row's baseline. */
 /* Related-party ids link straight to that party's own record. */
 a.rel-id { color: var(--color-primary); text-decoration: none; }
 a.rel-id:hover { text-decoration: underline; }
@@ -719,15 +715,66 @@ input[type=range] { width: 100%; accent-color: var(--color-primary); height: 22p
 .tag.tag-id .id-type { color: var(--color-muted-fg); margin-right: 5px; }
 .tag.tag-type { border-color: #BFDBFE; background: #EFF6FF; color: var(--color-primary-hover); }
 
-.rc-actions { display: flex; gap: 16px; align-items: center; margin-top: 6px; flex-wrap: wrap; }
-.rc-toggle, .rc-copy, .rc-graph {
-  background: transparent; border: none; font: inherit;
-  font-size: .8rem; font-weight: 600; cursor: pointer; padding: 8px 0 0; display: inline-flex; align-items: center; gap: 4px;
+/*
+ * Card action row.
+ *
+ * This was three competing visual languages on one line — a 0.8rem semibold
+ * sans button, a 0.74rem monospace muted button, and a 0.78rem link that
+ * `align-self: center` lifted off the shared baseline. One type scale now, one
+ * alignment, and two groups that say what the actions are FOR:
+ *
+ *   left  — change what you are looking at (expand the record, open the network)
+ *   right — take the record somewhere else (link, print, CSV, JSON)
+ *
+ * The separator between them is the point: without it six equal-weight verbs
+ * read as one undifferentiated pile.
+ */
+.rc-actions {
+  display: flex; align-items: center; gap: 8px 18px; flex-wrap: wrap;
+  margin-top: 12px; padding-top: 11px;
+  border-top: 1px solid var(--color-border);
 }
+.rc-act-group { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
+/* Push the export cluster right, and mark the boundary. */
+.rc-act-export { margin-left: auto; padding-left: 18px; border-left: 1px solid var(--color-border); }
+
+.rc-act {
+  display: inline-flex; align-items: center; gap: 5px;
+  font: inherit; font-size: .77rem; font-weight: 500; line-height: 1;
+  background: transparent; border: 1px solid transparent; border-radius: 7px;
+  padding: 6px 8px; cursor: pointer; text-decoration: none;
+  color: var(--color-muted-fg);
+}
+.rc-act svg { flex-shrink: 0; opacity: .8; }
+.rc-act:hover { background: var(--color-surface-2); color: var(--color-foreground); }
+.rc-act:focus-visible { outline: none; box-shadow: var(--ring); }
+
+/* The two view actions carry the weight; exports stay quiet until hovered. */
+.rc-act-view { font-weight: 600; }
 .rc-toggle { color: var(--color-primary); }
 .rc-graph { color: var(--color-accent); }
-.rc-copy, .rc-csv, .rc-print { color: var(--color-muted-fg); font-family: var(--mono); font-size: .74rem; font-weight: 500; background: transparent; border: none; cursor: pointer; padding: 8px 0 0; }
-.rc-toggle:hover, .rc-copy:hover, .rc-graph:hover, .rc-csv:hover, .rc-print:hover { text-decoration: underline; }
+.rc-toggle:hover { color: var(--color-primary); background: rgba(37, 99, 235, .08); }
+.rc-graph:hover { color: var(--color-accent); background: rgba(124, 58, 237, .08); }
+
+/* Chevron follows the disclosure state rather than needing its own bookkeeping. */
+.rc-toggle svg { transition: transform .15s ease; }
+.rc-toggle[aria-expanded="true"] svg { transform: rotate(180deg); }
+
+/* Outcome of a clipboard write — both branches, because a failed copy that
+   looks like a successful one sends the user off with an empty clipboard. */
+.rc-act.is-done { color: var(--color-ok-fg); background: var(--color-ok-bg); }
+.rc-act.is-failed { color: var(--color-destructive-fg); background: var(--color-destructive-bg); }
+
+@media (prefers-reduced-motion: reduce) {
+  .rc-toggle svg { transition: none; }
+}
+
+/* On a phone the export cluster cannot sit on the same line — let it wrap to
+   its own row instead of squeezing the labels. */
+@media (max-width: 640px) {
+  .rc-act-export { margin-left: 0; padding-left: 0; border-left: 0; }
+  .rc-actions { gap: 4px; }
+}
 
 .results-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
 .results-head .result-summary { flex: 1; min-width: 220px; }

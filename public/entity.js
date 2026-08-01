@@ -71,15 +71,21 @@ function wireActions(r) {
   // back to the search page with the network already requested instead.
   if (net) net.addEventListener('click', () => { location.href = `./?q=${encodeURIComponent(r.name)}&network=${encodeURIComponent(r.id)}`; });
 
+  // Resolves true/false instead of throwing: an unhandled rejection would look
+  // identical to a successful copy and leave the clipboard empty.
+  const copyText = (text) => (navigator.clipboard
+    ? navigator.clipboard.writeText(text).then(() => true, () => false)
+    : Promise.resolve(false));
+  const flash = (btn, okText, failText, restore) => (ok) => {
+    btn.textContent = ok ? okText : failText;
+    setTimeout(() => (btn.textContent = restore), 1800);
+  };
+
   $('copyLinkBtn').addEventListener('click', () => {
-    navigator.clipboard.writeText(location.href).then(() => {
-      const b = $('copyLinkBtn'); b.textContent = 'Link copied'; setTimeout(() => (b.textContent = 'Copy link'), 1500);
-    });
+    copyText(location.href).then(flash($('copyLinkBtn'), 'Link copied', 'Copy failed', 'Copy link'));
   });
   $('jsonBtn').addEventListener('click', () => {
-    navigator.clipboard.writeText(JSON.stringify(r, null, 2)).then(() => {
-      const b = $('jsonBtn'); b.textContent = 'Copied JSON'; setTimeout(() => (b.textContent = 'Copy JSON'), 1500);
-    });
+    copyText(JSON.stringify(r, null, 2)).then(flash($('jsonBtn'), 'Copied JSON', 'Copy failed', 'Copy JSON'));
   });
   $('csvBtn').addEventListener('click', () => {
     const cell = (v) => `"${String(v == null ? '' : v).replace(/"/g, '""')}"`;
