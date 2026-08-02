@@ -477,6 +477,68 @@ demo data. Surfaced in full:
   known types are grouped, unknown types fall through to "Other" so nothing is dropped.
 - **Multiple** sanctions types and legal authorities, plus programs, list, date published.
 
+## Cross-authority entity resolution
+
+Four authorities designate independently, and the tool used to treat every listing as a
+separate party. One sanctioned shipowner occupies four rows under four spellings —
+`TSANG, Yung Yuan` (OFAC), `Yun Yuan Tsang` (EU), `TSANG YUNG YUAN` (UN and UK) — and
+nothing said they were one person. That costs twice: the reviewer counts four parties and
+works four times, and **the evidence never meets** — the EU record carries a birth date
+OFAC does not publish, OFAC carries ownership edges the EU does not, and neither was
+reachable from the other.
+
+`lib/crosslist.js` groups them and shows the evidence. Records are **never merged**: the
+prohibitions differ by regime, and a merged party would have to pick one and be wrong for
+the others. Each card gets an *Also listed by EU · UK · UN* tag, and the expanded record
+links every sibling listing.
+
+```
+2,848 clusters · 2,827 spanning more than one authority · largest cluster 5 · 439ms · +2MB
+identifier 528   name+dob 1,795   name+country 525
+```
+
+Precision over recall, deliberately — a wrong link tells someone that two different people
+are one person, on a screen used to decide whether to block a payment. So a link needs
+more than a matching name, and every link records what justified it:
+
+| Basis | Rule | Confidence |
+|---|---|---|
+| `identifier` | a shared passport / national ID / tax / registration / IMO / LEI number, **and** a distinctive name token in common | high |
+| `name+dob` | identical name and an agreeing year of birth | high |
+| `name+country` | identical name and a shared jurisdiction, **entities only** | medium, shown dashed |
+| — | a matching name and nothing else | no link |
+
+Stated birth years that disagree **prevent** a link, however identical the names.
+
+Getting there took three rounds against real data pathologies, each of which had produced
+a confident wrong answer:
+
+- **A fifteen-member "party"** — Uralsib, Fora-Bank, Derzhava, BBR, DOM.RF and
+  Rosselkhozbank chained into one. They share `registration:770401001`, which is a Russian
+  **KPP**: a code issued per tax office, not per company. No identifier value may now be
+  shared by more than four parties.
+- **Three different Koryo banks collapsed into one.** The search tokenizer strips 1,758
+  words to maximise recall, including `COMMERCIAL`, `CREDIT` and `DEVELOPMENT` — right for
+  finding a party, wrong for asserting two listings *are* one. Identity comparison uses its
+  own narrow list that removes only the legal form, so `JSC Russian Agricultural Bank`
+  still meets `JOINT STOCK COMPANY RUSSIAN AGRICULTURAL BANK` while the Koryo three stay
+  apart.
+- **Renova Group linked to Bank Zenit; two different people linked as one.** Another KPP
+  and a low-entropy national ID, both under the cardinality cap. An identifier is now only
+  believed when the two names also share a *distinctive* token — rarity taken from the
+  corpus IDF the scorer already maintains, so `BANK` cannot corroborate anything.
+
+Twelve random clusters were checked by hand across all three bases; all twelve were
+correct, including the Cyrillic-to-Latin pairs (`ZAMULEVICH` ↔ `ЗАМУЛЕВИЧ`,
+`Energotransbank` ↔ `Энерготрансбанк`) that the transliteration work exists for.
+
+The tied-score notice knows about this too. It used to tell the reviewer to *"compare the
+date of birth to separate them"*, which is advice against the data when the tied rows are
+one party; it now says so instead:
+
+> **4 hits share the top score of 1.00 — and they are one party.** EU, OFAC, UK, UN have
+> each listed the same person or entity, so this is one decision rather than 4.
+
 ## 50 Percent Rule (derivative blocking)
 
 `lib/ownership.js`, `GET /api/ownership?id=`, plus a panel on every hit whose ownership
@@ -669,6 +731,7 @@ sanctions compliance.
 | `lib/matcher.js` | Script-aware normalization + fuzzy scoring + match classification |
 | `lib/searchindex.js` | Candidate prefilter (trigram / bigram / acronym / identifier lanes) |
 | `lib/ownership.js` | 50% Rule: ownership chains to a blocked person, and the aggregate-test flag |
+| `lib/crosslist.js` | Which listings across the four authorities are the same real party, and why |
 | `lib/stats.js` | Snapshot analytics: composition, timeline, recent designations |
 | `lib/countries.js` | Cross-authority country normalization (ISO codes, sovereign map, free-text jurisdictions) |
 | `lib/vocab.js` | Canonical `kind` for every attribute label and identifier type |
