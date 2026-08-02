@@ -256,6 +256,29 @@ sanctions.example.com {
 }
 ```
 
+### The threshold slider stops at 0.95
+
+Below 0.95 the candidate index is not recall-safe, so `/api/search` falls back to scoring
+every record. At 38,210 records that does not fit in 512MB. Measured on the deployed
+instance, awake and fully loaded: **the first full-scan query answers 200 and the second
+is answered by a dead container.** Restoring the BIS and State lists grew the snapshot 20%
+and took the free tier past what it can do.
+
+So the slider stops where the fast path is provably complete, and `/api/search` clamps a
+lower request up to 0.95 rather than pretending to honour it.
+
+The capability that needs to go below the line is threshold tuning, and that still exists.
+`/api/below-the-line` is opt-in and single-shot, and it now asks whether the instance can
+afford the scan before starting one — answering `503` with the arithmetic rather than
+being OOM-killed halfway through and taking the service down with it:
+
+> below-the-line testing needs a full scan of every record, and this instance does not
+> have the memory for one right now — *this instance has 512MB total and is using 558MB;
+> a full scan needs about 160MB of headroom*
+
+On an instance with room, it simply runs. Twelve consecutive default-threshold searches on
+the deployed free tier: 12/12, container healthy throughout.
+
 Health check: `GET /healthz`. Scaling note: screening is CPU-bound and single-threaded
 (~0.9s per cold uncached query over ~20k entities). One instance + rate limiting suits a
 demo; for heavy traffic run multiple instances behind the proxy (each keeps its own
