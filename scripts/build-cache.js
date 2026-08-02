@@ -23,7 +23,7 @@
 const fs = require('fs');
 const path = require('path');
 const zlib = require('zlib');
-const { buildLiveSnapshot, assertAuthorityCoverage, CACHE_GZ_PATH } = require('../lib/ingest');
+const { buildLiveSnapshot, assertAuthorityCoverage, EXPECTED_AUTHORITIES, CACHE_GZ_PATH } = require('../lib/ingest');
 
 const CHANGES_PATH = path.join(path.dirname(CACHE_GZ_PATH), 'changes.json');
 const MAX_LISTED = 3000; // per side, so one bad day cannot produce a huge file
@@ -93,6 +93,28 @@ function computeChanges(prev, next) {
   const t = Date.now();
   const prev = previousSnapshot();
   const baseline = prev && prev.authorities;
+
+  /*
+   * Retry mode, for a run scheduled purely to recover from an upstream outage.
+   *
+   * On 2026-08-01 the EU list served HTTP 500 for hours; the coverage guard
+   * correctly refused to publish, and because the workflow ran once a day that
+   * unrelated outage froze OFAC, UN and UK data for a full 24 hours too. A
+   * second run halves that — but only if it stays cheap when nothing is wrong.
+   *
+   * So: if the snapshot on disk already covers every authority, exit before
+   * fetching anything. No build, no commit, no 5MB blob added to the history
+   * for a timestamp change.
+   */
+  if (process.env.ONLY_IF_DEGRADED && prev) {
+    const missing = EXPECTED_AUTHORITIES.filter((a) => !prev.authorities.includes(a));
+    if (!missing.length) {
+      console.log('Retry run: existing snapshot has full authority coverage — nothing to recover, exiting.');
+      return;
+    }
+    console.log(`Retry run: existing snapshot is missing ${missing.join(', ')} — attempting to recover.`);
+  }
+
   const s = await buildLiveSnapshot();
 
   for (const src of s.sources || []) {

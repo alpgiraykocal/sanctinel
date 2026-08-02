@@ -24,6 +24,29 @@ window.SS = (function () {
     State: 'https://www.pmddtc.state.gov',
   };
 
+  /*
+   * Fetch JSON, waiting out a cold start.
+   *
+   * The server answers 503 with {booting:true} while it parses the snapshot —
+   * it would rather say "not ready" than screen against the sample data it
+   * holds until then. On a free tier that sleeps after fifteen idle minutes,
+   * a visitor hits this on the first request, so every page retries quietly
+   * instead of reporting an error the user can do nothing about.
+   */
+  async function getJson(path, opts) {
+    const o = opts || {};
+    const tries = o.tries || 12;
+    for (let i = 0; i < tries; i++) {
+      const res = await fetch(path, o.init);
+      if (res.status !== 503) return { res, body: await res.json().catch(() => ({})) };
+      const body = await res.json().catch(() => ({}));
+      if (!body.booting) return { res, body };
+      if (typeof o.onWait === 'function') o.onWait(i);
+      await new Promise((r) => setTimeout(r, Math.min(1000 + i * 500, 4000)));
+    }
+    return { res: { ok: false, status: 503 }, body: { error: 'server still starting up — try again in a moment' } };
+  }
+
   function relTime(iso) {
     const t = Date.parse(iso);
     if (!t) return '';
@@ -64,7 +87,7 @@ window.SS = (function () {
    */
   async function autoCoverage() {
     if (!document.getElementById('coverageBar') || window.SS.ownsMeta) return;
-    try { renderCoverage(await fetch('api/meta').then((r) => r.json())); } catch { /* banner stays hidden */ }
+    try { const { body } = await getJson('api/meta'); renderCoverage(body); } catch { /* banner stays hidden */ }
   }
 
   /*
@@ -89,5 +112,5 @@ window.SS = (function () {
 
   document.addEventListener('DOMContentLoaded', autoCoverage);
 
-  return { esc, AUTHORITY_URL, relTime, renderCoverage, bindSearchShortcuts };
+  return { esc, AUTHORITY_URL, relTime, renderCoverage, bindSearchShortcuts, getJson };
 })();

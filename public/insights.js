@@ -164,7 +164,8 @@ $('moreBtn').addEventListener('click', () => renderRecent(false));
 
 (async () => {
   try {
-    const s = await fetch('api/stats').then((r) => { if (!r.ok) throw new Error(r.status); return r.json(); });
+    const { res: sr, body: s } = await window.SS.getJson('api/stats');
+    if (!sr.ok) throw new Error(sr.status);
     render(s);
     // A background refresh swaps the snapshot; re-pull once it finishes so the
     // page does not sit on numbers from the previous publication.
