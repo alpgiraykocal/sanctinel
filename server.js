@@ -273,7 +273,27 @@ function warmIndex() {
  * active threshold. It is deliberately a separate, opt-in request — the default
  * search stays on the recall-safe fast index, and this one cannot use it.
  */
-const BTL_FLOOR = 0.8;      // the slider minimum
+/*
+ * The lowest threshold the routine search path will accept.
+ *
+ * Below 0.95 the candidate index is not recall-safe, so /api/search falls back
+ * to scoring every record — and at 38,210 records that does not fit. Measured
+ * on the deployed instance, awake and loaded: the first full-scan query answers
+ * 200 and the second is answered by a dead container. Restoring the BIS and
+ * State lists grew the snapshot 20% and took the free tier past what it can do.
+ *
+ * So the slider stops at the point where the fast path is provably complete.
+ * The capability that needs to go below it is threshold tuning, and that still
+ * exists — see belowTheLine, which is opt-in, single-shot, and now declines
+ * rather than dying when the instance cannot afford the scan.
+ */
+const MIN_SEARCH_THRESHOLD = 0.95;
+
+// Headroom one full scan needs. Smaller than a refresh worker's, because the
+// scan allocates transiently rather than holding a second snapshot.
+const SCAN_HEADROOM_MB = 160;
+
+const BTL_FLOOR = 0.8;      // how far below the line the tuning scan reaches
 const BTL_STEP = 0.01;
 const BTL_MAX_MARGINAL = 50;
 const BTL_MAX_PREFIX = 25;
@@ -471,7 +491,8 @@ function search(params) {
   // form turned "widen the net as far as it goes" into the NARROWEST setting.
   const rawThreshold = (params.get('threshold') || '').trim();
   const parsedThreshold = rawThreshold === '' ? NaN : Number(rawThreshold);
-  const threshold = Number.isFinite(parsedThreshold) ? Math.min(1, Math.max(0.8, parsedThreshold)) : 0.95;
+  const threshold = Number.isFinite(parsedThreshold)
+    ? Math.min(1, Math.max(MIN_SEARCH_THRESHOLD, parsedThreshold)) : 0.95;
   const yob = /^\d{4}$/.test(params.get('yob') || '') ? params.get('yob') : '';
   const country = (params.get('country') || '').trim().slice(0, MAX_FIELD);
   const mods = (yob || country) ? { yob, country } : null;
@@ -689,6 +710,19 @@ function handle(req, res) {
       if (!readOnly) return sendJson(res, 405, { error: 'method not allowed' });
       const sr = searchLimiter.check(ip);
       if (!sr.ok) return sendJson(res, 429, { error: 'search rate limit exceeded' }, { 'Retry-After': String(sr.retryAfter) });
+      /*
+       * One full scan over every record. That is the point of the feature and
+       * it is what the instance cannot always afford, so ask before running it
+       * rather than being OOM-killed halfway through and taking the whole
+       * service down with it. On an instance with room this never fires.
+       */
+      const room = refreshFeasibility(SCAN_HEADROOM_MB, 'a full scan');
+      if (!room.ok) {
+        return sendJson(res, 503, {
+          error: 'below-the-line testing needs a full scan of every record, and this instance does not have the memory for one right now',
+          reason: room.reason,
+        }, { 'Retry-After': '120' }, req);
+      }
       return sendJson(res, 200, belowTheLine(url.searchParams), null, req);
     }
 

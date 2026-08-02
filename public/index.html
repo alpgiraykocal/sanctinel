@@ -86,8 +86,8 @@
           </label>
           <label class="field">
             <span class="field-label">Match threshold <output id="threshOut">0.95</output></span>
-            <input id="threshold" name="threshold" type="range" min="0.8" max="1" step="0.01" value="0.95" />
-            <span class="field-help">Lower = more hits (more noise). Never change a production threshold without looking at what falls just under it.</span>
+            <input id="threshold" name="threshold" type="range" min="0.95" max="1" step="0.01" value="0.95" />
+            <span class="field-help">Lower = more hits (more noise). The slider stops at 0.95, where the fast index is provably complete; to look below that use the button beneath, which scores the whole list down to 0.80. Never change a production threshold without looking at what falls just under it.</span>
           </label>
 
           <button class="btn-ghost btl-btn" type="button" id="btlBtn" hidden
