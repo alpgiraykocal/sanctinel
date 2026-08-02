@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-08-02T09:58:29.549Z",
+ "generatedAt": "2026-08-02T13:22:31.382Z",
  "publicationId": "933",
  "retrievedAt": "2026-08-01T07:52:09.101Z",
  "count": 31954,
@@ -8,7 +8,7 @@
    "count": 19569,
    "aliasRate": 0.5227144974193878,
    "addressRate": 1,
-   "identifierRate": 0.8435280290254995,
+   "identifierRate": 0.7320251418059175,
    "birthDateRate": 0.38233941437988656,
    "nationalityRate": 0.30870253973120754,
    "relationshipEdges": 9143
@@ -45,10 +45,10 @@
   "dobParseRate": 0.999941089837997,
   "countryResolveRate": 0.9996165460384413,
   "attributeUnclassifiedRate": 0,
-  "identifierUnclassifiedRate": 0.042207344959638536,
+  "identifierUnclassifiedRate": 0.050313639199973725,
   "dobValues": 16975,
   "countryValues": 41726,
   "attributes": 88209,
-  "identifiers": 36297
+  "identifiers": 30449
  }
 }
