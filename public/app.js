@@ -222,6 +222,25 @@ function sortResults(rows) {
 function tieNote(data) {
   const n = data.topScoreTies || 0;
   if (n < 3) return '';
+
+  /*
+   * When the tied rows are one party listed by several authorities, saying
+   * "compare the date of birth to separate them" is advice against the data:
+   * there is nothing to separate, and following it wastes the reviewer's time
+   * on four copies of one decision. Detect that case and say the opposite.
+   */
+  const tied = (data.results || []).filter((r) => r.score === data.topScore);
+  const clusters = new Set(tied.map((r) => (r.crossListed && r.crossListed.clusterId) || `_${r.id}`));
+  if (tied.length >= 3 && clusters.size === 1 && tied[0].crossListed) {
+    const authorities = [...new Set(tied.map((r) => r.authority))].sort();
+    return `<span class="tie-note">
+      <strong>${tied.length} hits share the top score of ${Number(data.topScore).toFixed(2)} — and they are one party.</strong>
+      ${authorities.join(', ')} have each listed the same person or entity, so this is
+      one decision rather than ${tied.length}. The designations still differ: check the
+      programme, dates and prohibitions on each.
+    </span>`;
+  }
+
   return `<span class="tie-note">
     <strong>${n} hits share the top score of ${Number(data.topScore).toFixed(2)}.</strong>
     The name alone cannot separate them and their order here is not a ranking —

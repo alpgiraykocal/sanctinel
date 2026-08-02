@@ -123,6 +123,50 @@ window.SSRecord = (function () {
   }
 
   /*
+   * "Also listed by" — the same real party under another authority.
+   *
+   * On the collapsed row because it changes the arithmetic before anything is
+   * opened: four authorities designate independently, so one shipowner can
+   * occupy four rows under four spellings, and a reviewer who cannot see that
+   * counts four parties and works four times.
+   */
+  function crossTag(r) {
+    const c = r.crossListed;
+    if (!c || !(c.alsoListedBy || []).length) return '';
+    const how = c.basis === 'identifier' ? 'a shared identity document or registration number'
+      : c.basis === 'name+dob' ? 'an identical name and an agreeing year of birth'
+      : 'an identical name and a shared jurisdiction — unconfirmed';
+    return `<span class="tag tag-cross${c.confidence === 'medium' ? ' tag-cross-weak' : ''}" title="Linked by ${esc(how)}">Also listed by ${c.alsoListedBy.map(esc).join(' · ')}</span>`;
+  }
+
+  /*
+   * The other listings themselves, with the evidence for the link.
+   *
+   * Never merged into one record: the prohibitions differ by regime, so a
+   * merged party would have to pick one and would be wrong for the others.
+   * What this does is point at them — the EU record often carries a date of
+   * birth OFAC does not publish, and OFAC carries ownership edges the EU does
+   * not, and neither used to be reachable from the other.
+   */
+  function crossListedHtml(r) {
+    const c = r.crossListed;
+    if (!c || !(c.others || []).length) return '';
+    return `
+      <div class="attr-group cross-group${c.confidence === 'medium' ? ' cross-weak' : ''}">
+        <h4 class="attr-group-title">Also listed by ${c.alsoListedBy.map(esc).join(' · ') || 'another authority'}</h4>
+        <p class="cross-note">${esc(c.note)}</p>
+        <ul class="cross-list">
+          ${c.others.map((o) => `<li>
+            <span class="tag tag-auth auth-${esc((o.authority || '').toLowerCase())}">${esc(o.authority)}</span>
+            <a href="entity.html?id=${encodeURIComponent(o.id)}">${esc(o.name)}</a>
+            <span class="cross-list-name">${esc(o.list || '')}</span>
+          </li>`).join('')}
+        </ul>
+        <p class="cross-limit">These are separate designations and are <strong>not merged</strong> — each authority's prohibitions, programme and dates stand on their own record. Confirm each one you rely on.</p>
+      </div>`;
+  }
+
+  /*
    * Derivative-blocking panel. Says two things the tag cannot: how many
    * DISTINCT blocked owners sit over this party (the aggregate limb of the
    * rule, which a direct-parent check misses entirely), and that OFAC publishes
@@ -163,6 +207,7 @@ window.SSRecord = (function () {
         ${listsOf(r).map((l) => `<span class="tag tag-list">${esc(l)}</span>`).join('')}
         ${(r.sanctionsTypes || []).map((t) => `<span class="tag tag-type">${esc(t)}</span>`).join('')}
         ${d ? `<span class="tag tag-own" title="${esc(d.distinctBlockedOwners)} blocked owner${d.distinctBlockedOwners === 1 ? '' : 's'} in the ownership chain">50% Rule · ${d.distinctBlockedOwners}${d.aggregationCandidate ? ' · aggregate' : ''}</span>` : ''}
+        ${crossTag(r)}
       </div>
       ${(r.programs || []).length ? `<div class="rc-tags rc-programs">${(r.programs || []).map((p) => `<span class="tag tag-prog">${esc(p)}</span>`).join('')}</div>` : ''}`;
   }
@@ -224,6 +269,7 @@ window.SSRecord = (function () {
       </div>
       ${groupsHtml}
       ${docsHtml}
+      ${crossListedHtml(r)}
       ${derivativeHtml(r)}
       ${relHtml}
       ${idsHtml ? `<div class="attr-group"><h4 class="attr-group-title">Screening Identifiers</h4>${idsHtml}</div>` : ''}
@@ -249,6 +295,6 @@ window.SSRecord = (function () {
   return {
     GROUP_ORDER, AUTHORITY_SOURCE,
     listsOf, shortDate, identityFacts, attrGroups, determinationHint,
-    derivativeHtml, factsHtml, tagsHtml, detailHtml, permalink,
+    derivativeHtml, crossListedHtml, crossTag, factsHtml, tagsHtml, detailHtml, permalink,
   };
 })();

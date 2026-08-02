@@ -424,6 +424,17 @@ a.btn-ghost { text-decoration: none; display: inline-block; }
 :root[data-theme="dark"] .deriv-group { border-left-color: #FBBF24; }
 :root[data-theme="dark"] .deriv-agg { background: rgba(251, 191, 36, .12); }
 
+/* Cross-authority listings panel. */
+.cross-group { border-left: 3px solid #2563EB; padding-left: 12px; }
+.cross-group.cross-weak { border-left-style: dashed; }
+.cross-note { margin: 0 0 8px; font-size: .8rem; }
+.cross-list { margin: 0 0 8px; padding: 0; list-style: none; display: grid; gap: 5px; }
+.cross-list li { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font-size: .82rem; }
+.cross-list a { font-weight: 500; }
+.cross-list-name { font-size: .72rem; color: var(--color-muted-fg); }
+.cross-limit { margin: 0; font-size: .74rem; opacity: .8; }
+:root[data-theme="dark"] .cross-group { border-left-color: #60A5FA; }
+
 /* What-changed page. */
 .changes-controls { display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-end; margin: 14px 0 18px; }
 .changes-controls .field { min-width: 180px; }
@@ -759,6 +770,13 @@ input[type=range] { width: 100%; accent-color: var(--color-primary); height: 22p
 @media (max-width: 640px) { .doc-row { grid-template-columns: 1fr; gap: 1px; } }
 
 .tag.tag-own { border-color: #FCA5A5; color: var(--color-destructive-fg); background: var(--color-destructive-bg); font-weight: 600; }
+/* Cross-authority link. Blue, not red: it says the same party appears elsewhere,
+   which is information about the search result rather than about the party's
+   risk. The weak variant is dashed, because a name-and-country link is a lead
+   the reviewer still has to confirm. */
+.tag.tag-cross { border-color: #93C5FD; color: #1D4ED8; background: rgba(59, 130, 246, .1); font-weight: 600; }
+.tag.tag-cross.tag-cross-weak { border-style: dashed; font-weight: 500; }
+:root[data-theme="dark"] .tag.tag-cross { border-color: rgba(147, 197, 253, .5); color: #BFDBFE; background: rgba(59, 130, 246, .14); }
 .rc-tags.ids { margin-top: 0; }
 .tag.tag-id { font-family: var(--mono); font-size: .68rem; background: var(--color-input); border-color: #DDD6FE; }
 .tag.tag-id .id-type { color: var(--color-muted-fg); margin-right: 5px; }

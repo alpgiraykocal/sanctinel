@@ -38,6 +38,7 @@ const { screenEntity } = require('./lib/matcher');
 const { finalizeSnapshot, readCache, EXPECTED_AUTHORITIES } = require('./lib/ingest');
 const { egoNetwork } = require('./lib/graph');
 const { profile: ownershipProfile, summary: ownershipSummary, clusterOf: ownershipCluster } = require('./lib/ownership');
+const { crossListing } = require('./lib/crosslist');
 // Written by scripts/build-cache.js when it replaces the snapshot.
 const CHANGES_PATH = path.join(__dirname, 'cache', 'changes.json');
 const { createLimiter } = require('./lib/ratelimit');
@@ -489,6 +490,11 @@ function search(params) {
       // a different amount of work depending on whether it is 67 companies or
       // one group — and the count alone never says which.
       cluster: ownershipCluster(snapshot.entities, e.id),
+      // The same real party listed by another authority. Four authorities
+      // designate independently, so one shipowner can occupy four rows under
+      // four spellings — and a reviewer who cannot see that counts four parties
+      // and works four times. Null unless somebody else lists them.
+      crossListed: crossListing(snapshot.entities, e.id),
     });
   }
   results.sort(rankResults);
@@ -612,6 +618,10 @@ function handle(req, res) {
         entity: Object.assign({}, e, {
           lists: e.lists || [e.list],
           derivative: ownershipSummary(snapshot.entities, e.id),
+          // Every other listing of this party, with what justifies the link.
+          // On the entity itself, not beside it, because the permalink page
+          // renders the record through the same builder the result card uses.
+          crossListed: crossListing(snapshot.entities, e.id),
         }),
         ownership: ownershipProfile(snapshot.entities, e.id),
         snapshot: meta(),
