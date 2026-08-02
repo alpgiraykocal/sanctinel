@@ -1,0 +1,54 @@
+{
+ "generatedAt": "2026-08-02T09:58:29.549Z",
+ "publicationId": "933",
+ "retrievedAt": "2026-08-01T07:52:09.101Z",
+ "count": 31954,
+ "authorities": {
+  "OFAC": {
+   "count": 19569,
+   "aliasRate": 0.5227144974193878,
+   "addressRate": 1,
+   "identifierRate": 0.8435280290254995,
+   "birthDateRate": 0.38233941437988656,
+   "nationalityRate": 0.30870253973120754,
+   "relationshipEdges": 9143
+  },
+  "EU": {
+   "count": 6239,
+   "aliasRate": 0.881070684404552,
+   "addressRate": 0.32248757813752205,
+   "identifierRate": 0.31944221830421543,
+   "birthDateRate": 0.6020195544157717,
+   "nationalityRate": 0.4287546081102741,
+   "relationshipEdges": 0
+  },
+  "UN": {
+   "count": 1011,
+   "aliasRate": 0.7091988130563798,
+   "addressRate": 0.5479723046488625,
+   "identifierRate": 0.29475766567754697,
+   "birthDateRate": 0.675568743818002,
+   "nationalityRate": 0.6271018793273986,
+   "relationshipEdges": 0
+  },
+  "UK": {
+   "count": 5135,
+   "aliasRate": 0.5248296007789679,
+   "addressRate": 0.5624148003894839,
+   "identifierRate": 0.14741966893865627,
+   "birthDateRate": 0.6296007789678676,
+   "nationalityRate": 0.5322297955209347,
+   "relationshipEdges": 0
+  }
+ },
+ "derived": {
+  "dobParseRate": 0.999941089837997,
+  "countryResolveRate": 0.9996165460384413,
+  "attributeUnclassifiedRate": 0,
+  "identifierUnclassifiedRate": 0.042207344959638536,
+  "dobValues": 16975,
+  "countryValues": 41726,
+  "attributes": 88209,
+  "identifiers": 36297
+ }
+}

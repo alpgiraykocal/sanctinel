@@ -16,16 +16,26 @@
  * snapshot in place, so the deployed app keeps serving complete data while the
  * upstream problem is fixed.
  *
- * ALLOW_AUTHORITY_DROP=1 overrides, for the case where an authority is
- * intentionally retired and the baseline needs to move down.
+ * A second gate measures the FIELDS. An authority can stay present, the entity
+ * count can look normal, and a field can still go quiet — a renamed label, a
+ * moved XML block — which no count floor detects and which silently disables
+ * whatever screening control reads that field. lib/quality profiles every
+ * build, stores the profile beside the snapshot, and blocks a publish that
+ * would replace a fuller snapshot with an emptier one.
+ *
+ * ALLOW_AUTHORITY_DROP=1 overrides the first, for an authority that is
+ * intentionally retired. ALLOW_QUALITY_DROP=1 overrides the second, for a field
+ * a publisher genuinely stopped providing.
  */
 
 const fs = require('fs');
 const path = require('path');
 const zlib = require('zlib');
 const { buildLiveSnapshot, assertAuthorityCoverage, EXPECTED_AUTHORITIES, CACHE_GZ_PATH } = require('../lib/ingest');
+const quality = require('../lib/quality');
 
 const CHANGES_PATH = path.join(path.dirname(CACHE_GZ_PATH), 'changes.json');
+const QUALITY_PATH = path.join(path.dirname(CACHE_GZ_PATH), 'quality.json');
 const MAX_LISTED = 3000; // per side, so one bad day cannot produce a huge file
 
 /*
@@ -46,6 +56,18 @@ function previousSnapshot() {
     return { byId, authorities: authorities.length ? authorities : null, meta: prev.meta || {}, count: byId.size };
   } catch (e) {
     console.warn(`could not read previous snapshot: ${e.message}`);
+    return null;
+  }
+}
+
+// The quality profile the last published build measured. Absent on a first run
+// and after any manual snapshot edit, in which case only the coded floors apply.
+function previousQuality() {
+  try {
+    if (!fs.existsSync(QUALITY_PATH)) return null;
+    return JSON.parse(fs.readFileSync(QUALITY_PATH, 'utf8'));
+  } catch (e) {
+    console.warn(`could not read previous quality profile: ${e.message}`);
     return null;
   }
 }
@@ -134,17 +156,44 @@ function computeChanges(prev, next) {
     process.exit(1);
   }
 
-  const payload = {
-    meta: {
-      source: s.source, sources: s.sources,
-      publicationId: s.publicationId, publishedDate: s.publishedDate,
-      publications: s.publications, retrievedAt: s.retrievedAt, isLive: true,
-    },
-    entities: s.entities,
+  /*
+   * Field-level quality gate. The coverage guard above answers "is an authority
+   * missing"; this answers "is an authority still there but a FIELD gone quiet",
+   * which no count floor can see. Same two-tier verdict, same reasoning: a
+   * regression means the snapshot on disk is better and this one must not
+   * replace it.
+   */
+  const qualityNow = quality.profile(s);
+  const qualityPrev = previousQuality();
+  const gate = quality.compare(qualityNow, qualityPrev);
+  const qualityOverride = !!process.env.ALLOW_QUALITY_DROP;
+
+  if (gate.findings.length) {
+    console.log('\nquality gate:');
+    console.log(quality.format(gate));
+  } else {
+    console.log('quality gate: no findings');
+  }
+
+  if (!gate.publishable && !qualityOverride) {
+    console.error('\nbuild-cache refused to publish: a measured field regressed against the published snapshot.');
+    console.error('That is what a broken parser looks like from the outside — the entity count holds and a field empties.');
+    console.error('Check the source format, or set ALLOW_QUALITY_DROP=1 if the publisher genuinely stopped providing it.');
+    process.exit(1);
+  }
+
+  const meta = {
+    source: s.source, sources: s.sources,
+    publicationId: s.publicationId, publishedDate: s.publishedDate,
+    publications: s.publications, retrievedAt: s.retrievedAt, isLive: true,
   };
   fs.mkdirSync(path.dirname(CACHE_GZ_PATH), { recursive: true });
-  const gz = zlib.gzipSync(Buffer.from(JSON.stringify(payload)), { level: 9 });
+  const gz = zlib.gzipSync(Buffer.from(JSON.stringify({ meta, entities: s.entities })), { level: 9 });
   fs.writeFileSync(CACHE_GZ_PATH, gz);
+  // Written next to the snapshot so the NEXT build has something to compare
+  // against. Committed with it for the same reason the delta is: a regression
+  // is only visible against what was actually published.
+  fs.writeFileSync(QUALITY_PATH, JSON.stringify(qualityNow, null, 1));
   console.log(`built ${path.basename(CACHE_GZ_PATH)}: ${s.count} entities, ${(gz.length / 1048576).toFixed(1)}MB gz, in ${((Date.now() - t) / 1000).toFixed(0)}s`);
   console.log(`authorities: ${s.authorities.join(', ')}`);
 
@@ -172,5 +221,14 @@ function computeChanges(prev, next) {
     console.error(`\nCOVERAGE ALARM: ${coverage.error.message}`);
     console.error('Snapshot published anyway (the gap predates this build), and the app shows an incomplete-coverage banner.');
     process.exitCode = 3; // distinct from 1 (build failed, nothing written)
+  }
+
+  // A below-floor finding that is not a regression ships for the same reason a
+  // standing coverage gap does — the other fields are fresh and withholding them
+  // helps nobody — but the run still ends red so it cannot become the new normal.
+  if (!gate.ok && gate.publishable && !qualityOverride) {
+    console.error('\nQUALITY ALARM: a measured field is below its floor but no worse than the published snapshot.');
+    console.error(quality.format(gate));
+    process.exitCode = 3;
   }
 })().catch((e) => { console.error('build-cache failed:', e.message); process.exit(1); });

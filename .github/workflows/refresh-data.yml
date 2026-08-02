@@ -27,12 +27,14 @@ jobs:
 
       # Exit codes:
       #   0  clean build, full authority coverage
-      #   3  published, but an authority is still missing (a gap that predates
-      #      this build). The snapshot IS written and must be committed — the
-      #      other authorities are fresh — so this failure is deferred to the
-      #      last step, after the commit.
-      #   1  build failed, or a source regressed since the last good snapshot.
-      #      Nothing was written; the previous, more complete snapshot stands.
+      #   3  published, but an alarm is standing: an authority is still missing,
+      #      or a measured field is below its floor. Both predate this build.
+      #      The snapshot IS written and must be committed — the other data is
+      #      fresh — so the failure is deferred to the last step, after commit.
+      #   1  build failed, a source regressed since the last good snapshot, or a
+      #      field regressed against the published one (a parser breaking looks
+      #      exactly like that: same entity count, empty field). Nothing was
+      #      written; the previous, more complete snapshot stands.
       - name: Build fresh snapshot from OFAC SLS
         id: build
         env:
@@ -51,8 +53,10 @@ jobs:
           git config user.name "ofac-data-bot"
           git config user.email "actions@github.com"
           # The delta ships with the snapshot — a removal cannot be recovered
-          # from the snapshot alone once the previous one is gone.
-          git add cache/snapshot.json.gz cache/changes.json
+          # from the snapshot alone once the previous one is gone. The quality
+          # profile ships too, because a field regression is only visible
+          # against the numbers that were actually published.
+          git add cache/snapshot.json.gz cache/changes.json cache/quality.json
           if git diff --cached --quiet; then
             echo "No data change."
           else
@@ -63,8 +67,8 @@ jobs:
       # Runs last so the data still lands. A red run is the point: a screening
       # list that covers less than it claims is a false-negative source, and
       # nobody would otherwise notice it going quiet.
-      - name: Fail if authority coverage is incomplete
+      - name: Fail if an alarm is standing
         if: steps.build.outputs.code == '3'
         run: |
-          echo "::error::Snapshot published with incomplete authority coverage — see the build log for which source failed."
+          echo "::error::Snapshot published with a standing alarm — an authority is missing, or a measured field is below its floor. See the build log."
           exit 1
