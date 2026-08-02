@@ -5,6 +5,9 @@
 cache/*
 !cache/snapshot.json.gz
 !cache/changes.json
+# The field-level quality profile of the published build. Committed because the
+# gate compares against what was actually published, not against a local run.
+!cache/quality.json
 
 # Node
 node_modules/
