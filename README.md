@@ -56,7 +56,6 @@ Environment variables:
 | `TRUST_PROXY` | `true` | read client IP from `X-Forwarded-For` (set `false` if not behind a proxy) |
 | `SANCTIONS_SEARCH_CONTACT` | *(unset)* | mailbox put in the outgoing `User-Agent`. OFAC asks data consumers to identify themselves; set this to an address you read, so a publisher can reach you instead of silently throttling |
 | `ALLOW_AUTHORITY_DROP` | *(unset)* | build-cache escape hatch: publish a snapshot even if it lost an authority. Only for an authority that is genuinely retired — see "Coverage guard" below |
-| `ALLOW_QUALITY_DROP` | *(unset)* | build-cache escape hatch: publish even if a measured field regressed. Only for a field a publisher genuinely stopped providing — see "Field-level quality gate" below |
 
 ### Cold start and refresh recovery
 
@@ -113,52 +112,6 @@ and linking to the authority's own list. `GET /api/meta` reports it as
 Note that the fix for an expired certificate is for the publisher to renew it.
 Do not disable TLS verification to work around this: these responses **are** the
 screening list, so an unverified one invites list tampering.
-
-### Field-level quality gate
-
-The coverage guard catches an authority vanishing. It cannot catch the failure one level
-down: the authority is still there, the entity count is normal, and **a field has gone
-quiet**. Every feed here is parsed from a format its publisher can change without telling
-anyone, and this app reads those fields for real decisions:
-
-- if OFAC renamed `Birthdate`, every birth date would stop being one, the year-of-birth
-  modifier would silently stop corroborating anything, and the build would go green;
-- if the EU reordered its XML, addresses could empty out while names kept parsing;
-- if the relationship block moved, the 50 Percent Rule module would report *"no ownership
-  chain to a blocked person"* for every party in the list — which reads exactly like a
-  clean result.
-
-None of those shrink the snapshot enough to trip a count floor. So `lib/quality.js`
-profiles each build — per authority: parties, alias / address / identifier / birth-date /
-nationality fill rates, relationship edges; globally: date-parse rate, country-resolution
-rate, and how much of the vocabulary went unclassified — writes it to
-`cache/quality.json` next to the snapshot, and compares the next build against it.
-
-| Case | Publish? | Exit |
-|---|---|---|
-| **Regression** — a measure fell materially against the published profile (>10% for a party count, >25% for a rate) | **No.** The snapshot on disk is fuller; keep serving it | `1` |
-| **Below floor** — worse than a minimum written down in `lib/quality.js`, but no worse than last time | **Yes.** The rest of the data is fresh | `3`, after the commit step |
-
-The floors are constants in code rather than a high-water mark taken from the last
-profile, for the same reason the standing-gap check compares against `EXTRA_SOURCES`:
-comparing only to last time ratchets, and one degraded publish would become the new
-normal. Moving a floor is a reviewable diff. `ALLOW_QUALITY_DROP=1` overrides, for a
-field a publisher genuinely stopped providing.
-
-Exercised against six synthetic degradations — a renamed label, an emptied address block,
-a vanished ownership graph, an unparseable date format, country fields replaced with
-internal codes, and an ordinary day of churn. The first five block or alarm; the ordinary
-day passes clean.
-
-```bash
-node scripts/quality-report.js
-```
-
-prints the current profile and the verdict without a rebuild — the question "did that
-parser change move any field" should be one command, not a fetch of every upstream list.
-`--write` adopts the current numbers as the baseline, which is for seeding or for a
-reviewed change; using it to silence a finding disables the alarm rather than answering
-it.
 
 Example behind Caddy:
 
@@ -298,76 +251,6 @@ inputs act as **score modifiers** — they raise a fuzzy hit they confirm and lo
 they contradict (a green `ID ✓` / red `ID ✗` badge shows which), never as a hard filter.
 This is the standard screening control of using secondary identifiers to resolve fuzzy
 name matches.
-
-The country modifier compares **ISO-3166 codes, not strings**. Four authorities write one
-jurisdiction four ways — OFAC `Korea, North`, the EU `KOREA, DEMOCRATIC PEOPLE'S REPUBLIC
-OF`, plus `DPRK` and `North Korea` — and the string comparison shared no token between
-them, so a user typing "North Korea" against a party OFAC publishes under the long form
-got the **red contradiction badge and a score penalty for a corroborating identifier**.
-Across the snapshot that was 2,254 wrong verdicts on a twelve-country probe. `lib/countries.js`
-now resolves 99.96% of the 41,726 country-bearing values to a code (up from 97.8% before
-its table was completed to full ISO-3166), and three details earn their keep:
-
-- **Sovereign expansion.** `HK`, `MO`, the British and French overseas territories carry a
-  parent, and codes are expanded on both sides, so a Hong Kong party does not contradict
-  "China" — and typing "Hong Kong" against a party listed in China does not either. The
-  cost is that two territories of one sovereign corroborate each other; on a ±0.04 nudge,
-  not penalizing an ambiguous jurisdiction signal is the safe direction.
-- **Address lines are read where the country field is empty.** 3,582 addresses in the
-  snapshot say `Located in Syria` with no structured country, and the string comparison
-  this replaces did see them. The rightmost jurisdiction in the line wins, which is postal
-  convention — `Atlanta, Georgia, United States` is in the US, not in Georgia.
-- **Unresolved values fall back to the old string comparison** rather than silently
-  skipping the check, so a region or disputed territory the table does not know is still
-  screened the way it always was.
-
-Entity records keep the authority's own wording throughout — the codes are a comparison
-surface, not a rewrite of the published data.
-
-The year-of-birth modifier compares **intervals, not a list of years**. The lists publish
-a birth date twelve different ways, and 140 of those values state a multi-year range
-("1975 to 1979"). Pulling every `\b(19|20)\d\d\b` out of the string and testing the user's
-year for membership caught the two endpoints and nothing between them, so **162 years that
-the list itself places inside a stated range scored as contradictions**. `lib/dates.js`
-parses all 16,975 birth-date values (100%) into inclusive `from … to` bounds plus the
-precision they were stated at — day, month, year or range — and the modifier tests
-overlap. Precision is kept rather than discarded: "born 1990" and "born 26 Mar 1990" are
-different evidence, and a reviewer comparing a passport to a hit needs to see which the
-list actually gave.
-
-### Canonical field vocabulary
-
-One snapshot carries **92 distinct attribute labels and 131 identifier types** for maybe
-two dozen real concepts, because each authority uses its own wording. A birth date is
-`Birthdate` under OFAC and `Date of Birth` everywhere else — 8,254 against 8,721. A
-national identity number is `National ID` (6,906), `National ID No.` (1,699) and
-`National Identification Number` (149).
-
-Consumers used to pattern-match their way around that, and it had already gone wrong
-where nobody was looking: the statistics page selected nationality with
-`label === 'Nationality' || label === 'Citizenship'`, which **never matched OFAC's own
-`Nationality Country` (5,821 attributes) or `Citizenship Country` (1,142)**. For every
-OFAC party the country chart quietly fell back to the address country, so it described
-where a party is located rather than what it is a national of.
-
-`lib/vocab.js` tags each attribute and identifier with a canonical `kind` at ingest —
-100% of attribute labels and 95.8% of identifier types resolve, and the 4.2% that do not
-are values the publisher itself declined to type ("Identification Number", "Other
-identification number"). The authority's own label and value are untouched; the kind is
-what code compares, so the screening modifier now selects `kind === 'dob'` rather than
-`/birth|born|dob/i` (which also matched "Place of Birth" and would read a year out of a
-birthplace).
-
-The annotations are **derived at read time, not stored**: rebuilding them costs 112ms
-across the whole snapshot, while persisting them would add 7.3% to a 5MB blob this repo
-commits every single day. It also keeps `cache/snapshot.json.gz` exactly what the
-authorities published, with this layer's opinions correctable by shipping code rather
-than by a rebuild.
-
-Both derivations are frozen in the iOS conformance fixture over the **real inventory** —
-every distinct label, type and birth-date value in the snapshot, 11,688 cases — because
-they decide which attribute *is* a birth date and which year corroborates a hit, and a
-port that quietly disagreed would move scores on the phone and nowhere else.
 
 **Non-name identifier screening:** the query is also matched exactly (case/space/
 punctuation-insensitive) against every structured identifier — passport, national/tax/
@@ -628,14 +511,9 @@ sanctions compliance.
 | `lib/searchindex.js` | Candidate prefilter (trigram / bigram / acronym / identifier lanes) |
 | `lib/ownership.js` | 50% Rule: ownership chains to a blocked person, and the aggregate-test flag |
 | `lib/stats.js` | Snapshot analytics: composition, timeline, recent designations |
-| `lib/countries.js` | Cross-authority country normalization (ISO codes, sovereign map, free-text jurisdictions) |
-| `lib/vocab.js` | Canonical `kind` for every attribute label and identifier type |
-| `lib/dates.js` | Birth dates parsed into comparable intervals with their stated precision |
-| `lib/quality.js` | Field-level quality profile and the gate that blocks a build which emptied one |
-| `scripts/quality-report.js` | Prints that profile and the gate verdict without a rebuild |
+| `lib/countries.js` | Cross-authority country normalization (ISO codes, long forms) |
 | `scripts/verify-recall.js` | Proves the prefilter returns what a full scan would, non-Latin scripts included |
 | `cache/changes.json` | What the last rebuild added and removed; written beside the snapshot |
-| `cache/quality.json` | Field fill rates the last published build measured; the next build's baseline |
 | `public/record.js` | How a listed party renders — shared by the results and the permalink page so they cannot disagree |
 | `public/chrome.js` | Shared chrome: missing-authority banner, keyboard shortcuts |
 | `public/entity.html` · `entity.js` | Permalink page for one record |
