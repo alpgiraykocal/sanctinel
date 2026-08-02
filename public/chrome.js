@@ -92,6 +92,22 @@ window.SS = (function () {
     }
 
     /*
+     * One authority can be much older than the rest. When a source is down its
+     * records are carried forward from the last good build so the others can
+     * still publish, which is the right trade — but it means the snapshot date
+     * no longer describes every authority in it, and a reviewer relying on the
+     * EU list deserves to know its data stopped two days ago.
+     */
+    const stale = (m && m.staleAuthorities) || [];
+    if (stale.length) {
+      parts.push(
+        `<strong>${stale.map((x) => `${esc(x.authority)} data is ${esc(String(x.ageHours))}h old`).join(', ')}.</strong> ` +
+        `That source was unreachable when this snapshot was built, so its last good records were kept. ` +
+        `Anything ${stale.length > 1 ? 'those authorities have' : 'that authority has'} designated since is not screened here.`
+      );
+    }
+
+    /*
      * A snapshot that has stopped updating is its own coverage problem, and it
      * was invisible: this instance is too small to run the runtime refresh, so
      * it declines rather than being OOM-killed mid-fetch, and without this line

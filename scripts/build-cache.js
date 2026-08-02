@@ -53,7 +53,22 @@ function previousSnapshot() {
       byId.set(String(e.id), { id: String(e.id), name: e.name, authority: e.authority, list: e.list, type: e.type });
     }
     const authorities = [...new Set((prev.entities || []).map((e) => e.authority).filter(Boolean))].sort();
-    return { byId, authorities: authorities.length ? authorities : null, meta: prev.meta || {}, count: byId.size };
+    return {
+      byId,
+      authorities: authorities.length ? authorities : null,
+      meta: prev.meta || {},
+      count: byId.size,
+      /*
+       * The full records, for carry-forward. Held only until the build hands
+       * them to buildLiveSnapshot, which keeps the ones it needs and lets the
+       * rest go — the slim byId index above is what the delta uses afterwards.
+       */
+      carryForward: {
+        entities: prev.entities || [],
+        retrievedAt: (prev.meta || {}).retrievedAt || '',
+        authorityFreshness: (prev.meta || {}).authorityFreshness || {},
+      },
+    };
   } catch (e) {
     console.warn(`could not read previous snapshot: ${e.message}`);
     return null;
@@ -137,11 +152,14 @@ function computeChanges(prev, next) {
     console.log(`Retry run: existing snapshot is missing ${missing.join(', ')} — attempting to recover.`);
   }
 
-  const s = await buildLiveSnapshot();
+  const s = await buildLiveSnapshot(prev && prev.carryForward);
 
   for (const src of s.sources || []) {
-    console.log(`  ${src.ok ? 'ok  ' : 'FAIL'} ${src.label} [${src.authorities.join(', ')}]` +
-      (src.ok ? ` — ${src.count} records` : ` — ${src.error}`));
+    const state = src.ok ? 'ok  ' : (src.carriedForward ? 'STALE' : 'FAIL');
+    console.log(`  ${state} ${src.label} [${src.authorities.join(', ')}]` +
+      (src.ok ? ` — ${src.count} records`
+        : src.carriedForward ? ` — ${src.error}; carried forward ${src.count} records as of ${src.asOf || 'unknown'}`
+          : ` — ${src.error}`));
   }
 
   const coverage = assertAuthorityCoverage(s, baseline);
@@ -186,6 +204,7 @@ function computeChanges(prev, next) {
     source: s.source, sources: s.sources,
     publicationId: s.publicationId, publishedDate: s.publishedDate,
     publications: s.publications, retrievedAt: s.retrievedAt, isLive: true,
+    authorityFreshness: s.authorityFreshness || {},
   };
   fs.mkdirSync(path.dirname(CACHE_GZ_PATH), { recursive: true });
   const gz = zlib.gzipSync(Buffer.from(JSON.stringify({ meta, entities: s.entities })), { level: 9 });
@@ -226,6 +245,14 @@ function computeChanges(prev, next) {
   // A below-floor finding that is not a regression ships for the same reason a
   // standing coverage gap does — the other fields are fresh and withholding them
   // helps nobody — but the run still ends red so it cannot become the new normal.
+  const carried = (s.sources || []).filter((src) => src.carriedForward);
+  if (carried.length) {
+    console.error(`\nSTALE AUTHORITY: ${carried.map((c) => `${c.authorities.join('/')} (${c.error})`).join('; ')}`);
+    console.error('Their records were carried forward from the last good build so the other authorities could publish.');
+    console.error('The app shows the per-authority as-of date. Fix the upstream source.');
+    process.exitCode = 3;
+  }
+
   if (!gate.ok && gate.publishable && !qualityOverride) {
     console.error('\nQUALITY ALARM: a measured field is below its floor but no worse than the published snapshot.');
     console.error(quality.format(gate));

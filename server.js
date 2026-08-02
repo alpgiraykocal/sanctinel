@@ -178,6 +178,23 @@ function missingAuthorities() {
   return EXPECTED_AUTHORITIES.filter((a) => !have.has(a));
 }
 
+/*
+ * Authorities whose data is materially older than the snapshot itself, because
+ * their source was down when it was built. A day's tolerance: the pipeline
+ * republishes daily and a few hours of lag is the normal state.
+ */
+const STALE_AUTHORITY_HOURS = 24;
+function staleAuthorities() {
+  const freshness = snapshot.authorityFreshness || {};
+  const out = [];
+  for (const [authority, asOf] of Object.entries(freshness)) {
+    if (!asOf) continue;
+    const hours = (Date.now() - Date.parse(asOf)) / 36e5;
+    if (hours >= STALE_AUTHORITY_HOURS) out.push({ authority, asOf, ageHours: Math.round(hours) });
+  }
+  return out.sort((a, b) => b.ageHours - a.ageHours);
+}
+
 function meta() {
   const missing = missingAuthorities();
   return {
@@ -188,6 +205,15 @@ function meta() {
     retrievedAt: snapshot.retrievedAt,
     count: snapshot.count, lists: snapshot.lists, programs: snapshot.programs, authorities: snapshot.authorities || [],
     missingAuthorities: missing,
+    /*
+     * When each authority's data was actually retrieved. One snapshot date
+     * cannot describe a snapshot whose parts were fetched days apart, and after
+     * carry-forward they routinely are: a source that is down contributes its
+     * last good records rather than nothing, so the other authorities can still
+     * publish on time.
+     */
+    authorityFreshness: snapshot.authorityFreshness || {},
+    staleAuthorities: staleAuthorities(),
     // Set when the instance is too small to refresh at runtime. The snapshot is
     // still whatever the last build published — it just will not get newer here.
     refreshBlocked,

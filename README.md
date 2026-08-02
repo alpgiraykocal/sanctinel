@@ -152,6 +152,56 @@ Note that the fix for an expired certificate is for the publisher to renew it.
 Do not disable TLS verification to work around this: these responses **are** the
 screening list, so an unverified one invites list tampering.
 
+### One publisher's outage no longer freezes the others
+
+The coverage guard refuses to publish a snapshot that lost an authority, and that is
+right. But the cost landed somewhere nobody intended: the EU list served **HTTP 500 from
+2026-08-01**, the guard blocked every build for two days, and OFAC, UN and UK data went
+stale alongside it. Four healthy sources frozen by a fifth.
+
+A failing source now contributes **its records from the last good snapshot** instead of
+contributing nothing. The authority stays present and screenable, the fresh authorities
+publish on time, and each carries its own as-of date, so staleness is visible per
+authority rather than hidden inside one snapshot timestamp:
+
+```
+  ok    OFAC SLS (advanced /entities) [OFAC] — 20185 records
+  STALE EU FSD [EU] — HTTP 500; carried forward 6239 records as of 2026-08-01T07:52
+  ok    UN Security Council [UN] — 1011 records
+  ok    UK OFSI [UK] — 5135 records
+  ok    U.S. export-control (BIS + State) [BIS, State] — 6256 records
+```
+
+`GET /api/meta` reports `authorityFreshness` and `staleAuthorities`, and past a day the
+coverage banner says so:
+
+> **EU data is 34h old.** That source was unreachable when this snapshot was built, so its
+> last good records were kept. Anything that authority has designated since is not
+> screened here.
+
+The run still ends red (exit `3`). Withholding a designation that IS in hand, because an
+unrelated publisher is down, helps nobody — but a stale authority must never be quiet.
+
+### The trade.gov certificate, resolved
+
+The 2026-07-28 incident that motivated the coverage guard had a fix available all along:
+`api.trade.gov` still presents a certificate that expired on 2026-07-28, while
+**`data.trade.gov`** carries one issued 2026-07-31 and valid into 2027. Both are Commerce
+Department hosts serving the same Consolidated Screening List, and the payload is
+byte-identical in shape — so moving the URL restored all **6,256 BIS + State records**
+with no parser change.
+
+Do not work around an expired certificate by disabling TLS verification. These responses
+*are* the screening list; an unverified one invites list tampering. Find the host the
+publisher is keeping alive, or wait.
+
+The EU has no equivalent alternative. Every FSD distribution — XML 1.0 and 1.1, CSV, PDF,
+including the checksum-bearing URLs the service's own RSS feed advertises — returns 500
+from the same application, while the RSS metadata endpoint stays up. The dataset record on
+data.europa.eu lists no other machine-readable distribution, and sanctionsmap.eu is a
+visualization app whose internal API is neither documented nor the authoritative
+distribution. So: carry forward, label it, and wait for the Commission.
+
 ### Field-level quality gate
 
 The coverage guard catches an authority vanishing. It cannot catch the failure one level
