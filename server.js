@@ -517,11 +517,27 @@ function handle(req, res) {
   const p = url.pathname;
   const ip = clientIp(req);
 
-  if (p === '/healthz') return sendJson(res, 200, { status: 'ok', live: !!snapshot.isLive, loading, entities: snapshot.count });
+  // Liveness, not readiness: the process is up and answering even while the
+  // snapshot parses, which is exactly what a platform health check should see
+  // so it does not kill a container mid-boot. `booting` reports the difference.
+  if (p === '/healthz') return sendJson(res, 200, { status: 'ok', booting, live: !!snapshot.isLive, loading, entities: booting ? 0 : snapshot.count });
 
   if (p.startsWith('/api/')) {
     const rl = apiLimiter.check(ip);
     if (!rl.ok) return sendJson(res, 429, { error: 'rate limit exceeded' }, { 'Retry-After': String(rl.retryAfter) });
+
+    /*
+     * Until the snapshot is parsed, `snapshot` still holds the fictional sample
+     * data the process starts with. Screening against that and returning it as
+     * a result would be far worse than a short wait, so say plainly that the
+     * data is not ready and let the client retry.
+     */
+    if (booting) {
+      return sendJson(res, 503, {
+        error: 'snapshot still loading — the server is starting up',
+        booting: true,
+      }, { 'Retry-After': '5' });
+    }
 
     // Read-only endpoints: GET and HEAD only, uniformly.
     const readOnly = req.method === 'GET' || req.method === 'HEAD';
@@ -666,15 +682,47 @@ function shutdown(sig) {
 process.on('SIGTERM', () => shutdown('SIGTERM'));
 process.on('SIGINT', () => shutdown('SIGINT'));
 
+/*
+ * Boot without blocking the first requests.
+ *
+ * The port used to open and then, in the same tick, readCache() gunzipped and
+ * parsed a ~5MB snapshot and warmIndex() built the trigram index — ten to
+ * twenty seconds of synchronous work on a small instance. Connections were
+ * accepted during it and answered by nobody, so the platform proxy gave up and
+ * returned 502: a cold start looked like an outage, on a free tier that cold
+ * starts on every visit after fifteen idle minutes.
+ *
+ * Deferring the heavy work by one tick lets the server answer while it loads.
+ * `booting` makes it answer HONESTLY — /healthz stays 200 because the process
+ * is alive, but the screening endpoints return 503 rather than quietly
+ * screening against the fictional sample data that `snapshot` still holds at
+ * this point. A search that silently ran against sample data would be the worst
+ * possible way to lose this race.
+ */
+let booting = !DEMO_ONLY;
+
 server.listen(PORT, HOST, () => {
-  const cached = DEMO_ONLY ? null : readCache();
-  if (cached) { snapshot = cached.snapshot; console.log(`Loaded cached snapshot: ${snapshot.source} (${snapshot.count} entities)`); }
   console.log(`Sanctions screening on http://${HOST}:${PORT}  (live=${!DEMO_ONLY}, admin-refresh=${ADMIN_TOKEN ? 'on' : 'off'})`);
-  console.log(`Snapshot: ${snapshot.source} (${snapshot.count} entities)`);
-  warmIndex();
-  if (!DEMO_ONLY) {
+  if (DEMO_ONLY) {
+    console.log(`Snapshot: ${snapshot.source} (${snapshot.count} entities)`);
+    warmIndex();
+    return;
+  }
+  console.log('Loading snapshot…');
+  setImmediate(async () => {
+    // readCache is one unavoidable synchronous gunzip + parse (~0.7s here); the
+    // index is the larger cost (~1.8s) and is built in slices so the process
+    // can answer "still loading" throughout instead of going silent.
+    const cached = readCache();
+    if (cached) { snapshot = cached.snapshot; console.log(`Loaded cached snapshot: ${snapshot.source} (${snapshot.count} entities)`); }
+    const t = Date.now();
+    index = await searchIndex.buildAsync(snapshot.entities);
+    indexedSnapshot = snapshot;
+    console.log(`Search index built: ${snapshot.count} entities in ${Date.now() - t}ms`);
+    booting = false;
+    console.log(`Ready: ${snapshot.source} (${snapshot.count} entities)`);
     const stale = !cached || cached.ageMs > TTL_MS;
     if (stale) startRefresh();
     else console.log(`Cache fresh (${(cached.ageMs / 3600000).toFixed(1)}h old) — no refresh needed.`);
-  }
+  });
 });

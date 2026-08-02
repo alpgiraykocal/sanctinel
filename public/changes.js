@@ -127,7 +127,7 @@ $('cExport').addEventListener('click', exportCsv);
 
 (async () => {
   try {
-    const d = await fetch('api/changes').then((r) => r.json());
+    const { body: d } = await window.SS.getJson('api/changes');
     window.SS.renderCoverage(d.snapshot);
     if (d.unavailable) {
       $('changesProvenance').textContent = '';

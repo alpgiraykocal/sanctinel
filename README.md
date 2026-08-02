@@ -57,6 +57,31 @@ Environment variables:
 | `SANCTIONS_SEARCH_CONTACT` | *(unset)* | mailbox put in the outgoing `User-Agent`. OFAC asks data consumers to identify themselves; set this to an address you read, so a publisher can reach you instead of silently throttling |
 | `ALLOW_AUTHORITY_DROP` | *(unset)* | build-cache escape hatch: publish a snapshot even if it lost an authority. Only for an authority that is genuinely retired — see "Coverage guard" below |
 
+### Cold start and refresh recovery
+
+**Booting no longer looks like an outage.** `server.listen` opened the port and then, in
+the same tick, gunzipped and parsed the snapshot and built the trigram index — ~2.5s here
+and closer to 18s on a small instance. Requests arriving in that window were accepted and
+answered by nobody, so the platform proxy returned **502**: on a free tier that sleeps
+after 15 idle minutes, every first visitor saw one.
+
+The load is now deferred off the listen callback, and `searchindex.buildAsync` builds the
+index in 2,000-entity slices with the event loop free between them (proved byte-identical
+to `build()`). Throughout, `/healthz` answers 200 with `booting: true` — liveness, so a
+platform health check does not kill the container mid-boot — while `/api/*` returns
+**503 + Retry-After**. That distinction is deliberate: until the snapshot is parsed the
+process still holds the fictional sample data it starts with, and screening against that
+and returning it as a result would be far worse than a short wait. Every page fetches
+through `SS.getJson`, which waits out a 503 rather than reporting an error the user can
+do nothing about.
+
+**A second refresh pass recovers from upstream outages.** On 2026-08-01 the EU list served
+HTTP 500 for hours; the coverage guard correctly refused to publish, and because the
+workflow ran once a day that unrelated outage froze OFAC, UN and UK data for a full 24
+hours too. An 11:00 UTC pass runs with `ONLY_IF_DEGRADED=1`, which exits before fetching
+anything when the published snapshot already has full coverage — so on a normal day it
+costs seconds and adds no commit, and on a bad day it halves the staleness.
+
 ### Coverage guard
 
 `scripts/build-cache.js` (and the background refresh worker) checks that the new

@@ -22,7 +22,11 @@ function scoreClass(t) {
 let pollTimer = null;
 async function loadMeta() {
   try {
-    const m = await fetch('api/meta').then((r) => r.json());
+    // Waits out a cold start rather than reporting a failure the user cannot act on.
+    const { body: m } = await window.SS.getJson('api/meta', {
+      onWait: () => { $('snapSource').textContent = 'Starting…'; },
+    });
+    if (!m || typeof m.count !== 'number') { $('snapSource').textContent = 'Snapshot unavailable'; return; }
     applyMeta(m);
     pollIfLoading(m);
   } catch { $('snapSource').textContent = 'Snapshot unavailable'; }
@@ -55,7 +59,7 @@ function pollIfLoading(m) {
   clearTimeout(pollTimer);
   if (!m.loading) return;
   pollTimer = setTimeout(async () => {
-    try { const mm = await fetch('api/meta').then((r) => r.json()); applyMeta(mm); pollIfLoading(mm); }
+    try { const { body: mm } = await window.SS.getJson('api/meta'); applyMeta(mm); pollIfLoading(mm); }
     catch { pollIfLoading(m); }
   }, 5000);
 }
@@ -109,8 +113,10 @@ async function runSearch(e) {
   $('resultList').innerHTML = '<div class="skeleton"></div><div class="skeleton" style="margin-top:14px"></div>';
 
   try {
-    const res = await fetch('api/search?' + params, { signal: controller.signal });
-    const data = await res.json().catch(() => ({}));
+    const { res, body: data } = await window.SS.getJson('api/search?' + params, {
+      init: { signal: controller.signal },
+      onWait: () => { $('resultList').innerHTML = '<div class="no-hits">Server is starting up and loading the sanctions snapshot — retrying…</div>'; },
+    });
     // Rate limits and server errors come back as {error}. Without this the
     // render path hit `data.results.length` on undefined and the analyst saw a
     // JavaScript type error instead of "search rate limit exceeded".
@@ -590,8 +596,7 @@ async function runBelowTheLine(opts) {
     threshold: $('threshold').value, yob: $('yob').value.trim(), country: $('country').value.trim(),
   });
   try {
-    const res = await fetch('api/below-the-line?' + params);
-    const d = await res.json().catch(() => ({}));
+    const { res, body: d } = await window.SS.getJson('api/below-the-line?' + params);
     if (!res.ok || !Array.isArray(d.steps)) {
       panel.innerHTML = `<div class="no-hits"><strong>Below-the-line check unavailable:</strong> ${esc(d.error || 'server responded ' + res.status)}.</div>`;
       return;

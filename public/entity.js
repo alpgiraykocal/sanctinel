@@ -124,8 +124,7 @@ function fail(msg) {
   $('entityLoading').hidden = false;
   if (!/^[\w:.-]+$/.test(id)) { $('entityLoading').hidden = true; return fail('No record id in this link.'); }
   try {
-    const res = await fetch('api/entity?id=' + encodeURIComponent(id));
-    const data = await res.json().catch(() => ({}));
+    const { res, body: data } = await window.SS.getJson('api/entity?id=' + encodeURIComponent(id));
     if (!res.ok || !data.entity) {
       // A 404 here is meaningful: the party is not in the snapshot at all, which
       // is different from "not designated" and must not be read as a clearance.

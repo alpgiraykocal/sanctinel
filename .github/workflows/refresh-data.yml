@@ -3,6 +3,13 @@ name: Refresh OFAC data
 on:
   schedule:
     - cron: '0 23 * * *'   # 23:00 UTC = 01:00 Stockholm (CEST); 00:00 in winter (CET)
+    # Recovery pass. The coverage guard refuses to publish a snapshot that lost
+    # an authority, so a few hours of upstream downtime — the EU list served
+    # HTTP 500 for most of 2026-08-01 — froze every OTHER authority for a full
+    # day as well. This run exits immediately when the published snapshot
+    # already has full coverage (ONLY_IF_DEGRADED), so on a normal day it costs
+    # seconds and commits nothing.
+    - cron: '0 11 * * *'
   workflow_dispatch:        # manual run button
 
 permissions:
@@ -28,6 +35,10 @@ jobs:
       #      Nothing was written; the previous, more complete snapshot stands.
       - name: Build fresh snapshot from OFAC SLS
         id: build
+        env:
+          # The 11:00 pass exists only to recover a degraded snapshot; it stops
+          # before fetching anything when coverage is already complete.
+          ONLY_IF_DEGRADED: ${{ github.event.schedule == '0 11 * * *' && '1' || '' }}
         run: |
           set +e
           node scripts/build-cache.js
