@@ -31,7 +31,7 @@
 const fs = require('fs');
 const path = require('path');
 const zlib = require('zlib');
-const { buildLiveSnapshot, assertAuthorityCoverage, EXPECTED_AUTHORITIES, CACHE_GZ_PATH, serializeEntities } = require('../lib/ingest');
+const { buildLiveSnapshot, assertAuthorityCoverage, EXPECTED_AUTHORITIES, CACHE_GZ_PATH } = require('../lib/ingest');
 const quality = require('../lib/quality');
 
 const CHANGES_PATH = path.join(path.dirname(CACHE_GZ_PATH), 'changes.json');
@@ -188,10 +188,7 @@ function computeChanges(prev, next) {
     publications: s.publications, retrievedAt: s.retrievedAt, isLive: true,
   };
   fs.mkdirSync(path.dirname(CACHE_GZ_PATH), { recursive: true });
-  // Published data only: the canonical kinds and parsed date intervals are
-  // derived at read time, and baking them in would add 7.3% to a blob this
-  // workflow commits every day.
-  const gz = zlib.gzipSync(Buffer.from(serializeEntities(s.entities, meta)), { level: 9 });
+  const gz = zlib.gzipSync(Buffer.from(JSON.stringify({ meta, entities: s.entities })), { level: 9 });
   fs.writeFileSync(CACHE_GZ_PATH, gz);
   // Written next to the snapshot so the NEXT build has something to compare
   // against. Committed with it for the same reason the delta is: a regression

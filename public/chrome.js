@@ -67,15 +67,47 @@ window.SS = (function () {
     const bar = document.getElementById('coverageBar');
     if (!bar) return;
     const missing = (m && m.missingAuthorities) || [];
-    if (!missing.length) { bar.hidden = true; return; }
-    const why = ((m && m.sourceFailures) || []).map((f) => `${f.label}: ${f.error}`).join(' · ');
-    const plural = missing.length > 1;
-    const text = document.getElementById('coverageText');
-    text.innerHTML =
-      `<strong>Incomplete coverage — ${esc(missing.join(' and '))} ${plural ? 'lists are' : 'list is'} not being screened.</strong> ` +
-      `A search cannot clear a party against ${plural ? 'these authorities' : 'this authority'} right now; check ` +
-      missing.map((a) => `<a href="${esc(AUTHORITY_URL[a] || AUTHORITY_URL.OFAC)}" rel="noreferrer noopener" target="_blank">${esc(a)}</a>`).join(' and ') +
-      ` directly.${why ? ` <span class="coverage-why">(${esc(why)})</span>` : ''}`;
+    const blocked = m && m.refreshBlocked;
+    const ageHours = m && m.snapshotAgeHours;
+
+    /*
+     * Two independent ways the screen in front of you covers less than it looks
+     * like it does, and they are ADDITIVE rather than exclusive. An earlier
+     * version showed only the first, which in practice meant the second was
+     * never seen: BIS and State have been missing since a certificate expired,
+     * so a missing-authority message is almost always on screen and would have
+     * hidden the staleness one behind it indefinitely.
+     */
+    const parts = [];
+
+    if (missing.length) {
+      const why = ((m && m.sourceFailures) || []).map((f) => `${f.label}: ${f.error}`).join(' · ');
+      const plural = missing.length > 1;
+      parts.push(
+        `<strong>Incomplete coverage — ${esc(missing.join(' and '))} ${plural ? 'lists are' : 'list is'} not being screened.</strong> ` +
+        `A search cannot clear a party against ${plural ? 'these authorities' : 'this authority'} right now; check ` +
+        missing.map((a) => `<a href="${esc(AUTHORITY_URL[a] || AUTHORITY_URL.OFAC)}" rel="noreferrer noopener" target="_blank">${esc(a)}</a>`).join(' and ') +
+        ` directly.${why ? ` <span class="coverage-why">(${esc(why)})</span>` : ''}`
+      );
+    }
+
+    /*
+     * A snapshot that has stopped updating is its own coverage problem, and it
+     * was invisible: this instance is too small to run the runtime refresh, so
+     * it declines rather than being OOM-killed mid-fetch, and without this line
+     * the only symptom is data that quietly stops moving. Shown past a day,
+     * since the pipeline republishes daily and a few hours of lag is normal.
+     */
+    if (blocked && ageHours != null && ageHours >= 24) {
+      parts.push(
+        `<strong>This snapshot is ${esc(String(ageHours))} hours old and is not refreshing on this instance.</strong> ` +
+        'Anything designated since then is not screened here. ' +
+        `<span class="coverage-why">(${esc(blocked.reason)})</span>`
+      );
+    }
+
+    if (!parts.length) { bar.hidden = true; return; }
+    document.getElementById('coverageText').innerHTML = parts.join('<br>');
     bar.hidden = false;
   }
 

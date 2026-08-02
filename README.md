@@ -57,6 +57,7 @@ Environment variables:
 | `SANCTIONS_SEARCH_CONTACT` | *(unset)* | mailbox put in the outgoing `User-Agent`. OFAC asks data consumers to identify themselves; set this to an address you read, so a publisher can reach you instead of silently throttling |
 | `ALLOW_AUTHORITY_DROP` | *(unset)* | build-cache escape hatch: publish a snapshot even if it lost an authority. Only for an authority that is genuinely retired — see "Coverage guard" below |
 | `ALLOW_QUALITY_DROP` | *(unset)* | build-cache escape hatch: publish even if a measured field regressed. Only for a field a publisher genuinely stopped providing — see "Field-level quality gate" below |
+| `MEMORY_LIMIT_MB` | *(detected)* | override the container memory ceiling used to decide whether a runtime refresh fits. Read from cgroups when available; set this on a platform that hides them — see "Runtime refresh and the memory ceiling" below |
 
 ### Cold start and refresh recovery
 
@@ -82,6 +83,43 @@ workflow ran once a day that unrelated outage froze OFAC, UN and UK data for a f
 hours too. An 11:00 UTC pass runs with `ONLY_IF_DEGRADED=1`, which exits before fetching
 anything when the published snapshot already has full coverage — so on a normal day it
 costs seconds and adds no commit, and on a bad day it halves the staleness.
+
+### Runtime refresh and the memory ceiling
+
+The bundled snapshot is rebuilt daily by the GitHub Action, so the runtime fetch is a
+fallback for when that has not happened. On a 512MB instance **that fallback does not
+fit**, and finding out the hard way cost an outage:
+
+```
+main process, snapshot parsed + index built   ~420-490MB RSS
+refresh worker, capped at                      300MB old generation
+Render free tier, total                        512MB
+```
+
+The bundled snapshot went 28 hours old — past the 26h TTL — so every cold boot started
+the refresh, the container was OOM-killed mid-fetch, restarted, found the same stale
+cache, and started the same refresh again. **The loop could not break itself**: the thing
+that would have fixed the staleness was the thing doing the killing. `/healthz` answering
+200 during boot, added so a platform health check would not kill the container mid-load,
+kept the platform feeding it.
+
+`lib/memory.js` now reads the real ceiling (cgroup v2 `memory.max`, then v1, then the host
+total, overridable with `MEMORY_LIMIT_MB`) and `startRefresh` declines when the headroom
+is not there, rather than starting something that cannot finish. The reason is not just
+logged — it comes back in `GET /api/meta` as `refreshBlocked`, and past a day the coverage
+banner says so on every page:
+
+> **This snapshot is 28 hours old and is not refreshing on this instance.** Anything
+> designated since then is not screened here. *(this instance has 512MB total and is using
+> 343MB; a refresh needs about 380MB of headroom and only 169MB is free)*
+
+Stale data that says how stale it is beats a screening tool that is not there. The manual
+`POST /api/refresh` is subject to the same guard and answers `503` with the same reason —
+an admin holding a token cannot make the container bigger.
+
+Note the banner is **additive**, not exclusive. It used to render one message; since BIS
+and State have been missing behind an expired certificate, a missing-authority message is
+almost always on screen and would have hidden the staleness line behind it indefinitely.
 
 ### Coverage guard
 
@@ -358,11 +396,15 @@ what code compares, so the screening modifier now selects `kind === 'dob'` rathe
 `/birth|born|dob/i` (which also matched "Place of Birth" and would read a year out of a
 birthplace).
 
-The annotations are **derived at read time, not stored**: rebuilding them costs 112ms
-across the whole snapshot, while persisting them would add 7.3% to a 5MB blob this repo
-commits every single day. It also keeps `cache/snapshot.json.gz` exactly what the
-authorities published, with this layer's opinions correctable by shipping code rather
-than by a rebuild.
+The kinds are **derived by whoever needs them, never written onto the record**. The first
+attempt did tag every attribute at ingest, which read well and cost **114MB of resident
+memory** — adding a property to 88,209 existing objects forces a hidden-class transition
+on each — and on a 512MB container that is the difference between booting and being
+OOM-killed. The scorer instead derives a record's kinds once and memoizes them for the
+life of the snapshot, so records that are never scored cost nothing; statistics and the
+quality gate call `lib/vocab` directly and run once per snapshot. It also keeps
+`cache/snapshot.json.gz` exactly what the authorities published, with this layer's
+opinions correctable by shipping code rather than by a rebuild.
 
 Both derivations are frozen in the iOS conformance fixture over the **real inventory** —
 every distinct label, type and birth-date value in the snapshot, 11,688 cases — because
@@ -632,6 +674,7 @@ sanctions compliance.
 | `lib/vocab.js` | Canonical `kind` for every attribute label and identifier type |
 | `lib/dates.js` | Birth dates parsed into comparable intervals with their stated precision |
 | `lib/quality.js` | Field-level quality profile and the gate that blocks a build which emptied one |
+| `lib/memory.js` | The container's real memory ceiling, and whether a runtime refresh fits under it |
 | `scripts/quality-report.js` | Prints that profile and the gate verdict without a rebuild |
 | `scripts/verify-recall.js` | Proves the prefilter returns what a full scan would, non-Latin scripts included |
 | `cache/changes.json` | What the last rebuild added and removed; written beside the snapshot |

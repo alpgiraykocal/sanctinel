@@ -33,6 +33,7 @@ const fs = require('fs');
 const path = require('path');
 const zlib = require('zlib');
 const { Worker } = require('worker_threads');
+const { refreshFeasibility } = require('./lib/memory');
 const { screenEntity } = require('./lib/matcher');
 const { finalizeSnapshot, readCache, EXPECTED_AUTHORITIES } = require('./lib/ingest');
 const { egoNetwork } = require('./lib/graph');
@@ -60,6 +61,10 @@ const searchLimiter = createLimiter({ windowMs: 60000, max: Number(process.env.S
 
 let snapshot = loadSampleSnapshot();
 let loading = false;
+// Why the last refresh attempt did not run, when it was declined for memory.
+// Surfaced through /api/meta: an operator looking at a stale snapshot should
+// not have to read container logs to find out why it stopped updating.
+let refreshBlocked = null;
 
 function loadSampleSnapshot() {
   const raw = JSON.parse(fs.readFileSync(path.join(__dirname, 'sample-data', 'sample.json'), 'utf8'));
@@ -70,7 +75,28 @@ function loadSampleSnapshot() {
 }
 
 function startRefresh() {
-  if (loading || DEMO_ONLY) return;
+  if (loading || DEMO_ONLY) return false;
+  /*
+   * Decline the refresh when the container cannot hold this process and the
+   * worker at the same time.
+   *
+   * This is not a theoretical bound. The main process sits around 420MB once
+   * the snapshot is parsed and the index is built; the worker is capped at
+   * 300MB; the free tier is 512MB total. Starting it anyway got the container
+   * OOM-killed, restarted into the same stale cache, and killed again — a loop
+   * that could not break itself, because the refresh that would have fixed the
+   * staleness was the thing doing the killing.
+   *
+   * Serving a snapshot that is a day old and saying so is a worse product and a
+   * far better outcome than serving nothing.
+   */
+  const feasible = refreshFeasibility();
+  if (!feasible.ok) {
+    refreshBlocked = { reason: feasible.reason, limitMb: feasible.limitMb, rssMb: feasible.rssMb, at: new Date().toISOString() };
+    console.warn(`Live refresh declined: ${feasible.reason}. Serving the bundled snapshot; the daily build is what updates it.`);
+    return false;
+  }
+  refreshBlocked = null;
   loading = true;
   queryCache.clear();
   console.log('Live refresh started in background worker…');
@@ -86,6 +112,7 @@ function startRefresh() {
     w.terminate();
   });
   w.on('error', (e) => { loading = false; console.warn('Worker error:', e.message); });
+  return true;
 }
 
 // ---- helpers ----
@@ -160,6 +187,11 @@ function meta() {
     retrievedAt: snapshot.retrievedAt,
     count: snapshot.count, lists: snapshot.lists, programs: snapshot.programs, authorities: snapshot.authorities || [],
     missingAuthorities: missing,
+    // Set when the instance is too small to refresh at runtime. The snapshot is
+    // still whatever the last build published — it just will not get newer here.
+    refreshBlocked,
+    snapshotAgeHours: snapshot.retrievedAt
+      ? Math.round((Date.now() - Date.parse(snapshot.retrievedAt)) / 36e5) : null,
     // Why each one is missing, when the snapshot recorded it.
     sourceFailures: (snapshot.sources || []).filter((s) => !s.ok).map((s) => ({ label: s.label, authorities: s.authorities, error: s.error })),
   };
@@ -641,7 +673,16 @@ function handle(req, res) {
       if (!ADMIN_TOKEN) return sendJson(res, 403, { ok: false, error: 'manual refresh disabled (auto-refreshes on a schedule)', meta: meta() });
       const tok = url.searchParams.get('token') || req.headers['x-admin-token'] || '';
       if (tok !== ADMIN_TOKEN) return sendJson(res, 401, { ok: false, error: 'unauthorized', meta: meta() });
-      startRefresh();
+      // The manual path is subject to the same memory guard as the automatic
+      // one — an admin holding a token cannot make the container bigger, and a
+      // refresh started here would OOM-kill it exactly the same way.
+      if (!startRefresh()) {
+        return sendJson(res, 503, {
+          ok: false,
+          error: refreshBlocked ? `refresh declined: ${refreshBlocked.reason}` : 'a refresh is already running',
+          meta: meta(),
+        });
+      }
       return sendJson(res, 200, { ok: true, loading: true, meta: meta() });
     }
 
