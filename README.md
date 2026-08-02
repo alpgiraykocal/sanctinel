@@ -566,6 +566,33 @@ chain reaches a blocked person.
   Absence of a chain is likewise not a clearance — OFAC lists only designated parties, so
   an unlisted intermediate owner never appears.
 
+### The graph is over parties, not listings
+
+Only OFAC publishes relationships — 9,143 edges, and **zero** from the EU, the UN or the
+UK. So for every party whose only listing is non-OFAC this module reported *"no ownership
+chain to a blocked person"*, which reads exactly like a clean result and was really an
+absence of data.
+
+Cross-authority resolution already establishes which listings are one party, so each
+cluster collapses to a single node here. The EU listing of a company now sees the
+ownership OFAC published for that same company, and a chain can cross authorities — an
+EU-listed parent above an OFAC-listed subsidiary is one chain that neither list contains
+in full.
+
+Nothing is invented. The edge is OFAC's, stated about a party the EU listed under another
+name, and the identity between them is evidenced. Profiles reached this way say so:
+
+> OFAC SLS relationship edges, **reached through this party's other listings** (see the
+> cross-authority links on the record). OFAC publishes no ownership percentages.
+
+Two further consequences of moving to party nodes: a party counts as blocking-listed if
+**any** of its listings blocks it, so a company blocked by OFAC no longer looks unblocked
+when its EU listing happens to win the cluster tie-break; and a listing pointing at its
+own twin is dropped rather than becoming a self-edge.
+
+Measured across the whole snapshot: **104 parties gained a chain, none lost one** — 55 EU,
+41 UK, 4 UN, and 4 OFAC parties whose second OFAC listing carried the edges.
+
 ## Ranking, near-misses and ownership groups
 
 **Ties are disclosed, not faked.** A single-token query is capped at exactly 0.96 by the
