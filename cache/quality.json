@@ -1,25 +1,25 @@
 {
- "generatedAt": "2026-08-04T23:56:10.663Z",
- "publicationId": "933",
- "retrievedAt": "2026-08-04T23:56:09.469Z",
- "count": 38210,
+ "generatedAt": "2026-08-05T23:51:42.358Z",
+ "publicationId": "935",
+ "retrievedAt": "2026-08-05T23:51:41.160Z",
+ "count": 38202,
  "authorities": {
   "OFAC": {
-   "count": 19569,
-   "aliasRate": 0.5227144974193878,
+   "count": 19566,
+   "aliasRate": 0.5227435347030563,
    "addressRate": 1,
-   "identifierRate": 0.7320251418059175,
-   "birthDateRate": 0.38233941437988656,
-   "nationalityRate": 0.30870253973120754,
-   "relationshipEdges": 9143
+   "identifierRate": 0.7320351630379229,
+   "birthDateRate": 0.38239803741183687,
+   "nationalityRate": 0.30874987222733313,
+   "relationshipEdges": 9140
   },
   "EU": {
-   "count": 6239,
-   "aliasRate": 0.881070684404552,
-   "addressRate": 0.32248757813752205,
-   "identifierRate": 0.31944221830421543,
-   "birthDateRate": 0.6020195544157717,
-   "nationalityRate": 0.4287546081102741,
+   "count": 6234,
+   "aliasRate": 0.8811357074109721,
+   "addressRate": 0.3230670516522297,
+   "identifierRate": 0.32001924927815206,
+   "birthDateRate": 0.6010587102983638,
+   "nationalityRate": 0.42829643888354185,
    "relationshipEdges": 0
   },
   "UN": {
@@ -60,13 +60,13 @@
   }
  },
  "derived": {
-  "dobParseRate": 0.999941089837997,
-  "countryResolveRate": 0.9995670058454211,
+  "dobParseRate": 0.9999410516387645,
+  "countryResolveRate": 0.9995669802779199,
   "attributeUnclassifiedRate": 0,
   "identifierUnclassifiedRate": 0.050313639199973725,
-  "dobValues": 16975,
-  "countryValues": 50809,
-  "attributes": 104292,
+  "dobValues": 16964,
+  "countryValues": 50806,
+  "attributes": 104251,
   "identifiers": 30449
  }
 }
