@@ -46,6 +46,10 @@
     "output": "program_info"
    },
    {
+    "input": "Call Sign",
+    "output": "vessel"
+   },
+   {
     "input": "Citizenship",
     "output": "citizenship"
    },
@@ -67,6 +71,10 @@
    },
    {
     "input": "Digital Currency Address - BCH",
+    "output": "crypto"
+   },
+   {
+    "input": "Digital Currency Address - BNB",
     "output": "crypto"
    },
    {
@@ -166,6 +174,10 @@
     "output": "email"
    },
    {
+    "input": "End date",
+    "output": "program_date"
+   },
+   {
     "input": "Equity Ticker",
     "output": "ticker"
    },
@@ -194,6 +206,10 @@
     "output": "program_info"
    },
    {
+    "input": "Federal Register notice",
+    "output": "program_info"
+   },
+   {
     "input": "Former Vessel Flag",
     "output": "vessel"
    },
@@ -216,6 +232,14 @@
    {
     "input": "Issuer Name",
     "output": "issuer"
+   },
+   {
+    "input": "Licence policy",
+    "output": "licence"
+   },
+   {
+    "input": "Licence requirement",
+    "output": "licence"
    },
    {
     "input": "Listing Date (CMIC)",
@@ -320,6 +344,10 @@
    {
     "input": "Secondary sanctions risk:",
     "output": "secondary_sanctions"
+   },
+   {
+    "input": "Standard order",
+    "output": "licence"
    },
    {
     "input": "Target Type",
@@ -3287,6 +3315,15 @@
     "output": {
      "from": "1954-07-01",
      "to": "1954-07-01",
+     "precision": "day",
+     "approximate": false
+    }
+   },
+   {
+    "input": "01 Jul 1958",
+    "output": {
+     "from": "1958-07-01",
+     "to": "1958-07-01",
      "precision": "day",
      "approximate": false
     }
@@ -9457,6 +9494,15 @@
     }
    },
    {
+    "input": "03 Oct 1960",
+    "output": {
+     "from": "1960-10-03",
+     "to": "1960-10-03",
+     "precision": "day",
+     "approximate": false
+    }
+   },
+   {
     "input": "03 Oct 1962",
     "output": {
      "from": "1962-10-03",
@@ -10820,15 +10866,6 @@
     "output": {
      "from": "2001-12-04",
      "to": "2001-12-04",
-     "precision": "day",
-     "approximate": false
-    }
-   },
-   {
-    "input": "04 Feb 1940",
-    "output": {
-     "from": "1940-02-04",
-     "to": "1940-02-04",
      "precision": "day",
      "approximate": false
     }
@@ -14096,6 +14133,15 @@
     "output": {
      "from": "1981-11-05",
      "to": "1981-11-05",
+     "precision": "day",
+     "approximate": false
+    }
+   },
+   {
+    "input": "05 Nov 1982",
+    "output": {
+     "from": "1982-11-05",
+     "to": "1982-11-05",
      "precision": "day",
      "approximate": false
     }
@@ -30238,6 +30284,15 @@
     }
    },
    {
+    "input": "12 Jul 1979",
+    "output": {
+     "from": "1979-07-12",
+     "to": "1979-07-12",
+     "precision": "day",
+     "approximate": false
+    }
+   },
+   {
     "input": "12 Jul 1984",
     "output": {
      "from": "1984-07-12",
@@ -32803,6 +32858,15 @@
     }
    },
    {
+    "input": "13 Oct 1964",
+    "output": {
+     "from": "1964-10-13",
+     "to": "1964-10-13",
+     "precision": "day",
+     "approximate": false
+    }
+   },
+   {
     "input": "13 Oct 1967",
     "output": {
      "from": "1967-10-13",
@@ -33609,15 +33673,6 @@
      "from": "2002-12-13",
      "to": "2002-12-13",
      "precision": "day",
-     "approximate": false
-    }
-   },
-   {
-    "input": "1339",
-    "output": {
-     "from": "1339-01-01",
-     "to": "1339-12-31",
-     "precision": "year",
      "approximate": false
     }
    },
@@ -47855,15 +47910,6 @@
     }
    },
    {
-    "input": "1945-11-24",
-    "output": {
-     "from": "1945-11-24",
-     "to": "1945-11-24",
-     "precision": "day",
-     "approximate": false
-    }
-   },
-   {
     "input": "1945–1950",
     "output": {
      "from": "1945-01-01",
@@ -49007,15 +49053,6 @@
     }
    },
    {
-    "input": "1951-09-15",
-    "output": {
-     "from": "1951-09-15",
-     "to": "1951-09-15",
-     "precision": "day",
-     "approximate": false
-    }
-   },
-   {
     "input": "1951-09-21",
     "output": {
      "from": "1951-09-21",
@@ -49029,15 +49066,6 @@
     "output": {
      "from": "1951-09-28",
      "to": "1951-09-28",
-     "precision": "day",
-     "approximate": false
-    }
-   },
-   {
-    "input": "1951-10-04",
-    "output": {
-     "from": "1951-10-04",
-     "to": "1951-10-04",
      "precision": "day",
      "approximate": false
     }
@@ -49236,15 +49264,6 @@
     "output": {
      "from": "1952-05-17",
      "to": "1952-05-17",
-     "precision": "day",
-     "approximate": false
-    }
-   },
-   {
-    "input": "1952-05-22",
-    "output": {
-     "from": "1952-05-22",
-     "to": "1952-05-22",
      "precision": "day",
      "approximate": false
     }
@@ -50834,15 +50853,6 @@
     }
    },
    {
-    "input": "1956-02-19",
-    "output": {
-     "from": "1956-02-19",
-     "to": "1956-02-19",
-     "precision": "day",
-     "approximate": false
-    }
-   },
-   {
     "input": "1956-03-01",
     "output": {
      "from": "1956-03-01",
@@ -51342,15 +51352,6 @@
     "output": {
      "from": "1957-01-17",
      "to": "1957-01-17",
-     "precision": "day",
-     "approximate": false
-    }
-   },
-   {
-    "input": "1957-01-23",
-    "output": {
-     "from": "1957-01-23",
-     "to": "1957-01-23",
      "precision": "day",
      "approximate": false
     }
@@ -54560,15 +54561,6 @@
     }
    },
    {
-    "input": "1962-02-28",
-    "output": {
-     "from": "1962-02-28",
-     "to": "1962-02-28",
-     "precision": "day",
-     "approximate": false
-    }
-   },
-   {
     "input": "1962-03-03",
     "output": {
      "from": "1962-03-03",
@@ -55131,15 +55123,6 @@
     "output": {
      "from": "1962-12-11",
      "to": "1962-12-11",
-     "precision": "day",
-     "approximate": false
-    }
-   },
-   {
-    "input": "1962-12-16",
-    "output": {
-     "from": "1962-12-16",
-     "to": "1962-12-16",
      "precision": "day",
      "approximate": false
     }
@@ -59888,6 +59871,15 @@
     }
    },
    {
+    "input": "1968-11-25",
+    "output": {
+     "from": "1968-11-25",
+     "to": "1968-11-25",
+     "precision": "day",
+     "approximate": false
+    }
+   },
+   {
     "input": "1968-11-26",
     "output": {
      "from": "1968-11-26",
@@ -60464,6 +60456,15 @@
     }
    },
    {
+    "input": "1969-07-11",
+    "output": {
+     "from": "1969-07-11",
+     "to": "1969-07-11",
+     "precision": "day",
+     "approximate": false
+    }
+   },
+   {
     "input": "1969-07-14",
     "output": {
      "from": "1969-07-14",
@@ -60837,15 +60838,6 @@
     "output": {
      "from": "1969-11-23",
      "to": "1969-11-23",
-     "precision": "day",
-     "approximate": false
-    }
-   },
-   {
-    "input": "1969-11-27",
-    "output": {
-     "from": "1969-11-27",
-     "to": "1969-11-27",
      "precision": "day",
      "approximate": false
     }
@@ -68541,6 +68533,15 @@
     "output": {
      "from": "1979-01-24",
      "to": "1979-01-24",
+     "precision": "day",
+     "approximate": false
+    }
+   },
+   {
+    "input": "1979-01-26",
+    "output": {
+     "from": "1979-01-26",
+     "to": "1979-01-26",
      "precision": "day",
      "approximate": false
     }
@@ -78927,6 +78928,15 @@
     "output": {
      "from": "1988-01-21",
      "to": "1988-01-21",
+     "precision": "day",
+     "approximate": false
+    }
+   },
+   {
+    "input": "21 Jan 1991",
+    "output": {
+     "from": "1991-01-21",
+     "to": "1991-01-21",
      "precision": "day",
      "approximate": false
     }
@@ -90452,6 +90462,15 @@
     }
    },
    {
+    "input": "26 Dec 1963",
+    "output": {
+     "from": "1963-12-26",
+     "to": "1963-12-26",
+     "precision": "day",
+     "approximate": false
+    }
+   },
+   {
     "input": "26 Dec 1968",
     "output": {
      "from": "1968-12-26",
@@ -95748,6 +95767,15 @@
     "output": {
      "from": "1991-06-28",
      "to": "1991-06-28",
+     "precision": "day",
+     "approximate": false
+    }
+   },
+   {
+    "input": "28 Jun 1992",
+    "output": {
+     "from": "1992-06-28",
+     "to": "1992-06-28",
      "precision": "day",
      "approximate": false
     }

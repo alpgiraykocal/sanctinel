@@ -1,32 +1,36 @@
 {
  "now": "2026-07-28T00:00:00.000Z",
  "totals": {
-  "entities": 31954,
-  "authorities": 4,
-  "lists": 10,
-  "programs": 148,
-  "countries": 195,
-  "dated": 31954,
-  "undated": 0,
-  "withAliases": 19138,
-  "withIdentifiers": 19555,
-  "withRelationships": 8566,
-  "relationshipEdges": 9143,
-  "ownershipEdges": 4194,
-  "added30": 457,
-  "added90": 803,
-  "added365": 3094,
-  "newest": "2026-07-30",
-  "oldest": "1981-01-07"
+  "entities": 38223,
+  "authorities": 6,
+  "lists": 16,
+  "programs": 158,
+  "countries": 199,
+  "dated": 37061,
+  "undated": 1162,
+  "withAliases": 21247,
+  "withIdentifiers": 17389,
+  "withRelationships": 8564,
+  "relationshipEdges": 9138,
+  "ownershipEdges": 4190,
+  "added30": 459,
+  "added90": 808,
+  "added365": 3247,
+  "newest": "2026-08-07",
+  "oldest": "1974-11-17"
  },
  "byAuthority": [
   {
    "name": "OFAC",
-   "count": 19569
+   "count": 19587
   },
   {
    "name": "EU",
-   "count": 6239
+   "count": 6234
+  },
+  {
+   "name": "BIS",
+   "count": 5308
   },
   {
    "name": "UK",
@@ -35,24 +39,40 @@
   {
    "name": "UN",
    "count": 1011
+  },
+  {
+   "name": "State",
+   "count": 948
   }
  ],
  "byList": [
   {
    "name": "SDN List",
-   "count": 19181
+   "count": 19199
   },
   {
    "name": "EU Consolidated List",
-   "count": 6239
+   "count": 6234
   },
   {
    "name": "UK Sanctions List",
    "count": 5135
   },
   {
+   "name": "BIS Entity List",
+   "count": 3420
+  },
+  {
+   "name": "BIS Denied Persons List",
+   "count": 1596
+  },
+  {
    "name": "UN Consolidated List",
    "count": 1011
+  },
+  {
+   "name": "ITAR Debarred List",
+   "count": 787
   },
   {
    "name": "Consolidated List",
@@ -63,8 +83,20 @@
    "count": 286
   },
   {
+   "name": "BIS Unverified List",
+   "count": 222
+  },
+  {
+   "name": "Nonproliferation Sanctions",
+   "count": 161
+  },
+  {
    "name": "Non-SDN Palestinian Legislative Council List",
    "count": 78
+  },
+  {
+   "name": "BIS Military End-User List",
+   "count": 70
   },
   {
    "name": "Non-SDN CMIC List",
@@ -73,38 +105,46 @@
   {
    "name": "Non-SDN Menu-Based Sanctions List",
    "count": 51
-  },
-  {
-   "name": "CAPTA List",
-   "count": 1
   }
  ],
  "byType": [
   {
    "name": "Individual",
-   "count": 16628
+   "count": 16626
   },
   {
    "name": "Entity",
-   "count": 13443
+   "count": 13460
+  },
+  {
+   "name": "Listed party",
+   "count": 6255
   },
   {
    "name": "Vessel",
-   "count": 1539
+   "count": 1540
   },
   {
    "name": "Aircraft",
-   "count": 344
+   "count": 342
   }
  ],
  "byMeasure": [
   {
    "name": "Block",
-   "count": 19176
+   "count": 19194
   },
   {
    "name": "Asset freeze",
-   "count": 12385
+   "count": 12380
+  },
+  {
+   "name": "Export licence requirement",
+   "count": 4660
+  },
+  {
+   "name": "Denial of export privileges",
+   "count": 1596
   },
   {
    "name": "13662 Sectoral Directive 1",
@@ -149,14 +189,6 @@
   {
    "name": "Executive Order 14024 Directive 4",
    "count": 3
-  },
-  {
-   "name": "CAATSA Section 231/235 Sanctions",
-   "count": 2
-  },
-  {
-   "name": "561 Full Restrictions",
-   "count": 1
   }
  ],
  "byProgram": [
@@ -166,11 +198,11 @@
   },
   {
    "name": "SDGT",
-   "count": 3246
+   "count": 3249
   },
   {
    "name": "UKR",
-   "count": 2967
+   "count": 2960
   },
   {
    "name": "Russia",
@@ -182,7 +214,7 @@
   },
   {
    "name": "SDNTK",
-   "count": 1372
+   "count": 1365
   },
   {
    "name": "NPWMD",
@@ -190,7 +222,7 @@
   },
   {
    "name": "IRAN-EO13902",
-   "count": 902
+   "count": 914
   },
   {
    "name": "GLOMAG",
@@ -202,7 +234,7 @@
   },
   {
    "name": "IRN",
-   "count": 711
+   "count": 707
   },
   {
    "name": "ILLICIT-DRUGS-EO14059",
@@ -224,19 +256,27 @@
  "byCountry": [
   {
    "name": "Russia",
-   "count": 9157
+   "count": 10291
   },
   {
    "name": "Iran",
-   "count": 2643
+   "count": 2790
   },
   {
    "name": "China",
-   "count": 1317
+   "count": 2660
   },
   {
    "name": "Mexico",
-   "count": 1182
+   "count": 1192
+  },
+  {
+   "name": "United States",
+   "count": 1066
+  },
+  {
+   "name": "United Arab Emirates",
+   "count": 958
   },
   {
    "name": "North Korea",
@@ -244,112 +284,394 @@
   },
   {
    "name": "Belarus",
-   "count": 761
-  },
-  {
-   "name": "United Arab Emirates",
-   "count": 643
-  },
-  {
-   "name": "Syria",
-   "count": 634
+   "count": 799
   },
   {
    "name": "Ukraine",
-   "count": 627
+   "count": 666
+  },
+  {
+   "name": "Syria",
+   "count": 661
   },
   {
    "name": "Iraq",
-   "count": 556
+   "count": 571
   },
   {
    "name": "Afghanistan",
-   "count": 539
-  },
-  {
-   "name": "Lebanon",
-   "count": 425
-  },
-  {
-   "name": "Colombia",
-   "count": 403
-  },
-  {
-   "name": "Myanmar",
-   "count": 379
+   "count": 570
   },
   {
    "name": "Turkey",
-   "count": 366
+   "count": 495
+  },
+  {
+   "name": "Pakistan",
+   "count": 490
+  },
+  {
+   "name": "Lebanon",
+   "count": 453
   }
  ],
  "years": [
   {
    "label": "2011",
-   "count": 702
+   "count": 786
   },
   {
    "label": "2012",
-   "count": 750
+   "count": 898
   },
   {
    "label": "2013",
-   "count": 437
+   "count": 562
   },
   {
    "label": "2014",
-   "count": 851
+   "count": 983
   },
   {
    "label": "2015",
-   "count": 646
+   "count": 783
   },
   {
    "label": "2016",
-   "count": 848
+   "count": 1077
   },
   {
    "label": "2017",
-   "count": 850
+   "count": 954
   },
   {
    "label": "2018",
-   "count": 1494
+   "count": 1684
   },
   {
    "label": "2019",
-   "count": 836
+   "count": 1100
   },
   {
    "label": "2020",
-   "count": 1254
+   "count": 1648
   },
   {
    "label": "2021",
-   "count": 1204
+   "count": 1406
   },
   {
    "label": "2022",
-   "count": 5409
+   "count": 5978
   },
   {
    "label": "2023",
-   "count": 3999
+   "count": 4602
   },
   {
    "label": "2024",
-   "count": 4333
+   "count": 4921
   },
   {
    "label": "2025",
-   "count": 3499
+   "count": 3785
   },
   {
    "label": "2026",
-   "count": 1504
+   "count": 1543
   }
  ],
  "recent": [
+  {
+   "id": "58239",
+   "date": "2026-08-07",
+   "authority": "OFAC",
+   "country": "Iran",
+   "aliases": 2,
+   "measures": [
+    "Block"
+   ]
+  },
+  {
+   "id": "58268",
+   "date": "2026-08-07",
+   "authority": "OFAC",
+   "country": "United Arab Emirates",
+   "aliases": 0,
+   "measures": [
+    "Block"
+   ]
+  },
+  {
+   "id": "58274",
+   "date": "2026-08-07",
+   "authority": "OFAC",
+   "country": "United Arab Emirates",
+   "aliases": 0,
+   "measures": [
+    "Block"
+   ]
+  },
+  {
+   "id": "58275",
+   "date": "2026-08-07",
+   "authority": "OFAC",
+   "country": "China",
+   "aliases": 0,
+   "measures": [
+    "Block"
+   ]
+  },
+  {
+   "id": "58271",
+   "date": "2026-08-07",
+   "authority": "OFAC",
+   "country": "Singapore",
+   "aliases": 0,
+   "measures": [
+    "Block"
+   ]
+  },
+  {
+   "id": "58258",
+   "date": "2026-08-07",
+   "authority": "OFAC",
+   "country": "United Arab Emirates",
+   "aliases": 0,
+   "measures": [
+    "Block"
+   ]
+  },
+  {
+   "id": "58267",
+   "date": "2026-08-07",
+   "authority": "OFAC",
+   "country": "Iran",
+   "aliases": 1,
+   "measures": [
+    "Block"
+   ]
+  },
+  {
+   "id": "58276",
+   "date": "2026-08-07",
+   "authority": "OFAC",
+   "country": "China",
+   "aliases": 0,
+   "measures": [
+    "Block"
+   ]
+  },
+  {
+   "id": "58277",
+   "date": "2026-08-07",
+   "authority": "OFAC",
+   "country": "Iran",
+   "aliases": 0,
+   "measures": [
+    "Block"
+   ]
+  },
+  {
+   "id": "58284",
+   "date": "2026-08-07",
+   "authority": "OFAC",
+   "country": "Iran",
+   "aliases": 3,
+   "measures": [
+    "Block"
+   ]
+  },
+  {
+   "id": "58269",
+   "date": "2026-08-07",
+   "authority": "OFAC",
+   "country": "Iran",
+   "aliases": 1,
+   "measures": [
+    "Block"
+   ]
+  },
+  {
+   "id": "58259",
+   "date": "2026-08-07",
+   "authority": "OFAC",
+   "country": "United Arab Emirates",
+   "aliases": 1,
+   "measures": [
+    "Block"
+   ]
+  },
+  {
+   "id": "58270",
+   "date": "2026-08-07",
+   "authority": "OFAC",
+   "country": "China",
+   "aliases": 0,
+   "measures": [
+    "Block"
+   ]
+  },
+  {
+   "id": "58266",
+   "date": "2026-08-07",
+   "authority": "OFAC",
+   "country": "Iran",
+   "aliases": 0,
+   "measures": [
+    "Block"
+   ]
+  },
+  {
+   "id": "58285",
+   "date": "2026-08-07",
+   "authority": "OFAC",
+   "country": "United Arab Emirates",
+   "aliases": 2,
+   "measures": [
+    "Block"
+   ]
+  },
+  {
+   "id": "58288",
+   "date": "2026-08-07",
+   "authority": "OFAC",
+   "country": "Poland",
+   "aliases": 2,
+   "measures": [
+    "Block"
+   ]
+  },
+  {
+   "id": "58287",
+   "date": "2026-08-07",
+   "authority": "OFAC",
+   "country": "Georgia",
+   "aliases": 1,
+   "measures": [
+    "Block"
+   ]
+  },
+  {
+   "id": "58272",
+   "date": "2026-08-07",
+   "authority": "OFAC",
+   "country": "United Arab Emirates",
+   "aliases": 2,
+   "measures": [
+    "Block"
+   ]
+  },
+  {
+   "id": "58298",
+   "date": "2026-08-06",
+   "authority": "OFAC",
+   "country": "Cuba",
+   "aliases": 0,
+   "measures": [
+    "Block"
+   ]
+  },
+  {
+   "id": "58295",
+   "date": "2026-08-06",
+   "authority": "OFAC",
+   "country": "Cuba",
+   "aliases": 1,
+   "measures": [
+    "Block"
+   ]
+  },
+  {
+   "id": "58292",
+   "date": "2026-08-06",
+   "authority": "OFAC",
+   "country": "Cuba",
+   "aliases": 4,
+   "measures": [
+    "Block"
+   ]
+  },
+  {
+   "id": "58296",
+   "date": "2026-08-06",
+   "authority": "OFAC",
+   "country": "Cuba",
+   "aliases": 2,
+   "measures": [
+    "Block"
+   ]
+  },
+  {
+   "id": "58299",
+   "date": "2026-08-06",
+   "authority": "OFAC",
+   "country": "Cuba",
+   "aliases": 0,
+   "measures": [
+    "Block"
+   ]
+  },
+  {
+   "id": "58300",
+   "date": "2026-08-06",
+   "authority": "OFAC",
+   "country": "Cuba",
+   "aliases": 0,
+   "measures": [
+    "Block"
+   ]
+  },
+  {
+   "id": "58297",
+   "date": "2026-08-06",
+   "authority": "OFAC",
+   "country": "Cuba",
+   "aliases": 0,
+   "measures": [
+    "Block"
+   ]
+  },
+  {
+   "id": "58293",
+   "date": "2026-08-06",
+   "authority": "OFAC",
+   "country": "Cuba",
+   "aliases": 0,
+   "measures": [
+    "Block"
+   ]
+  },
+  {
+   "id": "58294",
+   "date": "2026-08-06",
+   "authority": "OFAC",
+   "country": "Cuba",
+   "aliases": 1,
+   "measures": [
+    "Block"
+   ]
+  },
+  {
+   "id": "58290",
+   "date": "2026-08-06",
+   "authority": "OFAC",
+   "country": "Cuba",
+   "aliases": 4,
+   "measures": [
+    "Block"
+   ]
+  },
+  {
+   "id": "58291",
+   "date": "2026-08-06",
+   "authority": "OFAC",
+   "country": "Cuba",
+   "aliases": 0,
+   "measures": [
+    "Block"
+   ]
+  },
   {
    "id": "58226",
    "date": "2026-07-30",
@@ -721,16 +1043,6 @@
    ]
   },
   {
-   "id": "EU-184308",
-   "date": "2026-07-23",
-   "authority": "EU",
-   "country": "Russia",
-   "aliases": 2,
-   "measures": [
-    "Asset freeze"
-   ]
-  },
-  {
    "id": "EU-184314",
    "date": "2026-07-23",
    "authority": "EU",
@@ -751,11 +1063,11 @@
    ]
   },
   {
-   "id": "EU-184101",
+   "id": "EU-184421",
    "date": "2026-07-23",
    "authority": "EU",
    "country": "Russia",
-   "aliases": 4,
+   "aliases": 1,
    "measures": [
     "Asset freeze"
    ]
@@ -811,17 +1123,27 @@
    ]
   },
   {
-   "id": "EU-184209",
+   "id": "EU-183145",
    "date": "2026-07-23",
    "authority": "EU",
    "country": "Russia",
-   "aliases": 1,
+   "aliases": 3,
    "measures": [
     "Asset freeze"
    ]
   },
   {
-   "id": "EU-184204",
+   "id": "EU-183909",
+   "date": "2026-07-23",
+   "authority": "EU",
+   "country": "Russia",
+   "aliases": 2,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "EU-184209",
    "date": "2026-07-23",
    "authority": "EU",
    "country": "Russia",
@@ -841,11 +1163,11 @@
    ]
   },
   {
-   "id": "EU-183145",
+   "id": "EU-184198",
    "date": "2026-07-23",
    "authority": "EU",
    "country": "Russia",
-   "aliases": 3,
+   "aliases": 1,
    "measures": [
     "Asset freeze"
    ]
@@ -871,11 +1193,21 @@
    ]
   },
   {
-   "id": "EU-182958",
+   "id": "EU-183923",
    "date": "2026-07-23",
    "authority": "EU",
    "country": "Russia",
    "aliases": 3,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "EU-184275",
+   "date": "2026-07-23",
+   "authority": "EU",
+   "country": "Russia",
+   "aliases": 1,
    "measures": [
     "Asset freeze"
    ]
@@ -891,26 +1223,6 @@
    ]
   },
   {
-   "id": "EU-184089",
-   "date": "2026-07-23",
-   "authority": "EU",
-   "country": "Russia",
-   "aliases": 2,
-   "measures": [
-    "Asset freeze"
-   ]
-  },
-  {
-   "id": "EU-183238",
-   "date": "2026-07-23",
-   "authority": "EU",
-   "country": "Russia",
-   "aliases": 1,
-   "measures": [
-    "Asset freeze"
-   ]
-  },
-  {
    "id": "EU-184510",
    "date": "2026-07-23",
    "authority": "EU",
@@ -921,11 +1233,11 @@
    ]
   },
   {
-   "id": "EU-184054",
+   "id": "EU-183238",
    "date": "2026-07-23",
    "authority": "EU",
    "country": "Russia",
-   "aliases": 2,
+   "aliases": 1,
    "measures": [
     "Asset freeze"
    ]
@@ -946,16 +1258,6 @@
    "authority": "EU",
    "country": "Russia",
    "aliases": 0,
-   "measures": [
-    "Asset freeze"
-   ]
-  },
-  {
-   "id": "EU-183408",
-   "date": "2026-07-23",
-   "authority": "EU",
-   "country": "Russia",
-   "aliases": 6,
    "measures": [
     "Asset freeze"
    ]
@@ -1001,17 +1303,27 @@
    ]
   },
   {
-   "id": "EU-184068",
+   "id": "EU-183094",
    "date": "2026-07-23",
    "authority": "EU",
    "country": "Russia",
-   "aliases": 3,
+   "aliases": 2,
    "measures": [
     "Asset freeze"
    ]
   },
   {
-   "id": "EU-183094",
+   "id": "EU-184019",
+   "date": "2026-07-23",
+   "authority": "EU",
+   "country": "Russia",
+   "aliases": 2,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "EU-183995",
    "date": "2026-07-23",
    "authority": "EU",
    "country": "Russia",
@@ -1031,11 +1343,41 @@
    ]
   },
   {
+   "id": "EU-184075",
+   "date": "2026-07-23",
+   "authority": "EU",
+   "country": "Russia",
+   "aliases": 4,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
    "id": "EU-184046",
    "date": "2026-07-23",
    "authority": "EU",
    "country": "Russia",
    "aliases": 4,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "EU-183321",
+   "date": "2026-07-23",
+   "authority": "EU",
+   "country": "Russia",
+   "aliases": 2,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "EU-184054",
+   "date": "2026-07-23",
+   "authority": "EU",
+   "country": "Russia",
+   "aliases": 2,
    "measures": [
     "Asset freeze"
    ]
@@ -1121,16 +1463,6 @@
    ]
   },
   {
-   "id": "EU-183876",
-   "date": "2026-07-23",
-   "authority": "EU",
-   "country": "Russia",
-   "aliases": 7,
-   "measures": [
-    "Asset freeze"
-   ]
-  },
-  {
    "id": "58016",
    "date": "2026-07-23",
    "authority": "OFAC",
@@ -1191,16 +1523,6 @@
    ]
   },
   {
-   "id": "EU-183525",
-   "date": "2026-07-23",
-   "authority": "EU",
-   "country": "Russia",
-   "aliases": 3,
-   "measures": [
-    "Asset freeze"
-   ]
-  },
-  {
    "id": "58210",
    "date": "2026-07-23",
    "authority": "OFAC",
@@ -1241,16 +1563,6 @@
    ]
   },
   {
-   "id": "EU-184039",
-   "date": "2026-07-23",
-   "authority": "EU",
-   "country": "Russia",
-   "aliases": 2,
-   "measures": [
-    "Asset freeze"
-   ]
-  },
-  {
    "id": "57998",
    "date": "2026-07-23",
    "authority": "OFAC",
@@ -1258,6 +1570,16 @@
    "aliases": 0,
    "measures": [
     "Block"
+   ]
+  },
+  {
+   "id": "EU-184400",
+   "date": "2026-07-23",
+   "authority": "EU",
+   "country": "Russia",
+   "aliases": 1,
+   "measures": [
+    "Asset freeze"
    ]
   },
   {
@@ -1361,6 +1683,16 @@
    ]
   },
   {
+   "id": "EU-184214",
+   "date": "2026-07-23",
+   "authority": "EU",
+   "country": "Russia",
+   "aliases": 3,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
    "id": "58060",
    "date": "2026-07-23",
    "authority": "OFAC",
@@ -1374,7 +1706,7 @@
    "id": "EU-183346",
    "date": "2026-07-23",
    "authority": "EU",
-   "country": "Ukraine",
+   "country": "Russia",
    "aliases": 2,
    "measures": [
     "Asset freeze"
@@ -1408,16 +1740,6 @@
    "aliases": 2,
    "measures": [
     "Block"
-   ]
-  },
-  {
-   "id": "EU-184517",
-   "date": "2026-07-23",
-   "authority": "EU",
-   "country": "Russia",
-   "aliases": 10,
-   "measures": [
-    "Asset freeze"
    ]
   },
   {
@@ -1471,11 +1793,21 @@
    ]
   },
   {
-   "id": "EU-182948",
+   "id": "EU-184560",
    "date": "2026-07-23",
    "authority": "EU",
    "country": "Russia",
-   "aliases": 2,
+   "aliases": 3,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "EU-183475",
+   "date": "2026-07-23",
+   "authority": "EU",
+   "country": "Russia",
+   "aliases": 5,
    "measures": [
     "Asset freeze"
    ]
@@ -1501,6 +1833,26 @@
    ]
   },
   {
+   "id": "EU-184252",
+   "date": "2026-07-23",
+   "authority": "EU",
+   "country": "Russia",
+   "aliases": 5,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "EU-184114",
+   "date": "2026-07-23",
+   "authority": "EU",
+   "country": "Russia",
+   "aliases": 3,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
    "id": "EU-183799",
    "date": "2026-07-23",
    "authority": "EU",
@@ -1521,327 +1873,7 @@
    ]
   },
   {
-   "id": "EU-184479",
-   "date": "2026-07-23",
-   "authority": "EU",
-   "country": "Russia",
-   "aliases": 1,
-   "measures": [
-    "Asset freeze"
-   ]
-  },
-  {
    "id": "EU-183339",
-   "date": "2026-07-23",
-   "authority": "EU",
-   "country": "Russia",
-   "aliases": 2,
-   "measures": [
-    "Asset freeze"
-   ]
-  },
-  {
-   "id": "EU-183181",
-   "date": "2026-07-23",
-   "authority": "EU",
-   "country": "Russia",
-   "aliases": 3,
-   "measures": [
-    "Asset freeze"
-   ]
-  },
-  {
-   "id": "EU-184075",
-   "date": "2026-07-23",
-   "authority": "EU",
-   "country": "Russia",
-   "aliases": 4,
-   "measures": [
-    "Asset freeze"
-   ]
-  },
-  {
-   "id": "EU-183361",
-   "date": "2026-07-23",
-   "authority": "EU",
-   "country": "Russia",
-   "aliases": 1,
-   "measures": [
-    "Asset freeze"
-   ]
-  },
-  {
-   "id": "EU-184300",
-   "date": "2026-07-23",
-   "authority": "EU",
-   "country": "Russia",
-   "aliases": 6,
-   "measures": [
-    "Asset freeze"
-   ]
-  },
-  {
-   "id": "EU-184275",
-   "date": "2026-07-23",
-   "authority": "EU",
-   "country": "Russia",
-   "aliases": 1,
-   "measures": [
-    "Asset freeze"
-   ]
-  },
-  {
-   "id": "EU-183380",
-   "date": "2026-07-23",
-   "authority": "EU",
-   "country": "Russia",
-   "aliases": 1,
-   "measures": [
-    "Asset freeze"
-   ]
-  },
-  {
-   "id": "EU-184114",
-   "date": "2026-07-23",
-   "authority": "EU",
-   "country": "Russia",
-   "aliases": 3,
-   "measures": [
-    "Asset freeze"
-   ]
-  },
-  {
-   "id": "EU-183386",
-   "date": "2026-07-23",
-   "authority": "EU",
-   "country": "Russia",
-   "aliases": 2,
-   "measures": [
-    "Asset freeze"
-   ]
-  },
-  {
-   "id": "EU-183188",
-   "date": "2026-07-23",
-   "authority": "EU",
-   "country": "Russia",
-   "aliases": 1,
-   "measures": [
-    "Asset freeze"
-   ]
-  },
-  {
-   "id": "EU-184287",
-   "date": "2026-07-23",
-   "authority": "EU",
-   "country": "Russia",
-   "aliases": 2,
-   "measures": [
-    "Asset freeze"
-   ]
-  },
-  {
-   "id": "EU-183244",
-   "date": "2026-07-23",
-   "authority": "EU",
-   "country": "Russia",
-   "aliases": 2,
-   "measures": [
-    "Asset freeze"
-   ]
-  },
-  {
-   "id": "EU-184473",
-   "date": "2026-07-23",
-   "authority": "EU",
-   "country": "Russia",
-   "aliases": 1,
-   "measures": [
-    "Asset freeze"
-   ]
-  },
-  {
-   "id": "EU-183972",
-   "date": "2026-07-23",
-   "authority": "EU",
-   "country": "Russia",
-   "aliases": 4,
-   "measures": [
-    "Asset freeze"
-   ]
-  },
-  {
-   "id": "EU-183475",
-   "date": "2026-07-23",
-   "authority": "EU",
-   "country": "Russia",
-   "aliases": 5,
-   "measures": [
-    "Asset freeze"
-   ]
-  },
-  {
-   "id": "EU-183490",
-   "date": "2026-07-23",
-   "authority": "EU",
-   "country": "Russia",
-   "aliases": 2,
-   "measures": [
-    "Asset freeze"
-   ]
-  },
-  {
-   "id": "EU-183988",
-   "date": "2026-07-23",
-   "authority": "EU",
-   "country": "Russia",
-   "aliases": 3,
-   "measures": [
-    "Asset freeze"
-   ]
-  },
-  {
-   "id": "EU-183847",
-   "date": "2026-07-23",
-   "authority": "EU",
-   "country": "Russia",
-   "aliases": 4,
-   "measures": [
-    "Asset freeze"
-   ]
-  },
-  {
-   "id": "EU-183087",
-   "date": "2026-07-23",
-   "authority": "EU",
-   "country": "Russia",
-   "aliases": 4,
-   "measures": [
-    "Asset freeze"
-   ]
-  },
-  {
-   "id": "EU-183307",
-   "date": "2026-07-23",
-   "authority": "EU",
-   "country": "Russia",
-   "aliases": 3,
-   "measures": [
-    "Asset freeze"
-   ]
-  },
-  {
-   "id": "EU-184007",
-   "date": "2026-07-23",
-   "authority": "EU",
-   "country": "Russia",
-   "aliases": 2,
-   "measures": [
-    "Asset freeze"
-   ]
-  },
-  {
-   "id": "EU-184019",
-   "date": "2026-07-23",
-   "authority": "EU",
-   "country": "Russia",
-   "aliases": 2,
-   "measures": [
-    "Asset freeze"
-   ]
-  },
-  {
-   "id": "EU-183162",
-   "date": "2026-07-23",
-   "authority": "EU",
-   "country": "Russia",
-   "aliases": 1,
-   "measures": [
-    "Asset freeze"
-   ]
-  },
-  {
-   "id": "58033",
-   "date": "2026-07-23",
-   "authority": "OFAC",
-   "country": "Mexico",
-   "aliases": 1,
-   "measures": [
-    "Block"
-   ]
-  },
-  {
-   "id": "EU-184261",
-   "date": "2026-07-23",
-   "authority": "EU",
-   "country": "Russia",
-   "aliases": 3,
-   "measures": [
-    "Asset freeze"
-   ]
-  },
-  {
-   "id": "EU-183884",
-   "date": "2026-07-23",
-   "authority": "EU",
-   "country": "Russia",
-   "aliases": 2,
-   "measures": [
-    "Asset freeze"
-   ]
-  },
-  {
-   "id": "EU-184426",
-   "date": "2026-07-23",
-   "authority": "EU",
-   "country": "",
-   "aliases": 1,
-   "measures": [
-    "Asset freeze"
-   ]
-  },
-  {
-   "id": "EU-183422",
-   "date": "2026-07-23",
-   "authority": "EU",
-   "country": "Russia",
-   "aliases": 3,
-   "measures": [
-    "Asset freeze"
-   ]
-  },
-  {
-   "id": "EU-183074",
-   "date": "2026-07-23",
-   "authority": "EU",
-   "country": "Russia",
-   "aliases": 1,
-   "measures": [
-    "Asset freeze"
-   ]
-  },
-  {
-   "id": "EU-183807",
-   "date": "2026-07-23",
-   "authority": "EU",
-   "country": "Russia",
-   "aliases": 8,
-   "measures": [
-    "Asset freeze"
-   ]
-  },
-  {
-   "id": "EU-183818",
-   "date": "2026-07-23",
-   "authority": "EU",
-   "country": "Russia",
-   "aliases": 5,
-   "measures": [
-    "Asset freeze"
-   ]
-  },
-  {
-   "id": "EU-184551",
    "date": "2026-07-23",
    "authority": "EU",
    "country": "Russia",
@@ -1998,6 +2030,16 @@
    "aliases": 1,
    "measures": [
     "Asset freeze"
+   ]
+  },
+  {
+   "id": "BIS-4903946610ff",
+   "date": "2026-03-26",
+   "authority": "BIS",
+   "country": "Russia",
+   "aliases": 0,
+   "measures": [
+    "Denial of export privileges"
    ]
   },
   {
@@ -2381,6 +2423,76 @@
    ]
   },
   {
+   "id": "BIS-f35b2b1c3029",
+   "date": "2025-12-15",
+   "authority": "BIS",
+   "country": "United States",
+   "aliases": 0,
+   "measures": [
+    "Denial of export privileges"
+   ]
+  },
+  {
+   "id": "BIS-b849d40aa861",
+   "date": "2025-12-15",
+   "authority": "BIS",
+   "country": "United States",
+   "aliases": 0,
+   "measures": [
+    "Denial of export privileges"
+   ]
+  },
+  {
+   "id": "BIS-448259b85db0",
+   "date": "2025-12-15",
+   "authority": "BIS",
+   "country": "United States",
+   "aliases": 0,
+   "measures": [
+    "Denial of export privileges"
+   ]
+  },
+  {
+   "id": "BIS-b33adb24c5a3",
+   "date": "2025-12-15",
+   "authority": "BIS",
+   "country": "United States",
+   "aliases": 0,
+   "measures": [
+    "Denial of export privileges"
+   ]
+  },
+  {
+   "id": "BIS-f14791c29962",
+   "date": "2025-12-15",
+   "authority": "BIS",
+   "country": "United States",
+   "aliases": 0,
+   "measures": [
+    "Denial of export privileges"
+   ]
+  },
+  {
+   "id": "BIS-a5b4e90faee5",
+   "date": "2025-12-15",
+   "authority": "BIS",
+   "country": "United States",
+   "aliases": 0,
+   "measures": [
+    "Denial of export privileges"
+   ]
+  },
+  {
+   "id": "BIS-ebe225555418",
+   "date": "2025-12-15",
+   "authority": "BIS",
+   "country": "United States",
+   "aliases": 0,
+   "measures": [
+    "Denial of export privileges"
+   ]
+  },
+  {
    "id": "UK-17257",
    "date": "2025-12-12",
    "authority": "UK",
@@ -2451,6 +2563,326 @@
    ]
   },
   {
+   "id": "BIS-c9e72c341b15",
+   "date": "2025-12-05",
+   "authority": "BIS",
+   "country": "Russia",
+   "aliases": 0,
+   "measures": [
+    "Denial of export privileges"
+   ]
+  },
+  {
+   "id": "BIS-b04d5f6edf0e",
+   "date": "2025-12-03",
+   "authority": "BIS",
+   "country": "Russia",
+   "aliases": 0,
+   "measures": [
+    "Denial of export privileges"
+   ]
+  },
+  {
+   "id": "BIS-f065b0262696",
+   "date": "2025-11-21",
+   "authority": "BIS",
+   "country": "United States",
+   "aliases": 0,
+   "measures": [
+    "Denial of export privileges"
+   ]
+  },
+  {
+   "id": "BIS-ce95636ebbdd",
+   "date": "2025-11-21",
+   "authority": "BIS",
+   "country": "United States",
+   "aliases": 0,
+   "measures": [
+    "Denial of export privileges"
+   ]
+  },
+  {
+   "id": "BIS-5d600f9469b2",
+   "date": "2025-11-21",
+   "authority": "BIS",
+   "country": "United States",
+   "aliases": 0,
+   "measures": [
+    "Denial of export privileges"
+   ]
+  },
+  {
+   "id": "BIS-f3d1029191a9",
+   "date": "2025-11-21",
+   "authority": "BIS",
+   "country": "United States",
+   "aliases": 0,
+   "measures": [
+    "Denial of export privileges"
+   ]
+  },
+  {
+   "id": "BIS-20d76b85a899",
+   "date": "2025-11-21",
+   "authority": "BIS",
+   "country": "United States",
+   "aliases": 0,
+   "measures": [
+    "Denial of export privileges"
+   ]
+  },
+  {
+   "id": "BIS-e75552bd1f4a",
+   "date": "2025-11-21",
+   "authority": "BIS",
+   "country": "United States",
+   "aliases": 0,
+   "measures": [
+    "Denial of export privileges"
+   ]
+  },
+  {
+   "id": "BIS-d0814b9e795a",
+   "date": "2025-11-21",
+   "authority": "BIS",
+   "country": "United States",
+   "aliases": 0,
+   "measures": [
+    "Denial of export privileges"
+   ]
+  },
+  {
+   "id": "BIS-a6473dd71806",
+   "date": "2025-11-21",
+   "authority": "BIS",
+   "country": "United States",
+   "aliases": 0,
+   "measures": [
+    "Denial of export privileges"
+   ]
+  },
+  {
+   "id": "BIS-65dcb73cfac1",
+   "date": "2025-11-21",
+   "authority": "BIS",
+   "country": "United States",
+   "aliases": 0,
+   "measures": [
+    "Denial of export privileges"
+   ]
+  },
+  {
+   "id": "BIS-2d9c1b188634",
+   "date": "2025-11-21",
+   "authority": "BIS",
+   "country": "",
+   "aliases": 0,
+   "measures": [
+    "Denial of export privileges"
+   ]
+  },
+  {
+   "id": "BIS-95abb2d42206",
+   "date": "2025-11-21",
+   "authority": "BIS",
+   "country": "United States",
+   "aliases": 0,
+   "measures": [
+    "Denial of export privileges"
+   ]
+  },
+  {
+   "id": "BIS-9f3bd4e2787e",
+   "date": "2025-11-21",
+   "authority": "BIS",
+   "country": "United States",
+   "aliases": 0,
+   "measures": [
+    "Denial of export privileges"
+   ]
+  },
+  {
+   "id": "BIS-1425ba169b06",
+   "date": "2025-11-04",
+   "authority": "BIS",
+   "country": "Russia",
+   "aliases": 0,
+   "measures": [
+    "Denial of export privileges"
+   ]
+  },
+  {
+   "id": "BIS-f296a40d2d28",
+   "date": "2025-10-27",
+   "authority": "BIS",
+   "country": "Iraq",
+   "aliases": 0,
+   "measures": [
+    "Denial of export privileges"
+   ]
+  },
+  {
+   "id": "BIS-826d20fb5916",
+   "date": "2025-10-27",
+   "authority": "BIS",
+   "country": "Iraq",
+   "aliases": 0,
+   "measures": [
+    "Denial of export privileges"
+   ]
+  },
+  {
+   "id": "BIS-9b33ecaa3513",
+   "date": "2025-10-27",
+   "authority": "BIS",
+   "country": "Jordan",
+   "aliases": 0,
+   "measures": [
+    "Denial of export privileges"
+   ]
+  },
+  {
+   "id": "BIS-9543aec54895",
+   "date": "2025-10-27",
+   "authority": "BIS",
+   "country": "Iraq",
+   "aliases": 0,
+   "measures": [
+    "Denial of export privileges"
+   ]
+  },
+  {
+   "id": "BIS-c8f094add67f",
+   "date": "2025-10-27",
+   "authority": "BIS",
+   "country": "Iraq",
+   "aliases": 0,
+   "measures": [
+    "Denial of export privileges"
+   ]
+  },
+  {
+   "id": "BIS-49ffe9b227cd",
+   "date": "2025-10-27",
+   "authority": "BIS",
+   "country": "United Arab Emirates",
+   "aliases": 0,
+   "measures": [
+    "Denial of export privileges"
+   ]
+  },
+  {
+   "id": "BIS-e7eeb44fb28a",
+   "date": "2025-10-27",
+   "authority": "BIS",
+   "country": "Jordan",
+   "aliases": 0,
+   "measures": [
+    "Denial of export privileges"
+   ]
+  },
+  {
+   "id": "BIS-58b835a038de",
+   "date": "2025-10-27",
+   "authority": "BIS",
+   "country": "Iraq",
+   "aliases": 0,
+   "measures": [
+    "Denial of export privileges"
+   ]
+  },
+  {
+   "id": "BIS-f05ee317217c",
+   "date": "2025-10-27",
+   "authority": "BIS",
+   "country": "Iraq",
+   "aliases": 0,
+   "measures": [
+    "Denial of export privileges"
+   ]
+  },
+  {
+   "id": "BIS-3803420acfc1",
+   "date": "2025-10-27",
+   "authority": "BIS",
+   "country": "United Arab Emirates",
+   "aliases": 0,
+   "measures": [
+    "Denial of export privileges"
+   ]
+  },
+  {
+   "id": "BIS-ca4c265807ad",
+   "date": "2025-10-27",
+   "authority": "BIS",
+   "country": "Jordan",
+   "aliases": 0,
+   "measures": [
+    "Denial of export privileges"
+   ]
+  },
+  {
+   "id": "BIS-8d736d5d20fe",
+   "date": "2025-10-27",
+   "authority": "BIS",
+   "country": "Iraq",
+   "aliases": 0,
+   "measures": [
+    "Denial of export privileges"
+   ]
+  },
+  {
+   "id": "BIS-695795440e8a",
+   "date": "2025-10-27",
+   "authority": "BIS",
+   "country": "Iraq",
+   "aliases": 0,
+   "measures": [
+    "Denial of export privileges"
+   ]
+  },
+  {
+   "id": "BIS-bbdbe66ae12c",
+   "date": "2025-10-27",
+   "authority": "BIS",
+   "country": "United Arab Emirates",
+   "aliases": 0,
+   "measures": [
+    "Denial of export privileges"
+   ]
+  },
+  {
+   "id": "BIS-5a7a975108b0",
+   "date": "2025-10-27",
+   "authority": "BIS",
+   "country": "Iraq",
+   "aliases": 0,
+   "measures": [
+    "Denial of export privileges"
+   ]
+  },
+  {
+   "id": "BIS-5bf33015dba4",
+   "date": "2025-10-27",
+   "authority": "BIS",
+   "country": "Saudi Arabia",
+   "aliases": 0,
+   "measures": [
+    "Denial of export privileges"
+   ]
+  },
+  {
+   "id": "BIS-b1bca8bc7652",
+   "date": "2025-10-27",
+   "authority": "BIS",
+   "country": "Iraq",
+   "aliases": 0,
+   "measures": [
+    "Denial of export privileges"
+   ]
+  },
+  {
    "id": "UN-6909474",
    "date": "2025-10-17",
    "authority": "UN",
@@ -2501,6 +2933,56 @@
    ]
   },
   {
+   "id": "State-071d45698900",
+   "date": "2024-11-20",
+   "authority": "State",
+   "country": "",
+   "aliases": 0,
+   "measures": [
+    "Export licence requirement"
+   ]
+  },
+  {
+   "id": "State-a54ab0dfee3b",
+   "date": "2024-11-20",
+   "authority": "State",
+   "country": "",
+   "aliases": 0,
+   "measures": [
+    "Export licence requirement"
+   ]
+  },
+  {
+   "id": "State-b0ea04c2f637",
+   "date": "2024-11-20",
+   "authority": "State",
+   "country": "",
+   "aliases": 0,
+   "measures": [
+    "Export licence requirement"
+   ]
+  },
+  {
+   "id": "State-5844889d798b",
+   "date": "2024-11-20",
+   "authority": "State",
+   "country": "",
+   "aliases": 0,
+   "measures": [
+    "Export licence requirement"
+   ]
+  },
+  {
+   "id": "State-3de0d1094814",
+   "date": "2024-11-20",
+   "authority": "State",
+   "country": "",
+   "aliases": 0,
+   "measures": [
+    "Export licence requirement"
+   ]
+  },
+  {
    "id": "UN-6909269",
    "date": "2024-11-08",
    "authority": "UN",
@@ -2541,6 +3023,56 @@
    ]
   },
   {
+   "id": "State-0ec42b309783",
+   "date": "2024-09-12",
+   "authority": "State",
+   "country": "",
+   "aliases": 0,
+   "measures": [
+    "Export licence requirement"
+   ]
+  },
+  {
+   "id": "State-d826e97839f5",
+   "date": "2024-09-12",
+   "authority": "State",
+   "country": "",
+   "aliases": 0,
+   "measures": [
+    "Export licence requirement"
+   ]
+  },
+  {
+   "id": "State-898ddd109162",
+   "date": "2024-09-12",
+   "authority": "State",
+   "country": "",
+   "aliases": 1,
+   "measures": [
+    "Export licence requirement"
+   ]
+  },
+  {
+   "id": "State-6b91d0e1ed7d",
+   "date": "2024-09-12",
+   "authority": "State",
+   "country": "",
+   "aliases": 0,
+   "measures": [
+    "Export licence requirement"
+   ]
+  },
+  {
+   "id": "State-c801c5f2e12a",
+   "date": "2024-09-12",
+   "authority": "State",
+   "country": "",
+   "aliases": 1,
+   "measures": [
+    "Export licence requirement"
+   ]
+  },
+  {
    "id": "UN-6909265",
    "date": "2024-05-21",
    "authority": "UN",
@@ -2568,6 +3100,146 @@
    "aliases": 5,
    "measures": [
     "Asset freeze"
+   ]
+  },
+  {
+   "id": "State-7ee25e0e3ba9",
+   "date": "2024-05-20",
+   "authority": "State",
+   "country": "",
+   "aliases": 0,
+   "measures": [
+    "Export licence requirement"
+   ]
+  },
+  {
+   "id": "State-30bfc90e47e3",
+   "date": "2024-05-20",
+   "authority": "State",
+   "country": "",
+   "aliases": 0,
+   "measures": [
+    "Export licence requirement"
+   ]
+  },
+  {
+   "id": "State-307919f7c1ca",
+   "date": "2024-05-20",
+   "authority": "State",
+   "country": "",
+   "aliases": 0,
+   "measures": [
+    "Export licence requirement"
+   ]
+  },
+  {
+   "id": "State-8c160638e431",
+   "date": "2024-05-20",
+   "authority": "State",
+   "country": "",
+   "aliases": 0,
+   "measures": [
+    "Export licence requirement"
+   ]
+  },
+  {
+   "id": "State-f1b106ef5867",
+   "date": "2024-05-20",
+   "authority": "State",
+   "country": "",
+   "aliases": 0,
+   "measures": [
+    "Export licence requirement"
+   ]
+  },
+  {
+   "id": "State-a7c95f37ef32",
+   "date": "2024-04-19",
+   "authority": "State",
+   "country": "",
+   "aliases": 0,
+   "measures": [
+    "Export licence requirement"
+   ]
+  },
+  {
+   "id": "State-066b52be3ddf",
+   "date": "2024-04-19",
+   "authority": "State",
+   "country": "",
+   "aliases": 0,
+   "measures": [
+    "Export licence requirement"
+   ]
+  },
+  {
+   "id": "State-829ce86e373c",
+   "date": "2024-04-19",
+   "authority": "State",
+   "country": "",
+   "aliases": 0,
+   "measures": [
+    "Export licence requirement"
+   ]
+  },
+  {
+   "id": "State-50af960f1221",
+   "date": "2024-04-19",
+   "authority": "State",
+   "country": "",
+   "aliases": 0,
+   "measures": [
+    "Export licence requirement"
+   ]
+  },
+  {
+   "id": "State-4f0ea6d18a49",
+   "date": "2024-02-27",
+   "authority": "State",
+   "country": "",
+   "aliases": 0,
+   "measures": [
+    "Export licence requirement"
+   ]
+  },
+  {
+   "id": "State-074515e7c148",
+   "date": "2024-02-27",
+   "authority": "State",
+   "country": "",
+   "aliases": 0,
+   "measures": [
+    "Export licence requirement"
+   ]
+  },
+  {
+   "id": "State-7d68bfae1f89",
+   "date": "2024-02-27",
+   "authority": "State",
+   "country": "",
+   "aliases": 0,
+   "measures": [
+    "Export licence requirement"
+   ]
+  },
+  {
+   "id": "State-24a2b6923897",
+   "date": "2024-02-27",
+   "authority": "State",
+   "country": "",
+   "aliases": 1,
+   "measures": [
+    "Export licence requirement"
+   ]
+  },
+  {
+   "id": "State-02d2db187539",
+   "date": "2024-02-27",
+   "authority": "State",
+   "country": "",
+   "aliases": 0,
+   "measures": [
+    "Export licence requirement"
    ]
   },
   {
@@ -2648,6 +3320,166 @@
    "aliases": 1,
    "measures": [
     "Asset freeze"
+   ]
+  },
+  {
+   "id": "State-5fa15cddc2bc",
+   "date": "2023-07-19",
+   "authority": "State",
+   "country": "",
+   "aliases": 0,
+   "measures": [
+    "Export licence requirement"
+   ]
+  },
+  {
+   "id": "State-22d3f270e382",
+   "date": "2023-07-19",
+   "authority": "State",
+   "country": "",
+   "aliases": 0,
+   "measures": [
+    "Export licence requirement"
+   ]
+  },
+  {
+   "id": "State-c6c3de12936a",
+   "date": "2023-07-19",
+   "authority": "State",
+   "country": "",
+   "aliases": 0,
+   "measures": [
+    "Export licence requirement"
+   ]
+  },
+  {
+   "id": "State-233a4d725770",
+   "date": "2023-07-19",
+   "authority": "State",
+   "country": "",
+   "aliases": 0,
+   "measures": [
+    "Export licence requirement"
+   ]
+  },
+  {
+   "id": "State-b299450b0cd9",
+   "date": "2023-07-19",
+   "authority": "State",
+   "country": "",
+   "aliases": 0,
+   "measures": [
+    "Export licence requirement"
+   ]
+  },
+  {
+   "id": "State-b5756c992815",
+   "date": "2021-03-18",
+   "authority": "State",
+   "country": "",
+   "aliases": 0,
+   "measures": [
+    "Export licence requirement"
+   ]
+  },
+  {
+   "id": "State-036be6b0a0b1",
+   "date": "2021-03-02",
+   "authority": "State",
+   "country": "",
+   "aliases": 0,
+   "measures": [
+    "Export licence requirement"
+   ]
+  },
+  {
+   "id": "State-77c81e96a3f7",
+   "date": "2021-03-02",
+   "authority": "State",
+   "country": "",
+   "aliases": 1,
+   "measures": [
+    "Export licence requirement"
+   ]
+  },
+  {
+   "id": "State-e244f21e70a8",
+   "date": "2021-03-02",
+   "authority": "State",
+   "country": "",
+   "aliases": 1,
+   "measures": [
+    "Export licence requirement"
+   ]
+  },
+  {
+   "id": "State-6e556396f401",
+   "date": "2021-03-02",
+   "authority": "State",
+   "country": "",
+   "aliases": 1,
+   "measures": [
+    "Export licence requirement"
+   ]
+  },
+  {
+   "id": "State-bbfd9d92444d",
+   "date": "2021-03-02",
+   "authority": "State",
+   "country": "",
+   "aliases": 1,
+   "measures": [
+    "Export licence requirement"
+   ]
+  },
+  {
+   "id": "State-4a92d8a29756",
+   "date": "2021-03-02",
+   "authority": "State",
+   "country": "",
+   "aliases": 1,
+   "measures": [
+    "Export licence requirement"
+   ]
+  },
+  {
+   "id": "State-09bf0c57eb2f",
+   "date": "2021-03-02",
+   "authority": "State",
+   "country": "",
+   "aliases": 1,
+   "measures": [
+    "Export licence requirement"
+   ]
+  },
+  {
+   "id": "State-5b5b95443037",
+   "date": "2020-12-14",
+   "authority": "State",
+   "country": "",
+   "aliases": 0,
+   "measures": [
+    "Export licence requirement"
+   ]
+  },
+  {
+   "id": "State-4b7c53c434a4",
+   "date": "2020-12-14",
+   "authority": "State",
+   "country": "",
+   "aliases": 0,
+   "measures": [
+    "Export licence requirement"
+   ]
+  },
+  {
+   "id": "State-3e619407f22e",
+   "date": "2020-12-14",
+   "authority": "State",
+   "country": "",
+   "aliases": 0,
+   "measures": [
+    "Export licence requirement"
    ]
   }
  ]
