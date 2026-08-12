@@ -1,0 +1,5246 @@
+{
+ "cases": [
+  {
+   "query": "ivanov",
+   "threshold": 0.95,
+   "authority": "",
+   "list": "",
+   "program": "",
+   "yob": "",
+   "country": "",
+   "count": 41,
+   "truncated": false,
+   "results": [
+    {
+     "id": "16690",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "39758",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "40800",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "45858",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "36799",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "35170",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "35410",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "16688",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "34598",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "35623",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "35622",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "35621",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "43797",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "38661",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "50663",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "EU-133967",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "EU-134824",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "EU-134828",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "EU-134832",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "EU-135816",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "EU-136665",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "EU-140267",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "EU-144450",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "EU-146570",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "EU-149732",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "EU-150261",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "EU-150729",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "EU-159631",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "EU-162513",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "UK-16036",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "UK-16687",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "UK-14679",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "UK-15068",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "UK-14964",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "UK-14790",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "UK-14336",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "UK-14337",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "UK-14338",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "UK-14335",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "State-0c629ed53d8c",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-1afda4d5bac1",
+     "score": 0.96,
+     "matchType": "strong"
+    }
+   ]
+  },
+  {
+   "query": "rosneft",
+   "threshold": 0.95,
+   "authority": "",
+   "list": "",
+   "program": "",
+   "yob": "",
+   "country": "",
+   "count": 11,
+   "truncated": false,
+   "results": [
+    {
+     "id": "18299",
+     "score": 1,
+     "matchType": "exact"
+    },
+    {
+     "id": "17022",
+     "score": 1,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "18300",
+     "score": 1,
+     "matchType": "exact"
+    },
+    {
+     "id": "UK-17169",
+     "score": 1,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "BIS-891cfd899aae",
+     "score": 1,
+     "matchType": "exact"
+    },
+    {
+     "id": "BIS-190b85a2272e",
+     "score": 1,
+     "matchType": "exact"
+    },
+    {
+     "id": "BIS-5541ec8534c4",
+     "score": 1,
+     "matchType": "exact"
+    },
+    {
+     "id": "18301",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "EU-137714",
+     "score": 0.96,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "UK-14977",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "UK-16970",
+     "score": 0.96,
+     "matchType": "strong"
+    }
+   ]
+  },
+  {
+   "query": "sberbank",
+   "threshold": 0.95,
+   "authority": "",
+   "list": "",
+   "program": "",
+   "yob": "",
+   "country": "",
+   "count": 22,
+   "truncated": false,
+   "results": [
+    {
+     "id": "36418",
+     "score": 1,
+     "matchType": "exact"
+    },
+    {
+     "id": "18715",
+     "score": 1,
+     "matchType": "exact"
+    },
+    {
+     "id": "18669",
+     "score": 1,
+     "matchType": "exact"
+    },
+    {
+     "id": "17018",
+     "score": 1,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "EU-142064",
+     "score": 1,
+     "matchType": "exact"
+    },
+    {
+     "id": "UK-15076",
+     "score": 1,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "36422",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "36410",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "18744",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "18743",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "18716",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "18714",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "18749",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "18709",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "18750",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "18751",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "18708",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "34542",
+     "score": 0.96,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "34638",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "34639",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "34641",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "18746",
+     "score": 0.96,
+     "matchType": "strong"
+    }
+   ]
+  },
+  {
+   "query": "mohammed ali",
+   "threshold": 0.95,
+   "authority": "",
+   "list": "",
+   "program": "",
+   "yob": "",
+   "country": "",
+   "count": 173,
+   "truncated": false,
+   "results": [
+    {
+     "id": "11461",
+     "score": 1,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "19930",
+     "score": 1,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "47088",
+     "score": 1,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "52304",
+     "score": 1,
+     "matchType": "strong"
+    },
+    {
+     "id": "52914",
+     "score": 1,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "6916",
+     "score": 1,
+     "matchType": "strong"
+    },
+    {
+     "id": "6927",
+     "score": 1,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "18596",
+     "score": 1,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "19669",
+     "score": 1,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "21387",
+     "score": 1,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "28528",
+     "score": 1,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "30962",
+     "score": 1,
+     "matchType": "strong"
+    },
+    {
+     "id": "32174",
+     "score": 1,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "32796",
+     "score": 1,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "29070",
+     "score": 1,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "54586",
+     "score": 1,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "50957",
+     "score": 1,
+     "matchType": "strong"
+    },
+    {
+     "id": "57613",
+     "score": 1,
+     "matchType": "strong"
+    },
+    {
+     "id": "54205",
+     "score": 1,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "EU-6478",
+     "score": 1,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "EU-6867",
+     "score": 1,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "EU-7091",
+     "score": 1,
+     "matchType": "strong"
+    },
+    {
+     "id": "EU-109405",
+     "score": 1,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "EU-141628",
+     "score": 1,
+     "matchType": "strong"
+    },
+    {
+     "id": "UN-6908549",
+     "score": 1,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "UN-6908868",
+     "score": 1,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "UK-13378",
+     "score": 1,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "UK-14176",
+     "score": 1,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "UK-10638",
+     "score": 1,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "23025",
+     "score": 0.9868,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "12463",
+     "score": 0.9868,
+     "matchType": "strong"
+    },
+    {
+     "id": "11747",
+     "score": 0.9868,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "39316",
+     "score": 0.9868,
+     "matchType": "strong"
+    },
+    {
+     "id": "45290",
+     "score": 0.9868,
+     "matchType": "strong"
+    },
+    {
+     "id": "44602",
+     "score": 0.9868,
+     "matchType": "strong"
+    },
+    {
+     "id": "46231",
+     "score": 0.9868,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "47442",
+     "score": 0.9868,
+     "matchType": "strong"
+    },
+    {
+     "id": "7252",
+     "score": 0.9868,
+     "matchType": "strong"
+    },
+    {
+     "id": "10895",
+     "score": 0.9868,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "12023",
+     "score": 0.9868,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "12450",
+     "score": 0.9868,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "12992",
+     "score": 0.9868,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "18007",
+     "score": 0.9868,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "23664",
+     "score": 0.9868,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "23719",
+     "score": 0.9868,
+     "matchType": "strong"
+    },
+    {
+     "id": "EU-945",
+     "score": 0.9868,
+     "matchType": "strong"
+    },
+    {
+     "id": "EU-966",
+     "score": 0.9868,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "EU-5620",
+     "score": 0.9868,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "EU-5626",
+     "score": 0.9868,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "EU-115485",
+     "score": 0.9868,
+     "matchType": "strong"
+    },
+    {
+     "id": "EU-128031",
+     "score": 0.9868,
+     "matchType": "strong"
+    },
+    {
+     "id": "EU-146090",
+     "score": 0.9868,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "EU-167337",
+     "score": 0.9868,
+     "matchType": "strong"
+    },
+    {
+     "id": "EU-171313",
+     "score": 0.9868,
+     "matchType": "strong"
+    },
+    {
+     "id": "UN-6908996",
+     "score": 0.9868,
+     "matchType": "strong"
+    },
+    {
+     "id": "UN-113223",
+     "score": 0.9868,
+     "matchType": "strong"
+    },
+    {
+     "id": "UN-111943",
+     "score": 0.9868,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "UN-2901762",
+     "score": 0.9868,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "UN-6908032",
+     "score": 0.9868,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "UN-6908855",
+     "score": 0.9868,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "UK-7098",
+     "score": 0.9868,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "UK-16383",
+     "score": 0.9868,
+     "matchType": "strong"
+    },
+    {
+     "id": "UK-16339",
+     "score": 0.9868,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "UK-11097",
+     "score": 0.9868,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "UK-10929",
+     "score": 0.9868,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "UK-7489",
+     "score": 0.9868,
+     "matchType": "strong"
+    },
+    {
+     "id": "UK-14067",
+     "score": 0.9868,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "UK-13613",
+     "score": 0.9868,
+     "matchType": "strong"
+    },
+    {
+     "id": "15831",
+     "score": 0.9798,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "EU-7178",
+     "score": 0.9763,
+     "matchType": "strong"
+    },
+    {
+     "id": "UN-3000509",
+     "score": 0.9763,
+     "matchType": "strong"
+    },
+    {
+     "id": "UK-12813",
+     "score": 0.9763,
+     "matchType": "strong"
+    },
+    {
+     "id": "28923",
+     "score": 0.9737,
+     "matchType": "strong"
+    },
+    {
+     "id": "25489",
+     "score": 0.9737,
+     "matchType": "strong"
+    },
+    {
+     "id": "24474",
+     "score": 0.9737,
+     "matchType": "strong"
+    },
+    {
+     "id": "36003",
+     "score": 0.9737,
+     "matchType": "strong"
+    },
+    {
+     "id": "29823",
+     "score": 0.9737,
+     "matchType": "strong"
+    },
+    {
+     "id": "16140",
+     "score": 0.9737,
+     "matchType": "strong"
+    },
+    {
+     "id": "40741",
+     "score": 0.9737,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "46888",
+     "score": 0.9737,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "48785",
+     "score": 0.9737,
+     "matchType": "strong"
+    },
+    {
+     "id": "49691",
+     "score": 0.9737,
+     "matchType": "strong"
+    },
+    {
+     "id": "50667",
+     "score": 0.9737,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "52822",
+     "score": 0.9737,
+     "matchType": "strong"
+    },
+    {
+     "id": "12066",
+     "score": 0.9737,
+     "matchType": "strong"
+    },
+    {
+     "id": "26556",
+     "score": 0.9737,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "26560",
+     "score": 0.9737,
+     "matchType": "strong"
+    },
+    {
+     "id": "27327",
+     "score": 0.9737,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "33253",
+     "score": 0.9737,
+     "matchType": "strong"
+    },
+    {
+     "id": "57813",
+     "score": 0.9737,
+     "matchType": "strong"
+    },
+    {
+     "id": "57814",
+     "score": 0.9737,
+     "matchType": "strong"
+    },
+    {
+     "id": "EU-5271",
+     "score": 0.9737,
+     "matchType": "strong"
+    },
+    {
+     "id": "EU-6211",
+     "score": 0.9737,
+     "matchType": "strong"
+    },
+    {
+     "id": "EU-6238",
+     "score": 0.9737,
+     "matchType": "strong"
+    },
+    {
+     "id": "EU-130611",
+     "score": 0.9737,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "EU-182017",
+     "score": 0.9737,
+     "matchType": "strong"
+    },
+    {
+     "id": "UN-6908857",
+     "score": 0.9737,
+     "matchType": "strong"
+    },
+    {
+     "id": "UK-14112",
+     "score": 0.9737,
+     "matchType": "strong"
+    },
+    {
+     "id": "UK-10643",
+     "score": 0.9737,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "UK-16607",
+     "score": 0.9737,
+     "matchType": "strong"
+    },
+    {
+     "id": "UK-12652",
+     "score": 0.9737,
+     "matchType": "strong"
+    },
+    {
+     "id": "UK-11808",
+     "score": 0.9737,
+     "matchType": "strong"
+    },
+    {
+     "id": "EU-3144",
+     "score": 0.9737,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "UN-113212",
+     "score": 0.9737,
+     "matchType": "strong"
+    },
+    {
+     "id": "UK-8719",
+     "score": 0.9737,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-d2879a062274",
+     "score": 0.9737,
+     "matchType": "strong"
+    },
+    {
+     "id": "45672",
+     "score": 0.9724,
+     "matchType": "strong"
+    },
+    {
+     "id": "17280",
+     "score": 0.9724,
+     "matchType": "strong"
+    },
+    {
+     "id": "EU-750",
+     "score": 0.9724,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "EU-107695",
+     "score": 0.9724,
+     "matchType": "strong"
+    },
+    {
+     "id": "UN-113219",
+     "score": 0.9724,
+     "matchType": "strong"
+    },
+    {
+     "id": "UN-6908535",
+     "score": 0.9724,
+     "matchType": "strong"
+    },
+    {
+     "id": "UK-7424",
+     "score": 0.9724,
+     "matchType": "strong"
+    },
+    {
+     "id": "UK-13320",
+     "score": 0.9724,
+     "matchType": "strong"
+    },
+    {
+     "id": "EU-120040",
+     "score": 0.9684,
+     "matchType": "strong"
+    },
+    {
+     "id": "UN-6908769",
+     "score": 0.9684,
+     "matchType": "strong"
+    },
+    {
+     "id": "UK-13787",
+     "score": 0.9684,
+     "matchType": "strong"
+    },
+    {
+     "id": "45093",
+     "score": 0.9674,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "EU-151889",
+     "score": 0.9674,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "EU-181981",
+     "score": 0.9674,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-64112c316a30",
+     "score": 0.9674,
+     "matchType": "strong"
+    },
+    {
+     "id": "34437",
+     "score": 0.9649,
+     "matchType": "strong"
+    },
+    {
+     "id": "11538",
+     "score": 0.9649,
+     "matchType": "strong"
+    },
+    {
+     "id": "39663",
+     "score": 0.9649,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "42396",
+     "score": 0.9649,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "10051",
+     "score": 0.9649,
+     "matchType": "strong"
+    },
+    {
+     "id": "24763",
+     "score": 0.9649,
+     "matchType": "strong"
+    },
+    {
+     "id": "27321",
+     "score": 0.9649,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "UK-12462",
+     "score": 0.9649,
+     "matchType": "strong"
+    },
+    {
+     "id": "UK-11702",
+     "score": 0.9649,
+     "matchType": "strong"
+    },
+    {
+     "id": "43637",
+     "score": 0.9649,
+     "matchType": "strong"
+    },
+    {
+     "id": "47339",
+     "score": 0.9649,
+     "matchType": "strong"
+    },
+    {
+     "id": "49358",
+     "score": 0.9649,
+     "matchType": "strong"
+    },
+    {
+     "id": "32151",
+     "score": 0.9649,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "52915",
+     "score": 0.9649,
+     "matchType": "strong"
+    },
+    {
+     "id": "6368",
+     "score": 0.9649,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "7150",
+     "score": 0.9649,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "9486",
+     "score": 0.9649,
+     "matchType": "strong"
+    },
+    {
+     "id": "16991",
+     "score": 0.9649,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "18591",
+     "score": 0.9649,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "22268",
+     "score": 0.9649,
+     "matchType": "strong"
+    },
+    {
+     "id": "23048",
+     "score": 0.9649,
+     "matchType": "strong"
+    },
+    {
+     "id": "23056",
+     "score": 0.9649,
+     "matchType": "strong"
+    },
+    {
+     "id": "27320",
+     "score": 0.9649,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "EU-537",
+     "score": 0.9649,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "EU-6515",
+     "score": 0.9649,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "EU-107689",
+     "score": 0.9649,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "UN-111639",
+     "score": 0.9649,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "UN-2973988",
+     "score": 0.9649,
+     "matchType": "strong"
+    },
+    {
+     "id": "UN-6908532",
+     "score": 0.9649,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "UK-6927",
+     "score": 0.9649,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "UK-13317",
+     "score": 0.9649,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "UK-12995",
+     "score": 0.9649,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "UK-12038",
+     "score": 0.9649,
+     "matchType": "strong"
+    },
+    {
+     "id": "UK-16348",
+     "score": 0.9649,
+     "matchType": "strong"
+    },
+    {
+     "id": "6920",
+     "score": 0.9605,
+     "matchType": "strong"
+    },
+    {
+     "id": "20841",
+     "score": 0.9605,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "26862",
+     "score": 0.9605,
+     "matchType": "strong"
+    },
+    {
+     "id": "55343",
+     "score": 0.9605,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "9694",
+     "score": 0.9605,
+     "matchType": "strong"
+    },
+    {
+     "id": "EU-176",
+     "score": 0.9605,
+     "matchType": "strong"
+    },
+    {
+     "id": "EU-148288",
+     "score": 0.9605,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "UK-7015",
+     "score": 0.9605,
+     "matchType": "strong"
+    },
+    {
+     "id": "43088",
+     "score": 0.9592,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "EU-167497",
+     "score": 0.9592,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "UN-6909267",
+     "score": 0.9592,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "UK-16501",
+     "score": 0.9592,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "29782",
+     "score": 0.9579,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "EU-132888",
+     "score": 0.9579,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "UN-6908867",
+     "score": 0.9579,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "UK-14168",
+     "score": 0.9579,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "27271",
+     "score": 0.9518,
+     "matchType": "strong"
+    },
+    {
+     "id": "7827",
+     "score": 0.9513,
+     "matchType": "strong"
+    }
+   ]
+  },
+  {
+   "query": "kim jong un",
+   "threshold": 0.95,
+   "authority": "",
+   "list": "",
+   "program": "",
+   "yob": "",
+   "country": "",
+   "count": 67,
+   "truncated": false,
+   "results": [
+    {
+     "id": "23214",
+     "score": 1,
+     "matchType": "strong"
+    },
+    {
+     "id": "22992",
+     "score": 1,
+     "matchType": "strong"
+    },
+    {
+     "id": "20157",
+     "score": 1,
+     "matchType": "exact"
+    },
+    {
+     "id": "18558",
+     "score": 1,
+     "matchType": "strong"
+    },
+    {
+     "id": "21444",
+     "score": 1,
+     "matchType": "strong"
+    },
+    {
+     "id": "EU-107820",
+     "score": 1,
+     "matchType": "strong"
+    },
+    {
+     "id": "EU-108637",
+     "score": 1,
+     "matchType": "strong"
+    },
+    {
+     "id": "EU-114578",
+     "score": 1,
+     "matchType": "strong"
+    },
+    {
+     "id": "UN-6908498",
+     "score": 1,
+     "matchType": "strong"
+    },
+    {
+     "id": "UN-6908643",
+     "score": 1,
+     "matchType": "strong"
+    },
+    {
+     "id": "UK-13561",
+     "score": 1,
+     "matchType": "strong"
+    },
+    {
+     "id": "UK-13332",
+     "score": 1,
+     "matchType": "strong"
+    },
+    {
+     "id": "UK-13364",
+     "score": 1,
+     "matchType": "strong"
+    },
+    {
+     "id": "12211",
+     "score": 0.9729,
+     "matchType": "strong"
+    },
+    {
+     "id": "21743",
+     "score": 0.9729,
+     "matchType": "strong"
+    },
+    {
+     "id": "17614",
+     "score": 0.9729,
+     "matchType": "strong"
+    },
+    {
+     "id": "55451",
+     "score": 0.9729,
+     "matchType": "strong"
+    },
+    {
+     "id": "52114",
+     "score": 0.9729,
+     "matchType": "strong"
+    },
+    {
+     "id": "EU-6847",
+     "score": 0.9729,
+     "matchType": "strong"
+    },
+    {
+     "id": "EU-107938",
+     "score": 0.9729,
+     "matchType": "strong"
+    },
+    {
+     "id": "EU-116464",
+     "score": 0.9729,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "EU-171486",
+     "score": 0.9729,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "UN-6908511",
+     "score": 0.9729,
+     "matchType": "strong"
+    },
+    {
+     "id": "UK-12439",
+     "score": 0.9729,
+     "matchType": "strong"
+    },
+    {
+     "id": "UK-13662",
+     "score": 0.9729,
+     "matchType": "strong"
+    },
+    {
+     "id": "UK-16816",
+     "score": 0.9729,
+     "matchType": "strong"
+    },
+    {
+     "id": "UK-13334",
+     "score": 0.9729,
+     "matchType": "strong"
+    },
+    {
+     "id": "State-3dc7577c1d44",
+     "score": 0.9729,
+     "matchType": "strong"
+    },
+    {
+     "id": "24918",
+     "score": 0.9684,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "17618",
+     "score": 0.9684,
+     "matchType": "strong"
+    },
+    {
+     "id": "52292",
+     "score": 0.9684,
+     "matchType": "strong"
+    },
+    {
+     "id": "EU-147392",
+     "score": 0.9684,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "23506",
+     "score": 0.9639,
+     "matchType": "strong"
+    },
+    {
+     "id": "23507",
+     "score": 0.9639,
+     "matchType": "strong"
+    },
+    {
+     "id": "23016",
+     "score": 0.9639,
+     "matchType": "strong"
+    },
+    {
+     "id": "23007",
+     "score": 0.9639,
+     "matchType": "strong"
+    },
+    {
+     "id": "11648",
+     "score": 0.9639,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "20125",
+     "score": 0.9639,
+     "matchType": "strong"
+    },
+    {
+     "id": "18554",
+     "score": 0.9639,
+     "matchType": "strong"
+    },
+    {
+     "id": "18555",
+     "score": 0.9639,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "40205",
+     "score": 0.9639,
+     "matchType": "strong"
+    },
+    {
+     "id": "51328",
+     "score": 0.9639,
+     "matchType": "strong"
+    },
+    {
+     "id": "EU-6859",
+     "score": 0.9639,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "EU-107828",
+     "score": 0.9639,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "EU-112309",
+     "score": 0.9639,
+     "matchType": "strong"
+    },
+    {
+     "id": "EU-114848",
+     "score": 0.9639,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "EU-115180",
+     "score": 0.9639,
+     "matchType": "strong"
+    },
+    {
+     "id": "EU-116481",
+     "score": 0.9639,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "EU-165834",
+     "score": 0.9639,
+     "matchType": "strong"
+    },
+    {
+     "id": "UN-6908497",
+     "score": 0.9639,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "UN-6908512",
+     "score": 0.9639,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "UN-6908585",
+     "score": 0.9639,
+     "matchType": "strong"
+    },
+    {
+     "id": "UN-6908644",
+     "score": 0.9639,
+     "matchType": "strong"
+    },
+    {
+     "id": "UK-12441",
+     "score": 0.9639,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "UK-13335",
+     "score": 0.9639,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "UK-13665",
+     "score": 0.9639,
+     "matchType": "strong"
+    },
+    {
+     "id": "UK-13600",
+     "score": 0.9639,
+     "matchType": "strong"
+    },
+    {
+     "id": "UK-13562",
+     "score": 0.9639,
+     "matchType": "strong"
+    },
+    {
+     "id": "UK-13475",
+     "score": 0.9639,
+     "matchType": "strong"
+    },
+    {
+     "id": "21746",
+     "score": 0.9549,
+     "matchType": "strong"
+    },
+    {
+     "id": "21443",
+     "score": 0.9549,
+     "matchType": "strong"
+    },
+    {
+     "id": "55064",
+     "score": 0.9549,
+     "matchType": "strong"
+    },
+    {
+     "id": "EU-108643",
+     "score": 0.9549,
+     "matchType": "strong"
+    },
+    {
+     "id": "EU-113713",
+     "score": 0.9549,
+     "matchType": "strong"
+    },
+    {
+     "id": "UN-6908620",
+     "score": 0.9549,
+     "matchType": "strong"
+    },
+    {
+     "id": "UK-13366",
+     "score": 0.9549,
+     "matchType": "strong"
+    },
+    {
+     "id": "UK-13534",
+     "score": 0.9549,
+     "matchType": "strong"
+    }
+   ]
+  },
+  {
+   "query": "gazprom",
+   "threshold": 0.95,
+   "authority": "",
+   "list": "",
+   "program": "",
+   "yob": "",
+   "country": "",
+   "count": 112,
+   "truncated": false,
+   "results": [
+    {
+     "id": "19675",
+     "score": 1,
+     "matchType": "exact"
+    },
+    {
+     "id": "17250",
+     "score": 1,
+     "matchType": "exact"
+    },
+    {
+     "id": "EU-160329",
+     "score": 1,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "EU-160334",
+     "score": 1,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "BIS-76c2837b2718",
+     "score": 1,
+     "matchType": "exact"
+    },
+    {
+     "id": "BIS-f6528bb6a6a9",
+     "score": 1,
+     "matchType": "exact"
+    },
+    {
+     "id": "24185",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "19040",
+     "score": 0.96,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "19640",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "47574",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "19653",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "46704",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "44090",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "44916",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "17143",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "51969",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "52138",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "52137",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "52136",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "52135",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "52129",
+     "score": 0.96,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "52127",
+     "score": 0.96,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "52126",
+     "score": 0.96,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "52125",
+     "score": 0.96,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "52122",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "51546",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "19546",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "19545",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "19544",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "19542",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "19543",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "19634",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "19635",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "19636",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "19637",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "19638",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "19641",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "19642",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "19643",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "19644",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "19645",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "19646",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "19647",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "19648",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "19649",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "19650",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "19633",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "19632",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "19631",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "19652",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "19469",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "19471",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "19472",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "19670",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "19672",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "19673",
+     "score": 0.96,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "19674",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "19677",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "19678",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "19681",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "19683",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "19686",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "19654",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "20296",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "19468",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "EU-181081",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "EU-181088",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "UK-16736",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-6147f95232b8",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-929cff1dce2b",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-27d0134b0783",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-3df8584a6448",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-5fd046a6d6f9",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-e7a1375bd632",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-bcfb0326bf79",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-fbbcfc8f9a6d",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-933e6e5b8adf",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-65b6b817c71d",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-10d566ee86b8",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-fdf6db6683da",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-8c691af41b2c",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-10cbfdcb2051",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-da602a5c3abc",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-4b32f4904b11",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-010b1dd57e4f",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-726e53e80e01",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-a99cbb1ff7c1",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-9fa53676108e",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-16b69ae3a84e",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-b84df9e8a8cf",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-95cd838fdffc",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-ef675ae3cbf8",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-c1783e19fdd3",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-99e50726e212",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-68299a3dc10e",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-d884b0022cd6",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-f6d009ef5344",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-8cd0ea0965ef",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-6457e51e0bf2",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-a685f0cc36c1",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-c306a8b1dffb",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-69a3572bc6b0",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-3ba6a27356af",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-a02b32abb762",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-5e8e9a6f1e3b",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-d0595a82ff29",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-06f370cfffe2",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-00450456af49",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-e7eb86b29f39",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-053cae3b9bb6",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-5d6444b7774f",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "49257",
+     "score": 0.95,
+     "matchType": "strong"
+    }
+   ]
+  },
+  {
+   "query": "wagner group",
+   "threshold": 0.95,
+   "authority": "",
+   "list": "",
+   "program": "",
+   "yob": "",
+   "country": "",
+   "count": 10,
+   "truncated": false,
+   "results": [
+    {
+     "id": "47743",
+     "score": 1,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "22543",
+     "score": 1,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "EU-132563",
+     "score": 1,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "EU-152064",
+     "score": 1,
+     "matchType": "exact"
+    },
+    {
+     "id": "EU-154669",
+     "score": 1,
+     "matchType": "exact"
+    },
+    {
+     "id": "UK-16630",
+     "score": 1,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "UK-15033",
+     "score": 1,
+     "matchType": "exact"
+    },
+    {
+     "id": "BIS-3663e97f6ed2",
+     "score": 1,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "EU-150790",
+     "score": 0.96,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "State-7d68bfae1f89",
+     "score": 0.96,
+     "matchType": "strong"
+    }
+   ]
+  },
+  {
+   "query": "huawei",
+   "threshold": 0.95,
+   "authority": "",
+   "list": "",
+   "program": "",
+   "yob": "",
+   "country": "",
+   "count": 138,
+   "truncated": false,
+   "results": [
+    {
+     "id": "BIS-18a7ef21cb7a",
+     "score": 1,
+     "matchType": "exact"
+    },
+    {
+     "id": "BIS-07c5d60f9df5",
+     "score": 1,
+     "matchType": "exact"
+    },
+    {
+     "id": "30947",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "32087",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-42b613587217",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-85dd9610f2b9",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-3c5e735b7196",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-19554e825cbd",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-a1bc45ac9ef3",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-418c406c480a",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-b1fd8e385edf",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-49cc98dbc240",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-a4eab523e98c",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-b91976e1936c",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-46bf4e263274",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-d39cedb3c858",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-3b6ac79c0dc7",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-33ce60243abd",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-e10d3301f7a5",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-29d2c2e56aa5",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-a7b7c751a75e",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-7d120a780765",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-b9ef7ab5a311",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-201aff9c2350",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-b8b0384a456d",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-10a41293904b",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-2f7e3c523ef5",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-2c3067d31021",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-717e9bd5f769",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-b1af4452e3fb",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-025cddccf549",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-9316860d8436",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-888dc6a81e36",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-baa3d4391bd5",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-82e41b4570c1",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-cb502b2a275e",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-7823054bedcd",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-cc5159b3481c",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-670e6a676ace",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-2aad7e66441f",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-b5756520c86a",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-181f7ab8b34b",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-bcfaa90becbe",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-e1dee706f760",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-8b353e10bc6a",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-011e2ff880f6",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-0ab8acd66056",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-8609ea3756d6",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-9e378505e06c",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-df97c1457389",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-66d816f860e4",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-d7bb3aa8f9b9",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-c038548cf5d8",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-eb311f30f5b0",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-cc8aad269196",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-58a232e99cde",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-21d1c72f52bb",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-e5004933c09f",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-ecf3aa6a5687",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-e6d58f701981",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-7f68afbeeb44",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-9556b6505b9f",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-dfdec46cb990",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-8ae72ab26764",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-cb14c0040b22",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-f7006a5e0abf",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-c60f2c66a055",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-485e7f9c3839",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-6d6b358ff353",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-649389243e21",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-ead92f787eac",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-0b3c1d1fdb50",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-a0928ca7622c",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-743c59700c6a",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-f0dcb02550d6",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-9c7a47bf708c",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-a38e5d670cec",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-30aa69119b77",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-552773ef96e1",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-0f4be4f70e55",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-f65551c7bf32",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-03d15849d588",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-5e4b9e5060c8",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-9995d95a83f5",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-550175e8d2d1",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-247ebec088be",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-7f620f1a398a",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-de60143a28bc",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-bdd188d783a5",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-794ffee35bfe",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-684ce9a13f82",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-b700f0535517",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-fbfdf38d606e",
+     "score": 0.96,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "BIS-24144c6e8e41",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-bccac989aa1b",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-da5bb4179f9d",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-8e7ec0358a8c",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-1a53f21df241",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-03af7d6df1cb",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-61e73d113299",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-30c68fe2f151",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-0cf0e5395c78",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-ad9c86310872",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-655714c9f001",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-793d6e6c3748",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-c22175e60120",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-fd2fd2106a18",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-00e7d15d0de9",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-54538d162b46",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-a57ede1f8a2d",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-3dbac52f1e2d",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-aada13e26e8c",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-c26d371c90be",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-e4f91863ace0",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-8857c176070a",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-a09da0ce5240",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-e0df7004cf6f",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-de1115eb262a",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-b6ee4c7805b8",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-f35fdb95cb61",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-aa596b5c6fae",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-9da359f0e5ef",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-e368a684c935",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-f190e50b7f5a",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-48f81ca80cd8",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-1535e6b796ac",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-5ebdeb38abd8",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-14eb22cf2943",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-52ccbe780c4e",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-41561464ad03",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-a69bccff8f6e",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-e765fdeb1c37",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-9851b5cb2645",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-2f4411e8153b",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-26c7de59a8b2",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-8bbb4ca353bb",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-4a5c94c81bb2",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-efb084f03c62",
+     "score": 0.96,
+     "matchType": "strong"
+    }
+   ]
+  },
+  {
+   "query": "CCC",
+   "threshold": 0.95,
+   "authority": "",
+   "list": "",
+   "program": "",
+   "yob": "",
+   "country": "",
+   "count": 8,
+   "truncated": false,
+   "results": [
+    {
+     "id": "BIS-cac6f88cfa36",
+     "score": 1,
+     "matchType": "exact"
+    },
+    {
+     "id": "18222",
+     "score": 0.97,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "30930",
+     "score": 0.97,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "BIS-057fb7ab22dd",
+     "score": 0.96,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "BIS-13aabe24d9f8",
+     "score": 0.96,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "BIS-4c65128b3f81",
+     "score": 0.96,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "BIS-820ef4db0bbf",
+     "score": 0.96,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "BIS-e38db36e180e",
+     "score": 0.96,
+     "matchType": "strong_alias"
+    }
+   ]
+  },
+  {
+   "query": "ghsair",
+   "threshold": 0.95,
+   "authority": "",
+   "list": "",
+   "program": "",
+   "yob": "",
+   "country": "",
+   "count": 2,
+   "truncated": false,
+   "results": [
+    {
+     "id": "BIS-db2d480234c3",
+     "score": 0.9556,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-733b05de91fe",
+     "score": 0.9556,
+     "matchType": "strong"
+    }
+   ]
+  },
+  {
+   "query": "soe win",
+   "threshold": 0.95,
+   "authority": "",
+   "list": "",
+   "program": "",
+   "yob": "",
+   "country": "",
+   "count": 37,
+   "truncated": false,
+   "results": [
+    {
+     "id": "27226",
+     "score": 1,
+     "matchType": "exact"
+    },
+    {
+     "id": "EU-128190",
+     "score": 1,
+     "matchType": "exact"
+    },
+    {
+     "id": "UK-13898",
+     "score": 1,
+     "matchType": "exact"
+    },
+    {
+     "id": "31128",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "31134",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "31923",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "31945",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "33973",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "11293",
+     "score": 0.96,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "41188",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "44658",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "47353",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "47354",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "47338",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "51235",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "54749",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "56031",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "56910",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "11269",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "EU-118877",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "EU-128193",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "EU-128206",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "EU-130402",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "EU-133415",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "EU-133419",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "EU-145499",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "EU-145508",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "EU-155669",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "EU-168276",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "UK-15858",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "UK-15048",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "UK-14063",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "UK-13737",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "UK-15717",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-01c42c3fecd4",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-5c0dea0ee62b",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-dad0ecb485f7",
+     "score": 0.96,
+     "matchType": "strong"
+    }
+   ]
+  },
+  {
+   "query": "petroleos de venezuela",
+   "threshold": 0.95,
+   "authority": "",
+   "list": "",
+   "program": "",
+   "yob": "",
+   "country": "",
+   "count": 1,
+   "truncated": false,
+   "results": [
+    {
+     "id": "26367",
+     "score": 1,
+     "matchType": "exact"
+    }
+   ]
+  },
+  {
+   "query": "yusuf",
+   "threshold": 0.95,
+   "authority": "",
+   "list": "",
+   "program": "",
+   "yob": "",
+   "country": "",
+   "count": 65,
+   "truncated": false,
+   "results": [
+    {
+     "id": "EU-7480",
+     "score": 1,
+     "matchType": "exact"
+    },
+    {
+     "id": "17166",
+     "score": 0.97,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "UN-6908399",
+     "score": 0.97,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "UK-13132",
+     "score": 0.97,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "35841",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "35840",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "37489",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "39518",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "39641",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "39642",
+     "score": 0.96,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "43076",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "43058",
+     "score": 0.96,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "43756",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "45670",
+     "score": 0.96,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "46248",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "47443",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "51870",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "9480",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "13168",
+     "score": 0.96,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "15515",
+     "score": 0.96,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "16152",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "17291",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "17292",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "18447",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "19274",
+     "score": 0.96,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "20439",
+     "score": 0.96,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "21406",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "22563",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "23719",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "26058",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "27311",
+     "score": 0.96,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "27788",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "29677",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "30628",
+     "score": 0.96,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "30884",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "31971",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "53832",
+     "score": 0.96,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "20241",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "21983",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "57696",
+     "score": 0.96,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "EU-540",
+     "score": 0.96,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "EU-6618",
+     "score": 0.96,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "EU-7489",
+     "score": 0.96,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "EU-7547",
+     "score": 0.96,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "EU-107699",
+     "score": 0.96,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "EU-115960",
+     "score": 0.96,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "EU-117925",
+     "score": 0.96,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "EU-131829",
+     "score": 0.96,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "EU-152906",
+     "score": 0.96,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "EU-167677",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "UN-6908440",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "UN-6908537",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "UN-110965",
+     "score": 0.96,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "UN-6908865",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "UN-6908409",
+     "score": 0.96,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "UK-13141",
+     "score": 0.96,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "UK-13194",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "UK-12208",
+     "score": 0.96,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "UK-13620",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "UK-13322",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "UK-16341",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "UK-14144",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "UK-7017",
+     "score": 0.96,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "State-196567b1a176",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-ae4b061ac187",
+     "score": 0.96,
+     "matchType": "strong"
+    }
+   ]
+  },
+  {
+   "query": "schmidt",
+   "threshold": 0.9,
+   "authority": "",
+   "list": "",
+   "program": "",
+   "yob": "",
+   "country": "",
+   "count": 5,
+   "truncated": false,
+   "results": [
+    {
+     "id": "BIS-f21863cd795b",
+     "score": 0.96,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "BIS-a3b0a571b590",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-c4d70d95295a",
+     "score": 0.95,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "34674",
+     "score": 0.9067,
+     "matchType": "weak_alias"
+    },
+    {
+     "id": "BIS-afbfead26d9b",
+     "score": 0.9067,
+     "matchType": "weak_alias"
+    }
+   ]
+  },
+  {
+   "query": "ivanov",
+   "threshold": 0.85,
+   "authority": "",
+   "list": "",
+   "program": "",
+   "yob": "",
+   "country": "",
+   "count": 305,
+   "truncated": true,
+   "results": [
+    {
+     "id": "16690",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "39758",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "40800",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "45858",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "36799",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "35170",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "35410",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "16688",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "34598",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "35623",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "35622",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "35621",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "43797",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "38661",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "50663",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "EU-133967",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "EU-134824",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "EU-134828",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "EU-134832",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "EU-135816",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "EU-136665",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "EU-140267",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "EU-144450",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "EU-146570",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "EU-149732",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "EU-150261",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "EU-150729",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "EU-159631",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "EU-162513",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "UK-16036",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "UK-16687",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "UK-14679",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "UK-15068",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "UK-14964",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "UK-14790",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "UK-14336",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "UK-14337",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "UK-14338",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "UK-14335",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "State-0c629ed53d8c",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-1afda4d5bac1",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "44904",
+     "score": 0.9312,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "26230",
+     "score": 0.8889,
+     "matchType": "weak_alias"
+    },
+    {
+     "id": "56301",
+     "score": 0.8833,
+     "matchType": "fuzzy"
+    },
+    {
+     "id": "29886",
+     "score": 0.8743,
+     "matchType": "fuzzy"
+    },
+    {
+     "id": "43977",
+     "score": 0.8743,
+     "matchType": "fuzzy"
+    },
+    {
+     "id": "37854",
+     "score": 0.8743,
+     "matchType": "fuzzy"
+    },
+    {
+     "id": "56414",
+     "score": 0.8743,
+     "matchType": "fuzzy"
+    },
+    {
+     "id": "EU-7304",
+     "score": 0.8743,
+     "matchType": "fuzzy"
+    },
+    {
+     "id": "EU-149939",
+     "score": 0.8743,
+     "matchType": "fuzzy"
+    },
+    {
+     "id": "EU-162271",
+     "score": 0.8743,
+     "matchType": "fuzzy"
+    },
+    {
+     "id": "UK-13667",
+     "score": 0.8743,
+     "matchType": "weak_alias"
+    },
+    {
+     "id": "UK-16019",
+     "score": 0.8743,
+     "matchType": "fuzzy"
+    },
+    {
+     "id": "UK-12943",
+     "score": 0.8743,
+     "matchType": "weak_alias"
+    },
+    {
+     "id": "UK-15809",
+     "score": 0.8743,
+     "matchType": "fuzzy"
+    },
+    {
+     "id": "23585",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "22410",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "23944",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "35118",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "35119",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "31871",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "31950",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "34770",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "33194",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "32696",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "32716",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "7695",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "21186",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "17241",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "16961",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "16934",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "16667",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "33403",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "46548",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "47750",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "47773",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "36865",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "36959",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "36820",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "36843",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "36842",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "36841",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "36377",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "35417",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "35236",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "35232",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "35225",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "35223",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "35222",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "35220",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "35315",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "35419",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "16692",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "16673",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "16660",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "16917",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "22409",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "35648",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "35682",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "35670",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "35641",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "35495",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "35520",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "35428",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "35473",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "35605",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "35614",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "35620",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "35550",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "35534",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "37178",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "42161",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "45786",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "41102",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "39208",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "40248",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "40119",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "37358",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "37331",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "37678",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "37724",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "40998",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "47819",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "50238",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "50248",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "50267",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "50261",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "50890",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "51948",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "51859",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "EU-7270",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "EU-7323",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "EU-7326",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "EU-7384",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "EU-7463",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "EU-7466",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "EU-7565",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "EU-116716",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "EU-118698",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "EU-126000",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "EU-126251",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "EU-126320",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "EU-126663",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "EU-126681",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "EU-126725",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "EU-127093",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "EU-127732",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "EU-130144",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "EU-130369",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "EU-133328",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "EU-133869",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "EU-133955",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "EU-133995",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "EU-134003",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "EU-134015",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "EU-134039",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "EU-134224",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "EU-134312",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "EU-134416",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "EU-134472",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "EU-134760",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "EU-134796",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "EU-134820",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "EU-134904",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "EU-134932",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "EU-135020",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "EU-135068",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "EU-135292",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "EU-135612",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "EU-135692",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "EU-135885",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "EU-135904",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "EU-136043",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "EU-136142",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "EU-136340",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "EU-136369",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "EU-136377",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "EU-136895",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "EU-136899",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "EU-137087",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "EU-137091",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "EU-137099",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "EU-138335",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "EU-138515",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "EU-138565",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "EU-138628",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "EU-138870",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "EU-139012",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "EU-140094",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "EU-141362",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "EU-144383",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "EU-146496",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "EU-148488",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "EU-149613",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "EU-153792",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "EU-154284",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "EU-154306",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "EU-154425",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "EU-154586",
+     "score": 0.855,
+     "matchType": "weak"
+    },
+    {
+     "id": "EU-155562",
+     "score": 0.855,
+     "matchType": "weak"
+    }
+   ]
+  },
+  {
+   "query": "ivanov",
+   "threshold": 0.95,
+   "authority": "OFAC",
+   "list": "",
+   "program": "",
+   "yob": "",
+   "country": "",
+   "count": 15,
+   "truncated": false,
+   "results": [
+    {
+     "id": "16690",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "39758",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "40800",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "45858",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "36799",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "35170",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "35410",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "16688",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "34598",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "35623",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "35622",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "35621",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "43797",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "38661",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "50663",
+     "score": 0.96,
+     "matchType": "strong"
+    }
+   ]
+  },
+  {
+   "query": "ivanov",
+   "threshold": 0.95,
+   "authority": "",
+   "list": "SDN List",
+   "program": "",
+   "yob": "",
+   "country": "",
+   "count": 15,
+   "truncated": false,
+   "results": [
+    {
+     "id": "16690",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "39758",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "40800",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "45858",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "36799",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "35170",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "35410",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "16688",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "34598",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "35623",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "35622",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "35621",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "43797",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "38661",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "50663",
+     "score": 0.96,
+     "matchType": "strong"
+    }
+   ]
+  },
+  {
+   "query": "bank",
+   "threshold": 0.95,
+   "authority": "",
+   "list": "",
+   "program": "IRAN",
+   "yob": "",
+   "country": "",
+   "count": 40,
+   "truncated": false,
+   "results": [
+    {
+     "id": "13145",
+     "score": 1,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "13131",
+     "score": 1,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "12028",
+     "score": 1,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "25677",
+     "score": 1,
+     "matchType": "exact"
+    },
+    {
+     "id": "25678",
+     "score": 1,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "25758",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "25618",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "25580",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "25684",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "25685",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "13146",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "13143",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "13142",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "13141",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "13140",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "13133",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "13134",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "13135",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "13136",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "13137",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "13138",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "4639",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "16017",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "17154",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "17156",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "17157",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "4642",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "10368",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "12478",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "25019",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "25066",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "25067",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "25577",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "25578",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "25619",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "25639",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "25648",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "4633",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "4635",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "4632",
+     "score": 0.96,
+     "matchType": "strong"
+    }
+   ]
+  },
+  {
+   "query": "ivanov",
+   "threshold": 0.95,
+   "authority": "",
+   "list": "",
+   "program": "",
+   "yob": "1968",
+   "country": "Russia",
+   "count": 2,
+   "truncated": false,
+   "results": [
+    {
+     "id": "BIS-1afda4d5bac1",
+     "score": 1,
+     "matchType": "strong"
+    },
+    {
+     "id": "State-0c629ed53d8c",
+     "score": 0.96,
+     "matchType": "strong"
+    }
+   ]
+  },
+  {
+   "query": "751234567",
+   "threshold": 0.95,
+   "authority": "",
+   "list": "",
+   "program": "",
+   "yob": "",
+   "country": "",
+   "count": 0,
+   "truncated": false,
+   "results": []
+  },
+  {
+   "query": "сompany",
+   "threshold": 0.95,
+   "authority": "",
+   "list": "",
+   "program": "",
+   "yob": "",
+   "country": "",
+   "count": 30,
+   "truncated": false,
+   "results": [
+    {
+     "id": "30286",
+     "score": 0.96,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "10603",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "15648",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "13356",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "47510",
+     "score": 0.96,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "47676",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "35244",
+     "score": 0.96,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "46021",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "42081",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "46523",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "45068",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "45091",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "37790",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "50344",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "50430",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "26884",
+     "score": 0.96,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "20006",
+     "score": 0.96,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "EU-162621",
+     "score": 0.96,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "EU-178275",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "EU-183408",
+     "score": 0.96,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "EU-184943",
+     "score": 0.96,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "UN-110345",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "UK-16805",
+     "score": 0.96,
+     "matchType": "strong_alias"
+    },
+    {
+     "id": "UK-16267",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "UK-15028",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "UK-16142",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-04fa8157910b",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-dcf631227475",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "BIS-a17fa7c8a6ec",
+     "score": 0.96,
+     "matchType": "strong"
+    },
+    {
+     "id": "15045",
+     "score": 0.95,
+     "matchType": "strong_alias"
+    }
+   ]
+  }
+ ]
+}
