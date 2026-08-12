@@ -1,0 +1,56 @@
+name: iOS engine conformance
+
+# The iPhone app screens on-device with a Swift port of lib/matcher.js and
+# lib/searchindex.js. Two scorers that drift apart is the failure this guards:
+# the phone would clear a party the web flags, silently, at the fourth decimal.
+#
+# So the job does two things, in order:
+#   1. regenerates the fixtures from the JavaScript and fails if they moved,
+#      which catches a change to the JS scorer that was never mirrored;
+#   2. runs the Swift suite against those fixtures and the committed snapshot,
+#      which catches a Swift port that no longer reproduces them.
+
+on:
+  push:
+    paths:
+      - 'lib/**'
+      - 'data/**'
+      - 'ios/**'
+      - 'scripts/gen-conformance-fixtures.js'
+      - '.github/workflows/ios-conformance.yml'
+  pull_request:
+    paths:
+      - 'lib/**'
+      - 'data/**'
+      - 'ios/**'
+      - 'scripts/gen-conformance-fixtures.js'
+  workflow_dispatch:
+
+jobs:
+  conformance:
+    runs-on: macos-15
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+
+      - name: Regenerate fixtures from the JavaScript reference
+        run: node scripts/gen-conformance-fixtures.js
+
+      - name: Fail if the fixtures moved
+        run: |
+          if ! git diff --quiet -- ios/SanctinelCore/Tests/SanctinelCoreTests/Fixtures \
+                                   ios/SanctinelCore/Sources/SanctinelCore/Resources/matching.json; then
+            echo "::error::The JavaScript scorer changed but the committed fixtures were not regenerated."
+            echo "Run: node scripts/gen-conformance-fixtures.js — then commit the result with your change."
+            git --no-pager diff --stat -- ios/SanctinelCore/Tests/SanctinelCoreTests/Fixtures \
+                                          ios/SanctinelCore/Sources/SanctinelCore/Resources/matching.json
+            exit 1
+          fi
+
+      - name: Run the Swift engine suite
+        working-directory: ios/SanctinelCore
+        run: swift test

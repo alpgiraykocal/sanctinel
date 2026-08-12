@@ -25,3 +25,9 @@ ios/**/xcuserdata/
 ios/**/*.xcuserstate
 ios/build/
 DerivedData/
+
+# SwiftPM build output
+.build/
+
+# Local knowledge-graph output from the graphify tool
+graphify-out/

@@ -1,0 +1,1853 @@
+{
+ "cases": [
+  {
+   "center": "13377",
+   "depth": 2,
+   "nodes": [
+    {
+     "id": "13377",
+     "hop": 0,
+     "inSnapshot": true,
+     "degree": 16,
+     "weightedDegree": 29
+    },
+    {
+     "id": "13353",
+     "hop": 1,
+     "inSnapshot": true,
+     "degree": 2,
+     "weightedDegree": 3
+    },
+    {
+     "id": "13355",
+     "hop": 1,
+     "inSnapshot": true,
+     "degree": 4,
+     "weightedDegree": 6
+    },
+    {
+     "id": "13356",
+     "hop": 1,
+     "inSnapshot": true,
+     "degree": 2,
+     "weightedDegree": 4
+    },
+    {
+     "id": "13378",
+     "hop": 1,
+     "inSnapshot": true,
+     "degree": 3,
+     "weightedDegree": 5
+    },
+    {
+     "id": "15708",
+     "hop": 1,
+     "inSnapshot": true,
+     "degree": 3,
+     "weightedDegree": 4
+    },
+    {
+     "id": "15709",
+     "hop": 1,
+     "inSnapshot": true,
+     "degree": 3,
+     "weightedDegree": 4
+    },
+    {
+     "id": "15710",
+     "hop": 1,
+     "inSnapshot": true,
+     "degree": 2,
+     "weightedDegree": 2
+    },
+    {
+     "id": "15711",
+     "hop": 1,
+     "inSnapshot": true,
+     "degree": 2,
+     "weightedDegree": 4
+    },
+    {
+     "id": "15712",
+     "hop": 1,
+     "inSnapshot": true,
+     "degree": 3,
+     "weightedDegree": 3
+    },
+    {
+     "id": "15714",
+     "hop": 1,
+     "inSnapshot": true,
+     "degree": 3,
+     "weightedDegree": 6
+    },
+    {
+     "id": "15715",
+     "hop": 1,
+     "inSnapshot": true,
+     "degree": 1,
+     "weightedDegree": 1
+    },
+    {
+     "id": "15857",
+     "hop": 1,
+     "inSnapshot": true,
+     "degree": 2,
+     "weightedDegree": 3
+    },
+    {
+     "id": "15865",
+     "hop": 1,
+     "inSnapshot": true,
+     "degree": 2,
+     "weightedDegree": 3
+    },
+    {
+     "id": "15866",
+     "hop": 1,
+     "inSnapshot": true,
+     "degree": 1,
+     "weightedDegree": 2
+    },
+    {
+     "id": "15867",
+     "hop": 1,
+     "inSnapshot": true,
+     "degree": 1,
+     "weightedDegree": 2
+    },
+    {
+     "id": "15868",
+     "hop": 1,
+     "inSnapshot": true,
+     "degree": 1,
+     "weightedDegree": 2
+    },
+    {
+     "id": "13376",
+     "hop": 2,
+     "inSnapshot": true,
+     "degree": 7,
+     "weightedDegree": 11
+    },
+    {
+     "id": "15701",
+     "hop": 2,
+     "inSnapshot": true,
+     "degree": 7,
+     "weightedDegree": 8
+    },
+    {
+     "id": "15705",
+     "hop": 2,
+     "inSnapshot": true,
+     "degree": 5,
+     "weightedDegree": 6
+    }
+   ],
+   "edges": [
+    {
+     "source": "15701",
+     "target": "15712",
+     "type": "playing a significant role in",
+     "ownership": false,
+     "role": null,
+     "hier": "up"
+    },
+    {
+     "source": "15701",
+     "target": "15857",
+     "type": "playing a significant role in",
+     "ownership": false,
+     "role": null,
+     "hier": "up"
+    },
+    {
+     "source": "15701",
+     "target": "15709",
+     "type": "playing a significant role in",
+     "ownership": false,
+     "role": null,
+     "hier": "up"
+    },
+    {
+     "source": "15701",
+     "target": "13355",
+     "type": "playing a significant role in",
+     "ownership": false,
+     "role": null,
+     "hier": "up"
+    },
+    {
+     "source": "15701",
+     "target": "15710",
+     "type": "playing a significant role in",
+     "ownership": false,
+     "role": null,
+     "hier": "up"
+    },
+    {
+     "source": "15701",
+     "target": "15711",
+     "type": "Owned or Controlled By",
+     "ownership": true,
+     "role": "owned_by",
+     "hier": "up"
+    },
+    {
+     "source": "15701",
+     "target": "15708",
+     "type": "playing a significant role in",
+     "ownership": false,
+     "role": null,
+     "hier": "up"
+    },
+    {
+     "source": "15705",
+     "target": "13378",
+     "type": "playing a significant role in",
+     "ownership": false,
+     "role": null,
+     "hier": "up"
+    },
+    {
+     "source": "15705",
+     "target": "15709",
+     "type": "playing a significant role in",
+     "ownership": false,
+     "role": null,
+     "hier": "up"
+    },
+    {
+     "source": "15705",
+     "target": "13355",
+     "type": "playing a significant role in",
+     "ownership": false,
+     "role": null,
+     "hier": "up"
+    },
+    {
+     "source": "15705",
+     "target": "15714",
+     "type": "Owned or Controlled By",
+     "ownership": true,
+     "role": "owned_by",
+     "hier": "up"
+    },
+    {
+     "source": "15705",
+     "target": "15708",
+     "type": "playing a significant role in",
+     "ownership": false,
+     "role": null,
+     "hier": "up"
+    },
+    {
+     "source": "13376",
+     "target": "13378",
+     "type": "Owned or Controlled By",
+     "ownership": true,
+     "role": "owned_by",
+     "hier": "up"
+    },
+    {
+     "source": "13376",
+     "target": "15712",
+     "type": "playing a significant role in",
+     "ownership": false,
+     "role": null,
+     "hier": "up"
+    },
+    {
+     "source": "13376",
+     "target": "13356",
+     "type": "Owned or Controlled By",
+     "ownership": true,
+     "role": "owned_by",
+     "hier": "up"
+    },
+    {
+     "source": "13376",
+     "target": "15865",
+     "type": "playing a significant role in",
+     "ownership": false,
+     "role": null,
+     "hier": "up"
+    },
+    {
+     "source": "13376",
+     "target": "13355",
+     "type": "Owned or Controlled By",
+     "ownership": true,
+     "role": "owned_by",
+     "hier": "up"
+    },
+    {
+     "source": "13376",
+     "target": "13353",
+     "type": "playing a significant role in",
+     "ownership": false,
+     "role": null,
+     "hier": "up"
+    },
+    {
+     "source": "13376",
+     "target": "15714",
+     "type": "Owned or Controlled By",
+     "ownership": true,
+     "role": "owned_by",
+     "hier": "up"
+    },
+    {
+     "source": "13377",
+     "target": "15868",
+     "type": "Owned or Controlled By",
+     "ownership": true,
+     "role": "owned_by",
+     "hier": "up"
+    },
+    {
+     "source": "13377",
+     "target": "13378",
+     "type": "Owned or Controlled By",
+     "ownership": true,
+     "role": "owned_by",
+     "hier": "up"
+    },
+    {
+     "source": "13377",
+     "target": "15866",
+     "type": "Owned or Controlled By",
+     "ownership": true,
+     "role": "owned_by",
+     "hier": "up"
+    },
+    {
+     "source": "13377",
+     "target": "15715",
+     "type": "playing a significant role in",
+     "ownership": false,
+     "role": null,
+     "hier": "up"
+    },
+    {
+     "source": "13377",
+     "target": "15712",
+     "type": "playing a significant role in",
+     "ownership": false,
+     "role": null,
+     "hier": "up"
+    },
+    {
+     "source": "13377",
+     "target": "15857",
+     "type": "Owned or Controlled By",
+     "ownership": true,
+     "role": "owned_by",
+     "hier": "up"
+    },
+    {
+     "source": "13377",
+     "target": "15709",
+     "type": "Owned or Controlled By",
+     "ownership": true,
+     "role": "owned_by",
+     "hier": "up"
+    },
+    {
+     "source": "13377",
+     "target": "13356",
+     "type": "Owned or Controlled By",
+     "ownership": true,
+     "role": "owned_by",
+     "hier": "up"
+    },
+    {
+     "source": "13377",
+     "target": "15865",
+     "type": "Owned or Controlled By",
+     "ownership": true,
+     "role": "owned_by",
+     "hier": "up"
+    },
+    {
+     "source": "13377",
+     "target": "13355",
+     "type": "Owned or Controlled By",
+     "ownership": true,
+     "role": "owned_by",
+     "hier": "up"
+    },
+    {
+     "source": "13377",
+     "target": "15710",
+     "type": "playing a significant role in",
+     "ownership": false,
+     "role": null,
+     "hier": "up"
+    },
+    {
+     "source": "13377",
+     "target": "15867",
+     "type": "Owned or Controlled By",
+     "ownership": true,
+     "role": "owned_by",
+     "hier": "up"
+    },
+    {
+     "source": "13377",
+     "target": "15711",
+     "type": "Owned or Controlled By",
+     "ownership": true,
+     "role": "owned_by",
+     "hier": "up"
+    },
+    {
+     "source": "13377",
+     "target": "13353",
+     "type": "Owned or Controlled By",
+     "ownership": true,
+     "role": "owned_by",
+     "hier": "up"
+    },
+    {
+     "source": "13377",
+     "target": "15714",
+     "type": "Owned or Controlled By",
+     "ownership": true,
+     "role": "owned_by",
+     "hier": "up"
+    },
+    {
+     "source": "13377",
+     "target": "15708",
+     "type": "Owned or Controlled By",
+     "ownership": true,
+     "role": "owned_by",
+     "hier": "up"
+    }
+   ],
+   "nodeCount": 20,
+   "edgeCount": 35,
+   "ownershipEdges": 19
+  },
+  {
+   "center": "21031",
+   "depth": 2,
+   "nodes": [
+    {
+     "id": "21031",
+     "hop": 0,
+     "inSnapshot": true,
+     "degree": 15,
+     "weightedDegree": 27
+    },
+    {
+     "id": "21023",
+     "hop": 1,
+     "inSnapshot": true,
+     "degree": 15,
+     "weightedDegree": 15
+    },
+    {
+     "id": "21073",
+     "hop": 1,
+     "inSnapshot": true,
+     "degree": 1,
+     "weightedDegree": 1
+    },
+    {
+     "id": "21075",
+     "hop": 1,
+     "inSnapshot": true,
+     "degree": 1,
+     "weightedDegree": 2
+    },
+    {
+     "id": "21077",
+     "hop": 1,
+     "inSnapshot": true,
+     "degree": 1,
+     "weightedDegree": 2
+    },
+    {
+     "id": "21079",
+     "hop": 1,
+     "inSnapshot": true,
+     "degree": 1,
+     "weightedDegree": 2
+    },
+    {
+     "id": "21081",
+     "hop": 1,
+     "inSnapshot": true,
+     "degree": 1,
+     "weightedDegree": 2
+    },
+    {
+     "id": "21083",
+     "hop": 1,
+     "inSnapshot": true,
+     "degree": 1,
+     "weightedDegree": 2
+    },
+    {
+     "id": "21084",
+     "hop": 1,
+     "inSnapshot": true,
+     "degree": 1,
+     "weightedDegree": 2
+    },
+    {
+     "id": "21086",
+     "hop": 1,
+     "inSnapshot": true,
+     "degree": 1,
+     "weightedDegree": 2
+    },
+    {
+     "id": "21090",
+     "hop": 1,
+     "inSnapshot": true,
+     "degree": 2,
+     "weightedDegree": 2
+    },
+    {
+     "id": "21095",
+     "hop": 1,
+     "inSnapshot": true,
+     "degree": 1,
+     "weightedDegree": 2
+    },
+    {
+     "id": "21098",
+     "hop": 1,
+     "inSnapshot": true,
+     "degree": 1,
+     "weightedDegree": 2
+    },
+    {
+     "id": "21114",
+     "hop": 1,
+     "inSnapshot": true,
+     "degree": 1,
+     "weightedDegree": 2
+    },
+    {
+     "id": "21116",
+     "hop": 1,
+     "inSnapshot": true,
+     "degree": 2,
+     "weightedDegree": 4
+    },
+    {
+     "id": "21119",
+     "hop": 1,
+     "inSnapshot": true,
+     "degree": 1,
+     "weightedDegree": 2
+    },
+    {
+     "id": "21024",
+     "hop": 2,
+     "inSnapshot": true,
+     "degree": 1,
+     "weightedDegree": 1
+    },
+    {
+     "id": "21026",
+     "hop": 2,
+     "inSnapshot": true,
+     "degree": 1,
+     "weightedDegree": 1
+    },
+    {
+     "id": "21027",
+     "hop": 2,
+     "inSnapshot": true,
+     "degree": 1,
+     "weightedDegree": 1
+    },
+    {
+     "id": "21028",
+     "hop": 2,
+     "inSnapshot": true,
+     "degree": 1,
+     "weightedDegree": 1
+    },
+    {
+     "id": "21029",
+     "hop": 2,
+     "inSnapshot": true,
+     "degree": 1,
+     "weightedDegree": 1
+    },
+    {
+     "id": "21030",
+     "hop": 2,
+     "inSnapshot": true,
+     "degree": 1,
+     "weightedDegree": 1
+    },
+    {
+     "id": "21032",
+     "hop": 2,
+     "inSnapshot": true,
+     "degree": 1,
+     "weightedDegree": 1
+    },
+    {
+     "id": "21033",
+     "hop": 2,
+     "inSnapshot": true,
+     "degree": 1,
+     "weightedDegree": 1
+    },
+    {
+     "id": "21035",
+     "hop": 2,
+     "inSnapshot": true,
+     "degree": 2,
+     "weightedDegree": 3
+    },
+    {
+     "id": "21036",
+     "hop": 2,
+     "inSnapshot": true,
+     "degree": 1,
+     "weightedDegree": 1
+    },
+    {
+     "id": "21064",
+     "hop": 2,
+     "inSnapshot": true,
+     "degree": 1,
+     "weightedDegree": 1
+    },
+    {
+     "id": "21065",
+     "hop": 2,
+     "inSnapshot": true,
+     "degree": 1,
+     "weightedDegree": 1
+    },
+    {
+     "id": "21067",
+     "hop": 2,
+     "inSnapshot": true,
+     "degree": 1,
+     "weightedDegree": 1
+    },
+    {
+     "id": "21070",
+     "hop": 2,
+     "inSnapshot": true,
+     "degree": 2,
+     "weightedDegree": 2
+    }
+   ],
+   "edges": [
+    {
+     "source": "21024",
+     "target": "21023",
+     "type": "Providing support to",
+     "ownership": false,
+     "role": null,
+     "hier": "up"
+    },
+    {
+     "source": "21026",
+     "target": "21023",
+     "type": "Providing support to",
+     "ownership": false,
+     "role": null,
+     "hier": "up"
+    },
+    {
+     "source": "21027",
+     "target": "21023",
+     "type": "Providing support to",
+     "ownership": false,
+     "role": null,
+     "hier": "up"
+    },
+    {
+     "source": "21028",
+     "target": "21023",
+     "type": "Providing support to",
+     "ownership": false,
+     "role": null,
+     "hier": "up"
+    },
+    {
+     "source": "21029",
+     "target": "21023",
+     "type": "Providing support to",
+     "ownership": false,
+     "role": null,
+     "hier": "up"
+    },
+    {
+     "source": "21030",
+     "target": "21023",
+     "type": "Providing support to",
+     "ownership": false,
+     "role": null,
+     "hier": "up"
+    },
+    {
+     "source": "21031",
+     "target": "21073",
+     "type": "Acting for or on behalf of",
+     "ownership": false,
+     "role": null,
+     "hier": "up"
+    },
+    {
+     "source": "21031",
+     "target": "21075",
+     "type": "Owned or Controlled By",
+     "ownership": true,
+     "role": "owned_by",
+     "hier": "up"
+    },
+    {
+     "source": "21031",
+     "target": "21077",
+     "type": "Owned or Controlled By",
+     "ownership": true,
+     "role": "owned_by",
+     "hier": "up"
+    },
+    {
+     "source": "21031",
+     "target": "21079",
+     "type": "Owned or Controlled By",
+     "ownership": true,
+     "role": "owned_by",
+     "hier": "up"
+    },
+    {
+     "source": "21031",
+     "target": "21081",
+     "type": "Owned or Controlled By",
+     "ownership": true,
+     "role": "owned_by",
+     "hier": "up"
+    },
+    {
+     "source": "21031",
+     "target": "21083",
+     "type": "Owned or Controlled By",
+     "ownership": true,
+     "role": "owned_by",
+     "hier": "up"
+    },
+    {
+     "source": "21031",
+     "target": "21084",
+     "type": "Owned or Controlled By",
+     "ownership": true,
+     "role": "owned_by",
+     "hier": "up"
+    },
+    {
+     "source": "21031",
+     "target": "21086",
+     "type": "Owned or Controlled By",
+     "ownership": true,
+     "role": "owned_by",
+     "hier": "up"
+    },
+    {
+     "source": "21031",
+     "target": "21090",
+     "type": "Acting for or on behalf of",
+     "ownership": false,
+     "role": null,
+     "hier": "up"
+    },
+    {
+     "source": "21031",
+     "target": "21023",
+     "type": "Acting for or on behalf of",
+     "ownership": false,
+     "role": null,
+     "hier": "up"
+    },
+    {
+     "source": "21031",
+     "target": "21095",
+     "type": "Owned or Controlled By",
+     "ownership": true,
+     "role": "owned_by",
+     "hier": "up"
+    },
+    {
+     "source": "21031",
+     "target": "21098",
+     "type": "Owned or Controlled By",
+     "ownership": true,
+     "role": "owned_by",
+     "hier": "up"
+    },
+    {
+     "source": "21031",
+     "target": "21114",
+     "type": "Owned or Controlled By",
+     "ownership": true,
+     "role": "owned_by",
+     "hier": "up"
+    },
+    {
+     "source": "21031",
+     "target": "21116",
+     "type": "Owned or Controlled By",
+     "ownership": true,
+     "role": "owned_by",
+     "hier": "up"
+    },
+    {
+     "source": "21031",
+     "target": "21119",
+     "type": "Owned or Controlled By",
+     "ownership": true,
+     "role": "owned_by",
+     "hier": "up"
+    },
+    {
+     "source": "21032",
+     "target": "21023",
+     "type": "Providing support to",
+     "ownership": false,
+     "role": null,
+     "hier": "up"
+    },
+    {
+     "source": "21036",
+     "target": "21023",
+     "type": "Providing support to",
+     "ownership": false,
+     "role": null,
+     "hier": "up"
+    },
+    {
+     "source": "21064",
+     "target": "21023",
+     "type": "Providing support to",
+     "ownership": false,
+     "role": null,
+     "hier": "up"
+    },
+    {
+     "source": "21065",
+     "target": "21023",
+     "type": "Acting for or on behalf of",
+     "ownership": false,
+     "role": null,
+     "hier": "up"
+    },
+    {
+     "source": "21035",
+     "target": "21023",
+     "type": "Providing support to",
+     "ownership": false,
+     "role": null,
+     "hier": "up"
+    },
+    {
+     "source": "21035",
+     "target": "21116",
+     "type": "Owned or Controlled By",
+     "ownership": true,
+     "role": "owned_by",
+     "hier": "up"
+    },
+    {
+     "source": "21067",
+     "target": "21023",
+     "type": "Acting for or on behalf of",
+     "ownership": false,
+     "role": null,
+     "hier": "up"
+    },
+    {
+     "source": "21070",
+     "target": "21090",
+     "type": "Acting for or on behalf of",
+     "ownership": false,
+     "role": null,
+     "hier": "up"
+    },
+    {
+     "source": "21070",
+     "target": "21023",
+     "type": "Acting for or on behalf of",
+     "ownership": false,
+     "role": null,
+     "hier": "up"
+    },
+    {
+     "source": "21033",
+     "target": "21023",
+     "type": "Providing support to",
+     "ownership": false,
+     "role": null,
+     "hier": "up"
+    }
+   ],
+   "nodeCount": 30,
+   "edgeCount": 31,
+   "ownershipEdges": 13
+  },
+  {
+   "center": "23883",
+   "depth": 2,
+   "nodes": [
+    {
+     "id": "23883",
+     "hop": 0,
+     "inSnapshot": true,
+     "degree": 14,
+     "weightedDegree": 28
+    },
+    {
+     "id": "23886",
+     "hop": 1,
+     "inSnapshot": true,
+     "degree": 1,
+     "weightedDegree": 2
+    },
+    {
+     "id": "23887",
+     "hop": 1,
+     "inSnapshot": true,
+     "degree": 1,
+     "weightedDegree": 2
+    },
+    {
+     "id": "23888",
+     "hop": 1,
+     "inSnapshot": true,
+     "degree": 1,
+     "weightedDegree": 2
+    },
+    {
+     "id": "23889",
+     "hop": 1,
+     "inSnapshot": true,
+     "degree": 1,
+     "weightedDegree": 2
+    },
+    {
+     "id": "23890",
+     "hop": 1,
+     "inSnapshot": true,
+     "degree": 1,
+     "weightedDegree": 2
+    },
+    {
+     "id": "23891",
+     "hop": 1,
+     "inSnapshot": true,
+     "degree": 1,
+     "weightedDegree": 2
+    },
+    {
+     "id": "23892",
+     "hop": 1,
+     "inSnapshot": true,
+     "degree": 1,
+     "weightedDegree": 2
+    },
+    {
+     "id": "23893",
+     "hop": 1,
+     "inSnapshot": true,
+     "degree": 1,
+     "weightedDegree": 2
+    },
+    {
+     "id": "23894",
+     "hop": 1,
+     "inSnapshot": true,
+     "degree": 1,
+     "weightedDegree": 2
+    },
+    {
+     "id": "23895",
+     "hop": 1,
+     "inSnapshot": true,
+     "degree": 1,
+     "weightedDegree": 2
+    },
+    {
+     "id": "23896",
+     "hop": 1,
+     "inSnapshot": true,
+     "degree": 1,
+     "weightedDegree": 2
+    },
+    {
+     "id": "23897",
+     "hop": 1,
+     "inSnapshot": true,
+     "degree": 1,
+     "weightedDegree": 2
+    },
+    {
+     "id": "23898",
+     "hop": 1,
+     "inSnapshot": true,
+     "degree": 1,
+     "weightedDegree": 2
+    },
+    {
+     "id": "23899",
+     "hop": 1,
+     "inSnapshot": true,
+     "degree": 1,
+     "weightedDegree": 2
+    }
+   ],
+   "edges": [
+    {
+     "source": "23883",
+     "target": "23886",
+     "type": "Owned or Controlled By",
+     "ownership": true,
+     "role": "owned_by",
+     "hier": "up"
+    },
+    {
+     "source": "23883",
+     "target": "23887",
+     "type": "Owned or Controlled By",
+     "ownership": true,
+     "role": "owned_by",
+     "hier": "up"
+    },
+    {
+     "source": "23883",
+     "target": "23888",
+     "type": "Owned or Controlled By",
+     "ownership": true,
+     "role": "owned_by",
+     "hier": "up"
+    },
+    {
+     "source": "23883",
+     "target": "23889",
+     "type": "Owned or Controlled By",
+     "ownership": true,
+     "role": "owned_by",
+     "hier": "up"
+    },
+    {
+     "source": "23883",
+     "target": "23890",
+     "type": "Owned or Controlled By",
+     "ownership": true,
+     "role": "owned_by",
+     "hier": "up"
+    },
+    {
+     "source": "23883",
+     "target": "23892",
+     "type": "Owned or Controlled By",
+     "ownership": true,
+     "role": "owned_by",
+     "hier": "up"
+    },
+    {
+     "source": "23883",
+     "target": "23891",
+     "type": "Owned or Controlled By",
+     "ownership": true,
+     "role": "owned_by",
+     "hier": "up"
+    },
+    {
+     "source": "23883",
+     "target": "23897",
+     "type": "Owned or Controlled By",
+     "ownership": true,
+     "role": "owned_by",
+     "hier": "up"
+    },
+    {
+     "source": "23883",
+     "target": "23895",
+     "type": "Owned or Controlled By",
+     "ownership": true,
+     "role": "owned_by",
+     "hier": "up"
+    },
+    {
+     "source": "23883",
+     "target": "23893",
+     "type": "Owned or Controlled By",
+     "ownership": true,
+     "role": "owned_by",
+     "hier": "up"
+    },
+    {
+     "source": "23883",
+     "target": "23894",
+     "type": "Owned or Controlled By",
+     "ownership": true,
+     "role": "owned_by",
+     "hier": "up"
+    },
+    {
+     "source": "23883",
+     "target": "23896",
+     "type": "Owned or Controlled By",
+     "ownership": true,
+     "role": "owned_by",
+     "hier": "up"
+    },
+    {
+     "source": "23883",
+     "target": "23898",
+     "type": "Owned or Controlled By",
+     "ownership": true,
+     "role": "owned_by",
+     "hier": "up"
+    },
+    {
+     "source": "23883",
+     "target": "23899",
+     "type": "Owned or Controlled By",
+     "ownership": true,
+     "role": "owned_by",
+     "hier": "up"
+    }
+   ],
+   "nodeCount": 15,
+   "edgeCount": 14,
+   "ownershipEdges": 14
+  },
+  {
+   "center": "20251",
+   "depth": 2,
+   "nodes": [
+    {
+     "id": "20251",
+     "hop": 0,
+     "inSnapshot": true,
+     "degree": 12,
+     "weightedDegree": 24
+    },
+    {
+     "id": "20252",
+     "hop": 1,
+     "inSnapshot": true,
+     "degree": 1,
+     "weightedDegree": 2
+    },
+    {
+     "id": "20253",
+     "hop": 1,
+     "inSnapshot": true,
+     "degree": 1,
+     "weightedDegree": 2
+    },
+    {
+     "id": "20254",
+     "hop": 1,
+     "inSnapshot": true,
+     "degree": 1,
+     "weightedDegree": 2
+    },
+    {
+     "id": "20255",
+     "hop": 1,
+     "inSnapshot": true,
+     "degree": 1,
+     "weightedDegree": 2
+    },
+    {
+     "id": "20256",
+     "hop": 1,
+     "inSnapshot": true,
+     "degree": 1,
+     "weightedDegree": 2
+    },
+    {
+     "id": "20257",
+     "hop": 1,
+     "inSnapshot": true,
+     "degree": 1,
+     "weightedDegree": 2
+    },
+    {
+     "id": "20258",
+     "hop": 1,
+     "inSnapshot": true,
+     "degree": 1,
+     "weightedDegree": 2
+    },
+    {
+     "id": "20260",
+     "hop": 1,
+     "inSnapshot": true,
+     "degree": 1,
+     "weightedDegree": 2
+    },
+    {
+     "id": "20261",
+     "hop": 1,
+     "inSnapshot": true,
+     "degree": 1,
+     "weightedDegree": 2
+    },
+    {
+     "id": "20262",
+     "hop": 1,
+     "inSnapshot": true,
+     "degree": 1,
+     "weightedDegree": 2
+    },
+    {
+     "id": "20263",
+     "hop": 1,
+     "inSnapshot": true,
+     "degree": 1,
+     "weightedDegree": 2
+    },
+    {
+     "id": "20264",
+     "hop": 1,
+     "inSnapshot": true,
+     "degree": 2,
+     "weightedDegree": 4
+    },
+    {
+     "id": "20861",
+     "hop": 2,
+     "inSnapshot": true,
+     "degree": 1,
+     "weightedDegree": 2
+    }
+   ],
+   "edges": [
+    {
+     "source": "20251",
+     "target": "20260",
+     "type": "Owned or Controlled By",
+     "ownership": true,
+     "role": "owned_by",
+     "hier": "up"
+    },
+    {
+     "source": "20251",
+     "target": "20262",
+     "type": "Owned or Controlled By",
+     "ownership": true,
+     "role": "owned_by",
+     "hier": "up"
+    },
+    {
+     "source": "20251",
+     "target": "20261",
+     "type": "Owned or Controlled By",
+     "ownership": true,
+     "role": "owned_by",
+     "hier": "up"
+    },
+    {
+     "source": "20251",
+     "target": "20264",
+     "type": "Owned or Controlled By",
+     "ownership": true,
+     "role": "owned_by",
+     "hier": "up"
+    },
+    {
+     "source": "20251",
+     "target": "20263",
+     "type": "Owned or Controlled By",
+     "ownership": true,
+     "role": "owned_by",
+     "hier": "up"
+    },
+    {
+     "source": "20251",
+     "target": "20255",
+     "type": "Owned or Controlled By",
+     "ownership": true,
+     "role": "owned_by",
+     "hier": "up"
+    },
+    {
+     "source": "20251",
+     "target": "20254",
+     "type": "Owned or Controlled By",
+     "ownership": true,
+     "role": "owned_by",
+     "hier": "up"
+    },
+    {
+     "source": "20251",
+     "target": "20258",
+     "type": "Owned or Controlled By",
+     "ownership": true,
+     "role": "owned_by",
+     "hier": "up"
+    },
+    {
+     "source": "20251",
+     "target": "20252",
+     "type": "Owned or Controlled By",
+     "ownership": true,
+     "role": "owned_by",
+     "hier": "up"
+    },
+    {
+     "source": "20251",
+     "target": "20257",
+     "type": "Owned or Controlled By",
+     "ownership": true,
+     "role": "owned_by",
+     "hier": "up"
+    },
+    {
+     "source": "20251",
+     "target": "20256",
+     "type": "Owned or Controlled By",
+     "ownership": true,
+     "role": "owned_by",
+     "hier": "up"
+    },
+    {
+     "source": "20251",
+     "target": "20253",
+     "type": "Owned or Controlled By",
+     "ownership": true,
+     "role": "owned_by",
+     "hier": "up"
+    },
+    {
+     "source": "20861",
+     "target": "20264",
+     "type": "Owned or Controlled By",
+     "ownership": true,
+     "role": "owned_by",
+     "hier": "up"
+    }
+   ],
+   "nodeCount": 14,
+   "edgeCount": 13,
+   "ownershipEdges": 13
+  },
+  {
+   "center": "18108",
+   "depth": 2,
+   "nodes": [
+    {
+     "id": "18108",
+     "hop": 0,
+     "inSnapshot": true,
+     "degree": 10,
+     "weightedDegree": 20
+    },
+    {
+     "id": "18089",
+     "hop": 1,
+     "inSnapshot": true,
+     "degree": 2,
+     "weightedDegree": 4
+    },
+    {
+     "id": "18092",
+     "hop": 1,
+     "inSnapshot": true,
+     "degree": 1,
+     "weightedDegree": 2
+    },
+    {
+     "id": "18093",
+     "hop": 1,
+     "inSnapshot": true,
+     "degree": 2,
+     "weightedDegree": 4
+    },
+    {
+     "id": "18094",
+     "hop": 1,
+     "inSnapshot": true,
+     "degree": 1,
+     "weightedDegree": 2
+    },
+    {
+     "id": "18095",
+     "hop": 1,
+     "inSnapshot": true,
+     "degree": 1,
+     "weightedDegree": 2
+    },
+    {
+     "id": "18821",
+     "hop": 1,
+     "inSnapshot": true,
+     "degree": 3,
+     "weightedDegree": 6
+    },
+    {
+     "id": "18822",
+     "hop": 1,
+     "inSnapshot": true,
+     "degree": 2,
+     "weightedDegree": 4
+    },
+    {
+     "id": "18824",
+     "hop": 1,
+     "inSnapshot": true,
+     "degree": 2,
+     "weightedDegree": 4
+    },
+    {
+     "id": "18825",
+     "hop": 1,
+     "inSnapshot": true,
+     "degree": 2,
+     "weightedDegree": 4
+    },
+    {
+     "id": "21883",
+     "hop": 1,
+     "inSnapshot": true,
+     "degree": 1,
+     "weightedDegree": 2
+    },
+    {
+     "id": "18097",
+     "hop": 2,
+     "inSnapshot": true,
+     "degree": 6,
+     "weightedDegree": 12
+    },
+    {
+     "id": "18107",
+     "hop": 2,
+     "inSnapshot": true,
+     "degree": 1,
+     "weightedDegree": 2
+    }
+   ],
+   "edges": [
+    {
+     "source": "18097",
+     "target": "18821",
+     "type": "Owned or Controlled By",
+     "ownership": true,
+     "role": "owned_by",
+     "hier": "up"
+    },
+    {
+     "source": "18097",
+     "target": "18822",
+     "type": "Owned or Controlled By",
+     "ownership": true,
+     "role": "owned_by",
+     "hier": "up"
+    },
+    {
+     "source": "18097",
+     "target": "18093",
+     "type": "Owned or Controlled By",
+     "ownership": true,
+     "role": "owned_by",
+     "hier": "up"
+    },
+    {
+     "source": "18097",
+     "target": "18089",
+     "type": "Owned or Controlled By",
+     "ownership": true,
+     "role": "owned_by",
+     "hier": "up"
+    },
+    {
+     "source": "18097",
+     "target": "18824",
+     "type": "Owned or Controlled By",
+     "ownership": true,
+     "role": "owned_by",
+     "hier": "up"
+    },
+    {
+     "source": "18097",
+     "target": "18825",
+     "type": "Owned or Controlled By",
+     "ownership": true,
+     "role": "owned_by",
+     "hier": "up"
+    },
+    {
+     "source": "18107",
+     "target": "18821",
+     "type": "Owned or Controlled By",
+     "ownership": true,
+     "role": "owned_by",
+     "hier": "up"
+    },
+    {
+     "source": "18108",
+     "target": "18821",
+     "type": "Owned or Controlled By",
+     "ownership": true,
+     "role": "owned_by",
+     "hier": "up"
+    },
+    {
+     "source": "18108",
+     "target": "18822",
+     "type": "Owned or Controlled By",
+     "ownership": true,
+     "role": "owned_by",
+     "hier": "up"
+    },
+    {
+     "source": "18108",
+     "target": "18093",
+     "type": "Owned or Controlled By",
+     "ownership": true,
+     "role": "owned_by",
+     "hier": "up"
+    },
+    {
+     "source": "18108",
+     "target": "18089",
+     "type": "Owned or Controlled By",
+     "ownership": true,
+     "role": "owned_by",
+     "hier": "up"
+    },
+    {
+     "source": "18108",
+     "target": "18824",
+     "type": "Owned or Controlled By",
+     "ownership": true,
+     "role": "owned_by",
+     "hier": "up"
+    },
+    {
+     "source": "18108",
+     "target": "18825",
+     "type": "Owned or Controlled By",
+     "ownership": true,
+     "role": "owned_by",
+     "hier": "up"
+    },
+    {
+     "source": "18108",
+     "target": "18094",
+     "type": "Owned or Controlled By",
+     "ownership": true,
+     "role": "owned_by",
+     "hier": "up"
+    },
+    {
+     "source": "18108",
+     "target": "18095",
+     "type": "Owned or Controlled By",
+     "ownership": true,
+     "role": "owned_by",
+     "hier": "up"
+    },
+    {
+     "source": "18108",
+     "target": "21883",
+     "type": "Owned or Controlled By",
+     "ownership": true,
+     "role": "owned_by",
+     "hier": "up"
+    },
+    {
+     "source": "18108",
+     "target": "18092",
+     "type": "Owned or Controlled By",
+     "ownership": true,
+     "role": "owned_by",
+     "hier": "up"
+    }
+   ],
+   "nodeCount": 13,
+   "edgeCount": 17,
+   "ownershipEdges": 17
+  },
+  {
+   "center": "15701",
+   "depth": 2,
+   "nodes": [
+    {
+     "id": "15701",
+     "hop": 0,
+     "inSnapshot": true,
+     "degree": 9,
+     "weightedDegree": 11
+    },
+    {
+     "id": "13355",
+     "hop": 1,
+     "inSnapshot": true,
+     "degree": 4,
+     "weightedDegree": 6
+    },
+    {
+     "id": "15708",
+     "hop": 1,
+     "inSnapshot": true,
+     "degree": 3,
+     "weightedDegree": 4
+    },
+    {
+     "id": "15709",
+     "hop": 1,
+     "inSnapshot": true,
+     "degree": 3,
+     "weightedDegree": 4
+    },
+    {
+     "id": "15710",
+     "hop": 1,
+     "inSnapshot": true,
+     "degree": 2,
+     "weightedDegree": 2
+    },
+    {
+     "id": "15711",
+     "hop": 1,
+     "inSnapshot": true,
+     "degree": 2,
+     "weightedDegree": 4
+    },
+    {
+     "id": "15712",
+     "hop": 1,
+     "inSnapshot": true,
+     "degree": 3,
+     "weightedDegree": 3
+    },
+    {
+     "id": "15857",
+     "hop": 1,
+     "inSnapshot": true,
+     "degree": 2,
+     "weightedDegree": 3
+    },
+    {
+     "id": "15869",
+     "hop": 1,
+     "inSnapshot": true,
+     "degree": 1,
+     "weightedDegree": 1
+    },
+    {
+     "id": "15943",
+     "hop": 1,
+     "inSnapshot": true,
+     "degree": 1,
+     "weightedDegree": 2
+    },
+    {
+     "id": "13376",
+     "hop": 2,
+     "inSnapshot": true,
+     "degree": 2,
+     "weightedDegree": 3
+    },
+    {
+     "id": "13377",
+     "hop": 2,
+     "inSnapshot": true,
+     "degree": 7,
+     "weightedDegree": 12
+    },
+    {
+     "id": "15705",
+     "hop": 2,
+     "inSnapshot": true,
+     "degree": 3,
+     "weightedDegree": 3
+    }
+   ],
+   "edges": [
+    {
+     "source": "15701",
+     "target": "15943",
+     "type": "Owned or Controlled By",
+     "ownership": true,
+     "role": "owned_by",
+     "hier": "up"
+    },
+    {
+     "source": "15701",
+     "target": "15712",
+     "type": "playing a significant role in",
+     "ownership": false,
+     "role": null,
+     "hier": "up"
+    },
+    {
+     "source": "15701",
+     "target": "15869",
+     "type": "playing a significant role in",
+     "ownership": false,
+     "role": null,
+     "hier": "up"
+    },
+    {
+     "source": "15701",
+     "target": "15857",
+     "type": "playing a significant role in",
+     "ownership": false,
+     "role": null,
+     "hier": "up"
+    },
+    {
+     "source": "15701",
+     "target": "15709",
+     "type": "playing a significant role in",
+     "ownership": false,
+     "role": null,
+     "hier": "up"
+    },
+    {
+     "source": "15701",
+     "target": "13355",
+     "type": "playing a significant role in",
+     "ownership": false,
+     "role": null,
+     "hier": "up"
+    },
+    {
+     "source": "15701",
+     "target": "15710",
+     "type": "playing a significant role in",
+     "ownership": false,
+     "role": null,
+     "hier": "up"
+    },
+    {
+     "source": "15701",
+     "target": "15711",
+     "type": "Owned or Controlled By",
+     "ownership": true,
+     "role": "owned_by",
+     "hier": "up"
+    },
+    {
+     "source": "15701",
+     "target": "15708",
+     "type": "playing a significant role in",
+     "ownership": false,
+     "role": null,
+     "hier": "up"
+    },
+    {
+     "source": "15705",
+     "target": "15709",
+     "type": "playing a significant role in",
+     "ownership": false,
+     "role": null,
+     "hier": "up"
+    },
+    {
+     "source": "15705",
+     "target": "13355",
+     "type": "playing a significant role in",
+     "ownership": false,
+     "role": null,
+     "hier": "up"
+    },
+    {
+     "source": "15705",
+     "target": "15708",
+     "type": "playing a significant role in",
+     "ownership": false,
+     "role": null,
+     "hier": "up"
+    },
+    {
+     "source": "13376",
+     "target": "15712",
+     "type": "playing a significant role in",
+     "ownership": false,
+     "role": null,
+     "hier": "up"
+    },
+    {
+     "source": "13376",
+     "target": "13355",
+     "type": "Owned or Controlled By",
+     "ownership": true,
+     "role": "owned_by",
+     "hier": "up"
+    },
+    {
+     "source": "13377",
+     "target": "15712",
+     "type": "playing a significant role in",
+     "ownership": false,
+     "role": null,
+     "hier": "up"
+    },
+    {
+     "source": "13377",
+     "target": "15857",
+     "type": "Owned or Controlled By",
+     "ownership": true,
+     "role": "owned_by",
+     "hier": "up"
+    },
+    {
+     "source": "13377",
+     "target": "15709",
+     "type": "Owned or Controlled By",
+     "ownership": true,
+     "role": "owned_by",
+     "hier": "up"
+    },
+    {
+     "source": "13377",
+     "target": "13355",
+     "type": "Owned or Controlled By",
+     "ownership": true,
+     "role": "owned_by",
+     "hier": "up"
+    },
+    {
+     "source": "13377",
+     "target": "15710",
+     "type": "playing a significant role in",
+     "ownership": false,
+     "role": null,
+     "hier": "up"
+    },
+    {
+     "source": "13377",
+     "target": "15711",
+     "type": "Owned or Controlled By",
+     "ownership": true,
+     "role": "owned_by",
+     "hier": "up"
+    },
+    {
+     "source": "13377",
+     "target": "15708",
+     "type": "Owned or Controlled By",
+     "ownership": true,
+     "role": "owned_by",
+     "hier": "up"
+    }
+   ],
+   "nodeCount": 13,
+   "edgeCount": 21,
+   "ownershipEdges": 8
+  }
+ ]
+}

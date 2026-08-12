@@ -1,0 +1,2654 @@
+{
+ "now": "2026-07-28T00:00:00.000Z",
+ "totals": {
+  "entities": 31954,
+  "authorities": 4,
+  "lists": 10,
+  "programs": 148,
+  "countries": 195,
+  "dated": 31954,
+  "undated": 0,
+  "withAliases": 19138,
+  "withIdentifiers": 19555,
+  "withRelationships": 8566,
+  "relationshipEdges": 9143,
+  "ownershipEdges": 4194,
+  "added30": 457,
+  "added90": 803,
+  "added365": 3094,
+  "newest": "2026-07-30",
+  "oldest": "1981-01-07"
+ },
+ "byAuthority": [
+  {
+   "name": "OFAC",
+   "count": 19569
+  },
+  {
+   "name": "EU",
+   "count": 6239
+  },
+  {
+   "name": "UK",
+   "count": 5135
+  },
+  {
+   "name": "UN",
+   "count": 1011
+  }
+ ],
+ "byList": [
+  {
+   "name": "SDN List",
+   "count": 19181
+  },
+  {
+   "name": "EU Consolidated List",
+   "count": 6239
+  },
+  {
+   "name": "UK Sanctions List",
+   "count": 5135
+  },
+  {
+   "name": "UN Consolidated List",
+   "count": 1011
+  },
+  {
+   "name": "Consolidated List",
+   "count": 481
+  },
+  {
+   "name": "Sectoral Sanctions Identifications List",
+   "count": 286
+  },
+  {
+   "name": "Non-SDN Palestinian Legislative Council List",
+   "count": 78
+  },
+  {
+   "name": "Non-SDN CMIC List",
+   "count": 68
+  },
+  {
+   "name": "Non-SDN Menu-Based Sanctions List",
+   "count": 51
+  },
+  {
+   "name": "CAPTA List",
+   "count": 1
+  }
+ ],
+ "byType": [
+  {
+   "name": "Individual",
+   "count": 16628
+  },
+  {
+   "name": "Entity",
+   "count": 13443
+  },
+  {
+   "name": "Vessel",
+   "count": 1539
+  },
+  {
+   "name": "Aircraft",
+   "count": 344
+  }
+ ],
+ "byMeasure": [
+  {
+   "name": "Block",
+   "count": 19176
+  },
+  {
+   "name": "Asset freeze",
+   "count": 12385
+  },
+  {
+   "name": "13662 Sectoral Directive 1",
+   "count": 124
+  },
+  {
+   "name": "13662 Sectoral Directive 4",
+   "count": 86
+  },
+  {
+   "name": "Reject",
+   "count": 76
+  },
+  {
+   "name": "CMIC Executive Order",
+   "count": 67
+  },
+  {
+   "name": "13662 Sectoral Directive 2",
+   "count": 55
+  },
+  {
+   "name": "13662 Sectoral Directive 3",
+   "count": 43
+  },
+  {
+   "name": "Hong Kong Autonomy Act (PL 116-149) Sanctions - Please review the sanctions info on each listing",
+   "count": 39
+  },
+  {
+   "name": "Executive Order 14024 Directive 2",
+   "count": 25
+  },
+  {
+   "name": "Executive Order 14024 Directive 3",
+   "count": 13
+  },
+  {
+   "name": "Executive Order 14024 Directive 1a",
+   "count": 3
+  },
+  {
+   "name": "Executive Order 14024 Directive 4",
+   "count": 3
+  },
+  {
+   "name": "CAATSA Section 231/235 Sanctions",
+   "count": 2
+  },
+  {
+   "name": "561 Full Restrictions",
+   "count": 1
+  }
+ ],
+ "byProgram": [
+  {
+   "name": "RUSSIA-EO14024",
+   "count": 6358
+  },
+  {
+   "name": "SDGT",
+   "count": 3246
+  },
+  {
+   "name": "UKR",
+   "count": 2967
+  },
+  {
+   "name": "Russia",
+   "count": 2413
+  },
+  {
+   "name": "IFSR",
+   "count": 1545
+  },
+  {
+   "name": "SDNTK",
+   "count": 1372
+  },
+  {
+   "name": "NPWMD",
+   "count": 1173
+  },
+  {
+   "name": "IRAN-EO13902",
+   "count": 902
+  },
+  {
+   "name": "GLOMAG",
+   "count": 739
+  },
+  {
+   "name": "UKRAINE-EO13662",
+   "count": 732
+  },
+  {
+   "name": "IRN",
+   "count": 711
+  },
+  {
+   "name": "ILLICIT-DRUGS-EO14059",
+   "count": 705
+  },
+  {
+   "name": "IRAN",
+   "count": 674
+  },
+  {
+   "name": "IRAN-EO13846",
+   "count": 470
+  },
+  {
+   "name": "TCO",
+   "count": 415
+  }
+ ],
+ "byCountry": [
+  {
+   "name": "Russia",
+   "count": 9157
+  },
+  {
+   "name": "Iran",
+   "count": 2643
+  },
+  {
+   "name": "China",
+   "count": 1317
+  },
+  {
+   "name": "Mexico",
+   "count": 1182
+  },
+  {
+   "name": "North Korea",
+   "count": 838
+  },
+  {
+   "name": "Belarus",
+   "count": 761
+  },
+  {
+   "name": "United Arab Emirates",
+   "count": 643
+  },
+  {
+   "name": "Syria",
+   "count": 634
+  },
+  {
+   "name": "Ukraine",
+   "count": 627
+  },
+  {
+   "name": "Iraq",
+   "count": 556
+  },
+  {
+   "name": "Afghanistan",
+   "count": 539
+  },
+  {
+   "name": "Lebanon",
+   "count": 425
+  },
+  {
+   "name": "Colombia",
+   "count": 403
+  },
+  {
+   "name": "Myanmar",
+   "count": 379
+  },
+  {
+   "name": "Turkey",
+   "count": 366
+  }
+ ],
+ "years": [
+  {
+   "label": "2011",
+   "count": 702
+  },
+  {
+   "label": "2012",
+   "count": 750
+  },
+  {
+   "label": "2013",
+   "count": 437
+  },
+  {
+   "label": "2014",
+   "count": 851
+  },
+  {
+   "label": "2015",
+   "count": 646
+  },
+  {
+   "label": "2016",
+   "count": 848
+  },
+  {
+   "label": "2017",
+   "count": 850
+  },
+  {
+   "label": "2018",
+   "count": 1494
+  },
+  {
+   "label": "2019",
+   "count": 836
+  },
+  {
+   "label": "2020",
+   "count": 1254
+  },
+  {
+   "label": "2021",
+   "count": 1204
+  },
+  {
+   "label": "2022",
+   "count": 5409
+  },
+  {
+   "label": "2023",
+   "count": 3999
+  },
+  {
+   "label": "2024",
+   "count": 4333
+  },
+  {
+   "label": "2025",
+   "count": 3499
+  },
+  {
+   "label": "2026",
+   "count": 1504
+  }
+ ],
+ "recent": [
+  {
+   "id": "58226",
+   "date": "2026-07-30",
+   "authority": "OFAC",
+   "country": "Russia",
+   "aliases": 2,
+   "measures": [
+    "Block"
+   ]
+  },
+  {
+   "id": "58173",
+   "date": "2026-07-30",
+   "authority": "OFAC",
+   "country": "Iran",
+   "aliases": 0,
+   "measures": [
+    "Block"
+   ]
+  },
+  {
+   "id": "58224",
+   "date": "2026-07-30",
+   "authority": "OFAC",
+   "country": "China",
+   "aliases": 1,
+   "measures": [
+    "Block"
+   ]
+  },
+  {
+   "id": "58222",
+   "date": "2026-07-30",
+   "authority": "OFAC",
+   "country": "China",
+   "aliases": 2,
+   "measures": [
+    "Block"
+   ]
+  },
+  {
+   "id": "58225",
+   "date": "2026-07-30",
+   "authority": "OFAC",
+   "country": "India",
+   "aliases": 2,
+   "measures": [
+    "Block"
+   ]
+  },
+  {
+   "id": "58223",
+   "date": "2026-07-30",
+   "authority": "OFAC",
+   "country": "China",
+   "aliases": 1,
+   "measures": [
+    "Block"
+   ]
+  },
+  {
+   "id": "58232",
+   "date": "2026-07-29",
+   "authority": "OFAC",
+   "country": "",
+   "aliases": 0,
+   "measures": [
+    "Block"
+   ]
+  },
+  {
+   "id": "58231",
+   "date": "2026-07-29",
+   "authority": "OFAC",
+   "country": "China",
+   "aliases": 1,
+   "measures": [
+    "Block"
+   ]
+  },
+  {
+   "id": "58217",
+   "date": "2026-07-29",
+   "authority": "OFAC",
+   "country": "Marshall Islands",
+   "aliases": 0,
+   "measures": [
+    "Block"
+   ]
+  },
+  {
+   "id": "58236",
+   "date": "2026-07-29",
+   "authority": "OFAC",
+   "country": "",
+   "aliases": 0,
+   "measures": [
+    "Block"
+   ]
+  },
+  {
+   "id": "58194",
+   "date": "2026-07-29",
+   "authority": "OFAC",
+   "country": "China",
+   "aliases": 1,
+   "measures": [
+    "Block"
+   ]
+  },
+  {
+   "id": "58220",
+   "date": "2026-07-29",
+   "authority": "OFAC",
+   "country": "",
+   "aliases": 0,
+   "measures": [
+    "Block"
+   ]
+  },
+  {
+   "id": "58234",
+   "date": "2026-07-29",
+   "authority": "OFAC",
+   "country": "Iran",
+   "aliases": 1,
+   "measures": [
+    "Block"
+   ]
+  },
+  {
+   "id": "58227",
+   "date": "2026-07-29",
+   "authority": "OFAC",
+   "country": "",
+   "aliases": 1,
+   "measures": [
+    "Block"
+   ]
+  },
+  {
+   "id": "58214",
+   "date": "2026-07-29",
+   "authority": "OFAC",
+   "country": "China",
+   "aliases": 0,
+   "measures": [
+    "Block"
+   ]
+  },
+  {
+   "id": "58218",
+   "date": "2026-07-29",
+   "authority": "OFAC",
+   "country": "",
+   "aliases": 0,
+   "measures": [
+    "Block"
+   ]
+  },
+  {
+   "id": "58235",
+   "date": "2026-07-29",
+   "authority": "OFAC",
+   "country": "China",
+   "aliases": 1,
+   "measures": [
+    "Block"
+   ]
+  },
+  {
+   "id": "58219",
+   "date": "2026-07-29",
+   "authority": "OFAC",
+   "country": "",
+   "aliases": 0,
+   "measures": [
+    "Block"
+   ]
+  },
+  {
+   "id": "58216",
+   "date": "2026-07-29",
+   "authority": "OFAC",
+   "country": "Marshall Islands",
+   "aliases": 0,
+   "measures": [
+    "Block"
+   ]
+  },
+  {
+   "id": "58233",
+   "date": "2026-07-29",
+   "authority": "OFAC",
+   "country": "",
+   "aliases": 0,
+   "measures": [
+    "Block"
+   ]
+  },
+  {
+   "id": "58189",
+   "date": "2026-07-29",
+   "authority": "OFAC",
+   "country": "China",
+   "aliases": 0,
+   "measures": [
+    "Block"
+   ]
+  },
+  {
+   "id": "58215",
+   "date": "2026-07-29",
+   "authority": "OFAC",
+   "country": "China",
+   "aliases": 0,
+   "measures": [
+    "Block"
+   ]
+  },
+  {
+   "id": "58190",
+   "date": "2026-07-29",
+   "authority": "OFAC",
+   "country": "",
+   "aliases": 0,
+   "measures": [
+    "Block"
+   ]
+  },
+  {
+   "id": "58221",
+   "date": "2026-07-29",
+   "authority": "OFAC",
+   "country": "",
+   "aliases": 0,
+   "measures": [
+    "Block"
+   ]
+  },
+  {
+   "id": "58188",
+   "date": "2026-07-24",
+   "authority": "OFAC",
+   "country": "Netherlands",
+   "aliases": 2,
+   "measures": [
+    "Block"
+   ]
+  },
+  {
+   "id": "58183",
+   "date": "2026-07-24",
+   "authority": "OFAC",
+   "country": "United Arab Emirates",
+   "aliases": 1,
+   "measures": [
+    "Block"
+   ]
+  },
+  {
+   "id": "58176",
+   "date": "2026-07-24",
+   "authority": "OFAC",
+   "country": "Iran",
+   "aliases": 6,
+   "measures": [
+    "Block"
+   ]
+  },
+  {
+   "id": "58181",
+   "date": "2026-07-24",
+   "authority": "OFAC",
+   "country": "Iran",
+   "aliases": 4,
+   "measures": [
+    "Block"
+   ]
+  },
+  {
+   "id": "58180",
+   "date": "2026-07-24",
+   "authority": "OFAC",
+   "country": "Iran",
+   "aliases": 2,
+   "measures": [
+    "Block"
+   ]
+  },
+  {
+   "id": "58178",
+   "date": "2026-07-24",
+   "authority": "OFAC",
+   "country": "",
+   "aliases": 3,
+   "measures": [
+    "Block"
+   ]
+  },
+  {
+   "id": "58179",
+   "date": "2026-07-24",
+   "authority": "OFAC",
+   "country": "Iran",
+   "aliases": 1,
+   "measures": [
+    "Block"
+   ]
+  },
+  {
+   "id": "58182",
+   "date": "2026-07-24",
+   "authority": "OFAC",
+   "country": "Iran",
+   "aliases": 2,
+   "measures": [
+    "Block"
+   ]
+  },
+  {
+   "id": "58187",
+   "date": "2026-07-24",
+   "authority": "OFAC",
+   "country": "Tajikistan",
+   "aliases": 1,
+   "measures": [
+    "Block"
+   ]
+  },
+  {
+   "id": "58186",
+   "date": "2026-07-24",
+   "authority": "OFAC",
+   "country": "Iran",
+   "aliases": 1,
+   "measures": [
+    "Block"
+   ]
+  },
+  {
+   "id": "58185",
+   "date": "2026-07-24",
+   "authority": "OFAC",
+   "country": "Iran",
+   "aliases": 1,
+   "measures": [
+    "Block"
+   ]
+  },
+  {
+   "id": "58174",
+   "date": "2026-07-24",
+   "authority": "OFAC",
+   "country": "Turkey",
+   "aliases": 3,
+   "measures": [
+    "Block"
+   ]
+  },
+  {
+   "id": "58177",
+   "date": "2026-07-24",
+   "authority": "OFAC",
+   "country": "United Arab Emirates",
+   "aliases": 0,
+   "measures": [
+    "Block"
+   ]
+  },
+  {
+   "id": "EU-184308",
+   "date": "2026-07-23",
+   "authority": "EU",
+   "country": "Russia",
+   "aliases": 2,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "EU-184314",
+   "date": "2026-07-23",
+   "authority": "EU",
+   "country": "Russia",
+   "aliases": 0,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "EU-183842",
+   "date": "2026-07-23",
+   "authority": "EU",
+   "country": "Russia",
+   "aliases": 3,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "EU-184101",
+   "date": "2026-07-23",
+   "authority": "EU",
+   "country": "Russia",
+   "aliases": 4,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "58076",
+   "date": "2026-07-23",
+   "authority": "OFAC",
+   "country": "Mexico",
+   "aliases": 0,
+   "measures": [
+    "Block"
+   ]
+  },
+  {
+   "id": "EU-183863",
+   "date": "2026-07-23",
+   "authority": "EU",
+   "country": "Russia",
+   "aliases": 4,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "58200",
+   "date": "2026-07-23",
+   "authority": "OFAC",
+   "country": "Iraq",
+   "aliases": 0,
+   "measures": [
+    "Block"
+   ]
+  },
+  {
+   "id": "58199",
+   "date": "2026-07-23",
+   "authority": "OFAC",
+   "country": "Iraq",
+   "aliases": 0,
+   "measures": [
+    "Block"
+   ]
+  },
+  {
+   "id": "58198",
+   "date": "2026-07-23",
+   "authority": "OFAC",
+   "country": "Palestinian Territories",
+   "aliases": 0,
+   "measures": [
+    "Block"
+   ]
+  },
+  {
+   "id": "EU-184209",
+   "date": "2026-07-23",
+   "authority": "EU",
+   "country": "Russia",
+   "aliases": 1,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "EU-184204",
+   "date": "2026-07-23",
+   "authority": "EU",
+   "country": "Russia",
+   "aliases": 1,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "EU-183903",
+   "date": "2026-07-23",
+   "authority": "EU",
+   "country": "Russia",
+   "aliases": 2,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "EU-183145",
+   "date": "2026-07-23",
+   "authority": "EU",
+   "country": "Russia",
+   "aliases": 3,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "EU-184128",
+   "date": "2026-07-23",
+   "authority": "EU",
+   "country": "Russia",
+   "aliases": 2,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "58065",
+   "date": "2026-07-23",
+   "authority": "OFAC",
+   "country": "Mexico",
+   "aliases": 0,
+   "measures": [
+    "Block"
+   ]
+  },
+  {
+   "id": "EU-182958",
+   "date": "2026-07-23",
+   "authority": "EU",
+   "country": "Russia",
+   "aliases": 3,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "EU-183215",
+   "date": "2026-07-23",
+   "authority": "EU",
+   "country": "Russia",
+   "aliases": 4,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "EU-184089",
+   "date": "2026-07-23",
+   "authority": "EU",
+   "country": "Russia",
+   "aliases": 2,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "EU-183238",
+   "date": "2026-07-23",
+   "authority": "EU",
+   "country": "Russia",
+   "aliases": 1,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "EU-184510",
+   "date": "2026-07-23",
+   "authority": "EU",
+   "country": "Russia",
+   "aliases": 3,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "EU-184054",
+   "date": "2026-07-23",
+   "authority": "EU",
+   "country": "Russia",
+   "aliases": 2,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "EU-184294",
+   "date": "2026-07-23",
+   "authority": "EU",
+   "country": "Russia",
+   "aliases": 1,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "EU-183784",
+   "date": "2026-07-23",
+   "authority": "EU",
+   "country": "Russia",
+   "aliases": 0,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "EU-183408",
+   "date": "2026-07-23",
+   "authority": "EU",
+   "country": "Russia",
+   "aliases": 6,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "EU-184581",
+   "date": "2026-07-23",
+   "authority": "EU",
+   "country": "Singapore",
+   "aliases": 0,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "58017",
+   "date": "2026-07-23",
+   "authority": "OFAC",
+   "country": "Mexico",
+   "aliases": 0,
+   "measures": [
+    "Block"
+   ]
+  },
+  {
+   "id": "EU-183551",
+   "date": "2026-07-23",
+   "authority": "EU",
+   "country": "Russia",
+   "aliases": 2,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "EU-183734",
+   "date": "2026-07-23",
+   "authority": "EU",
+   "country": "Russia",
+   "aliases": 2,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "EU-184068",
+   "date": "2026-07-23",
+   "authority": "EU",
+   "country": "Russia",
+   "aliases": 3,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "EU-183094",
+   "date": "2026-07-23",
+   "authority": "EU",
+   "country": "Russia",
+   "aliases": 2,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "EU-183173",
+   "date": "2026-07-23",
+   "authority": "EU",
+   "country": "Russia",
+   "aliases": 4,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "EU-184046",
+   "date": "2026-07-23",
+   "authority": "EU",
+   "country": "Russia",
+   "aliases": 4,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "EU-183706",
+   "date": "2026-07-23",
+   "authority": "EU",
+   "country": "Russia",
+   "aliases": 2,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "EU-184083",
+   "date": "2026-07-23",
+   "authority": "EU",
+   "country": "Russia",
+   "aliases": 2,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "58022",
+   "date": "2026-07-23",
+   "authority": "OFAC",
+   "country": "Mexico",
+   "aliases": 0,
+   "measures": [
+    "Block"
+   ]
+  },
+  {
+   "id": "58023",
+   "date": "2026-07-23",
+   "authority": "OFAC",
+   "country": "Mexico",
+   "aliases": 0,
+   "measures": [
+    "Block"
+   ]
+  },
+  {
+   "id": "58024",
+   "date": "2026-07-23",
+   "authority": "OFAC",
+   "country": "Mexico",
+   "aliases": 0,
+   "measures": [
+    "Block"
+   ]
+  },
+  {
+   "id": "58014",
+   "date": "2026-07-23",
+   "authority": "OFAC",
+   "country": "Mexico",
+   "aliases": 2,
+   "measures": [
+    "Block"
+   ]
+  },
+  {
+   "id": "58015",
+   "date": "2026-07-23",
+   "authority": "OFAC",
+   "country": "Mexico",
+   "aliases": 0,
+   "measures": [
+    "Block"
+   ]
+  },
+  {
+   "id": "58013",
+   "date": "2026-07-23",
+   "authority": "OFAC",
+   "country": "Mexico",
+   "aliases": 2,
+   "measures": [
+    "Block"
+   ]
+  },
+  {
+   "id": "EU-183876",
+   "date": "2026-07-23",
+   "authority": "EU",
+   "country": "Russia",
+   "aliases": 7,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "58016",
+   "date": "2026-07-23",
+   "authority": "OFAC",
+   "country": "Mexico",
+   "aliases": 0,
+   "measures": [
+    "Block"
+   ]
+  },
+  {
+   "id": "58074",
+   "date": "2026-07-23",
+   "authority": "OFAC",
+   "country": "Mexico",
+   "aliases": 0,
+   "measures": [
+    "Block"
+   ]
+  },
+  {
+   "id": "57999",
+   "date": "2026-07-23",
+   "authority": "OFAC",
+   "country": "Mexico",
+   "aliases": 0,
+   "measures": [
+    "Block"
+   ]
+  },
+  {
+   "id": "58205",
+   "date": "2026-07-23",
+   "authority": "OFAC",
+   "country": "Guernsey",
+   "aliases": 0,
+   "measures": [
+    "Block"
+   ]
+  },
+  {
+   "id": "58208",
+   "date": "2026-07-23",
+   "authority": "OFAC",
+   "country": "Cuba",
+   "aliases": 1,
+   "measures": [
+    "Block"
+   ]
+  },
+  {
+   "id": "58021",
+   "date": "2026-07-23",
+   "authority": "OFAC",
+   "country": "Mexico",
+   "aliases": 0,
+   "measures": [
+    "Block"
+   ]
+  },
+  {
+   "id": "EU-183525",
+   "date": "2026-07-23",
+   "authority": "EU",
+   "country": "Russia",
+   "aliases": 3,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "58210",
+   "date": "2026-07-23",
+   "authority": "OFAC",
+   "country": "Cuba",
+   "aliases": 4,
+   "measures": [
+    "Block"
+   ]
+  },
+  {
+   "id": "58204",
+   "date": "2026-07-23",
+   "authority": "OFAC",
+   "country": "Cuba",
+   "aliases": 0,
+   "measures": [
+    "Block"
+   ]
+  },
+  {
+   "id": "58068",
+   "date": "2026-07-23",
+   "authority": "OFAC",
+   "country": "Mexico",
+   "aliases": 0,
+   "measures": [
+    "Block"
+   ]
+  },
+  {
+   "id": "58018",
+   "date": "2026-07-23",
+   "authority": "OFAC",
+   "country": "Mexico",
+   "aliases": 0,
+   "measures": [
+    "Block"
+   ]
+  },
+  {
+   "id": "EU-184039",
+   "date": "2026-07-23",
+   "authority": "EU",
+   "country": "Russia",
+   "aliases": 2,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "57998",
+   "date": "2026-07-23",
+   "authority": "OFAC",
+   "country": "Mexico",
+   "aliases": 0,
+   "measures": [
+    "Block"
+   ]
+  },
+  {
+   "id": "57966",
+   "date": "2026-07-23",
+   "authority": "OFAC",
+   "country": "Mexico",
+   "aliases": 1,
+   "measures": [
+    "Block"
+   ]
+  },
+  {
+   "id": "57968",
+   "date": "2026-07-23",
+   "authority": "OFAC",
+   "country": "Mexico",
+   "aliases": 1,
+   "measures": [
+    "Block"
+   ]
+  },
+  {
+   "id": "58061",
+   "date": "2026-07-23",
+   "authority": "OFAC",
+   "country": "Mexico",
+   "aliases": 0,
+   "measures": [
+    "Block"
+   ]
+  },
+  {
+   "id": "58207",
+   "date": "2026-07-23",
+   "authority": "OFAC",
+   "country": "Cuba",
+   "aliases": 0,
+   "measures": [
+    "Block"
+   ]
+  },
+  {
+   "id": "58064",
+   "date": "2026-07-23",
+   "authority": "OFAC",
+   "country": "Mexico",
+   "aliases": 0,
+   "measures": [
+    "Block"
+   ]
+  },
+  {
+   "id": "58195",
+   "date": "2026-07-23",
+   "authority": "OFAC",
+   "country": "Austria",
+   "aliases": 1,
+   "measures": [
+    "Block"
+   ]
+  },
+  {
+   "id": "58197",
+   "date": "2026-07-23",
+   "authority": "OFAC",
+   "country": "Turkey",
+   "aliases": 6,
+   "measures": [
+    "Block"
+   ]
+  },
+  {
+   "id": "EU-183140",
+   "date": "2026-07-23",
+   "authority": "EU",
+   "country": "Russia",
+   "aliases": 3,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "58206",
+   "date": "2026-07-23",
+   "authority": "OFAC",
+   "country": "Cuba",
+   "aliases": 1,
+   "measures": [
+    "Block"
+   ]
+  },
+  {
+   "id": "EU-183150",
+   "date": "2026-07-23",
+   "authority": "EU",
+   "country": "Russia",
+   "aliases": 3,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "58060",
+   "date": "2026-07-23",
+   "authority": "OFAC",
+   "country": "Mexico",
+   "aliases": 0,
+   "measures": [
+    "Block"
+   ]
+  },
+  {
+   "id": "EU-183346",
+   "date": "2026-07-23",
+   "authority": "EU",
+   "country": "Ukraine",
+   "aliases": 2,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "EU-183700",
+   "date": "2026-07-23",
+   "authority": "EU",
+   "country": "Russia",
+   "aliases": 1,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "58038",
+   "date": "2026-07-23",
+   "authority": "OFAC",
+   "country": "Mexico",
+   "aliases": 1,
+   "measures": [
+    "Block"
+   ]
+  },
+  {
+   "id": "57370",
+   "date": "2026-07-23",
+   "authority": "OFAC",
+   "country": "United States",
+   "aliases": 2,
+   "measures": [
+    "Block"
+   ]
+  },
+  {
+   "id": "EU-184517",
+   "date": "2026-07-23",
+   "authority": "EU",
+   "country": "Russia",
+   "aliases": 10,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "58020",
+   "date": "2026-07-23",
+   "authority": "OFAC",
+   "country": "Mexico",
+   "aliases": 0,
+   "measures": [
+    "Block"
+   ]
+  },
+  {
+   "id": "58070",
+   "date": "2026-07-23",
+   "authority": "OFAC",
+   "country": "Mexico",
+   "aliases": 0,
+   "measures": [
+    "Block"
+   ]
+  },
+  {
+   "id": "58067",
+   "date": "2026-07-23",
+   "authority": "OFAC",
+   "country": "Mexico",
+   "aliases": 0,
+   "measures": [
+    "Block"
+   ]
+  },
+  {
+   "id": "EU-184585",
+   "date": "2026-07-23",
+   "authority": "EU",
+   "country": "China",
+   "aliases": 0,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "58075",
+   "date": "2026-07-23",
+   "authority": "OFAC",
+   "country": "Mexico",
+   "aliases": 0,
+   "measures": [
+    "Block"
+   ]
+  },
+  {
+   "id": "EU-182948",
+   "date": "2026-07-23",
+   "authority": "EU",
+   "country": "Russia",
+   "aliases": 2,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "EU-182963",
+   "date": "2026-07-23",
+   "authority": "EU",
+   "country": "Russia",
+   "aliases": 3,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "58072",
+   "date": "2026-07-23",
+   "authority": "OFAC",
+   "country": "Mexico",
+   "aliases": 0,
+   "measures": [
+    "Block"
+   ]
+  },
+  {
+   "id": "EU-183799",
+   "date": "2026-07-23",
+   "authority": "EU",
+   "country": "Russia",
+   "aliases": 5,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "EU-182984",
+   "date": "2026-07-23",
+   "authority": "EU",
+   "country": "Russia",
+   "aliases": 1,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "EU-184479",
+   "date": "2026-07-23",
+   "authority": "EU",
+   "country": "Russia",
+   "aliases": 1,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "EU-183339",
+   "date": "2026-07-23",
+   "authority": "EU",
+   "country": "Russia",
+   "aliases": 2,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "EU-183181",
+   "date": "2026-07-23",
+   "authority": "EU",
+   "country": "Russia",
+   "aliases": 3,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "EU-184075",
+   "date": "2026-07-23",
+   "authority": "EU",
+   "country": "Russia",
+   "aliases": 4,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "EU-183361",
+   "date": "2026-07-23",
+   "authority": "EU",
+   "country": "Russia",
+   "aliases": 1,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "EU-184300",
+   "date": "2026-07-23",
+   "authority": "EU",
+   "country": "Russia",
+   "aliases": 6,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "EU-184275",
+   "date": "2026-07-23",
+   "authority": "EU",
+   "country": "Russia",
+   "aliases": 1,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "EU-183380",
+   "date": "2026-07-23",
+   "authority": "EU",
+   "country": "Russia",
+   "aliases": 1,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "EU-184114",
+   "date": "2026-07-23",
+   "authority": "EU",
+   "country": "Russia",
+   "aliases": 3,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "EU-183386",
+   "date": "2026-07-23",
+   "authority": "EU",
+   "country": "Russia",
+   "aliases": 2,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "EU-183188",
+   "date": "2026-07-23",
+   "authority": "EU",
+   "country": "Russia",
+   "aliases": 1,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "EU-184287",
+   "date": "2026-07-23",
+   "authority": "EU",
+   "country": "Russia",
+   "aliases": 2,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "EU-183244",
+   "date": "2026-07-23",
+   "authority": "EU",
+   "country": "Russia",
+   "aliases": 2,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "EU-184473",
+   "date": "2026-07-23",
+   "authority": "EU",
+   "country": "Russia",
+   "aliases": 1,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "EU-183972",
+   "date": "2026-07-23",
+   "authority": "EU",
+   "country": "Russia",
+   "aliases": 4,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "EU-183475",
+   "date": "2026-07-23",
+   "authority": "EU",
+   "country": "Russia",
+   "aliases": 5,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "EU-183490",
+   "date": "2026-07-23",
+   "authority": "EU",
+   "country": "Russia",
+   "aliases": 2,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "EU-183988",
+   "date": "2026-07-23",
+   "authority": "EU",
+   "country": "Russia",
+   "aliases": 3,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "EU-183847",
+   "date": "2026-07-23",
+   "authority": "EU",
+   "country": "Russia",
+   "aliases": 4,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "EU-183087",
+   "date": "2026-07-23",
+   "authority": "EU",
+   "country": "Russia",
+   "aliases": 4,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "EU-183307",
+   "date": "2026-07-23",
+   "authority": "EU",
+   "country": "Russia",
+   "aliases": 3,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "EU-184007",
+   "date": "2026-07-23",
+   "authority": "EU",
+   "country": "Russia",
+   "aliases": 2,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "EU-184019",
+   "date": "2026-07-23",
+   "authority": "EU",
+   "country": "Russia",
+   "aliases": 2,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "EU-183162",
+   "date": "2026-07-23",
+   "authority": "EU",
+   "country": "Russia",
+   "aliases": 1,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "58033",
+   "date": "2026-07-23",
+   "authority": "OFAC",
+   "country": "Mexico",
+   "aliases": 1,
+   "measures": [
+    "Block"
+   ]
+  },
+  {
+   "id": "EU-184261",
+   "date": "2026-07-23",
+   "authority": "EU",
+   "country": "Russia",
+   "aliases": 3,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "EU-183884",
+   "date": "2026-07-23",
+   "authority": "EU",
+   "country": "Russia",
+   "aliases": 2,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "EU-184426",
+   "date": "2026-07-23",
+   "authority": "EU",
+   "country": "",
+   "aliases": 1,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "EU-183422",
+   "date": "2026-07-23",
+   "authority": "EU",
+   "country": "Russia",
+   "aliases": 3,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "EU-183074",
+   "date": "2026-07-23",
+   "authority": "EU",
+   "country": "Russia",
+   "aliases": 1,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "EU-183807",
+   "date": "2026-07-23",
+   "authority": "EU",
+   "country": "Russia",
+   "aliases": 8,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "EU-183818",
+   "date": "2026-07-23",
+   "authority": "EU",
+   "country": "Russia",
+   "aliases": 5,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "EU-184551",
+   "date": "2026-07-23",
+   "authority": "EU",
+   "country": "Russia",
+   "aliases": 2,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "UN-6909568",
+   "date": "2026-07-22",
+   "authority": "UN",
+   "country": "",
+   "aliases": 0,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "UN-6909619",
+   "date": "2026-07-14",
+   "authority": "UN",
+   "country": "DR Congo",
+   "aliases": 0,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "UN-6909616",
+   "date": "2026-07-14",
+   "authority": "UN",
+   "country": "DR Congo",
+   "aliases": 1,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "UN-6909613",
+   "date": "2026-07-14",
+   "authority": "UN",
+   "country": "DR Congo",
+   "aliases": 2,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "UN-6909618",
+   "date": "2026-07-14",
+   "authority": "UN",
+   "country": "Rwanda",
+   "aliases": 3,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "UN-6909617",
+   "date": "2026-07-14",
+   "authority": "UN",
+   "country": "DR Congo",
+   "aliases": 0,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "UN-6909615",
+   "date": "2026-07-14",
+   "authority": "UN",
+   "country": "Uganda",
+   "aliases": 6,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "UN-6909614",
+   "date": "2026-07-14",
+   "authority": "UN",
+   "country": "Rwanda",
+   "aliases": 2,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "UN-6909620",
+   "date": "2026-07-14",
+   "authority": "UN",
+   "country": "DR Congo",
+   "aliases": 0,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "UN-6909557",
+   "date": "2026-04-28",
+   "authority": "UN",
+   "country": "Sudan",
+   "aliases": 2,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "UN-6909558",
+   "date": "2026-04-28",
+   "authority": "UN",
+   "country": "Colombia",
+   "aliases": 0,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "UN-6909559",
+   "date": "2026-04-28",
+   "authority": "UN",
+   "country": "Colombia",
+   "aliases": 0,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "UN-6909560",
+   "date": "2026-04-28",
+   "authority": "UN",
+   "country": "Colombia",
+   "aliases": 0,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "UN-6909621",
+   "date": "2026-03-30",
+   "authority": "UN",
+   "country": "Uganda",
+   "aliases": 4,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "UN-6909494",
+   "date": "2026-03-26",
+   "authority": "UN",
+   "country": "Iraq",
+   "aliases": 1,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "UN-6909348",
+   "date": "2026-03-26",
+   "authority": "UN",
+   "country": "Iraq",
+   "aliases": 4,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "UN-6909527",
+   "date": "2026-02-24",
+   "authority": "UN",
+   "country": "Sudan",
+   "aliases": 0,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "UN-6909528",
+   "date": "2026-02-24",
+   "authority": "UN",
+   "country": "Sudan",
+   "aliases": 1,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "UN-6909526",
+   "date": "2026-02-24",
+   "authority": "UN",
+   "country": "Sudan",
+   "aliases": 1,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "UN-6909529",
+   "date": "2026-02-24",
+   "authority": "UN",
+   "country": "Sudan",
+   "aliases": 1,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "UK-17249",
+   "date": "2025-12-19",
+   "authority": "UK",
+   "country": "Syria",
+   "aliases": 4,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "UK-17254",
+   "date": "2025-12-19",
+   "authority": "UK",
+   "country": "",
+   "aliases": 2,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "UK-17256",
+   "date": "2025-12-19",
+   "authority": "UK",
+   "country": "Russia",
+   "aliases": 7,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "UK-17248",
+   "date": "2025-12-19",
+   "authority": "UK",
+   "country": "Syria",
+   "aliases": 1,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "UK-17250",
+   "date": "2025-12-19",
+   "authority": "UK",
+   "country": "Syria",
+   "aliases": 1,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "UK-17255",
+   "date": "2025-12-19",
+   "authority": "UK",
+   "country": "Russia",
+   "aliases": 5,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "UK-17251",
+   "date": "2025-12-19",
+   "authority": "UK",
+   "country": "Turkey",
+   "aliases": 1,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "UK-17252",
+   "date": "2025-12-19",
+   "authority": "UK",
+   "country": "",
+   "aliases": 0,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "UK-17253",
+   "date": "2025-12-19",
+   "authority": "UK",
+   "country": "Syria",
+   "aliases": 1,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "UK-17285",
+   "date": "2025-12-18",
+   "authority": "UK",
+   "country": "United Arab Emirates",
+   "aliases": 2,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "UK-17267",
+   "date": "2025-12-18",
+   "authority": "UK",
+   "country": "",
+   "aliases": 1,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "UK-17271",
+   "date": "2025-12-18",
+   "authority": "UK",
+   "country": "",
+   "aliases": 1,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "UK-17265",
+   "date": "2025-12-18",
+   "authority": "UK",
+   "country": "Azerbaijan",
+   "aliases": 0,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "UK-17272",
+   "date": "2025-12-18",
+   "authority": "UK",
+   "country": "Uzbekistan",
+   "aliases": 6,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "UK-17273",
+   "date": "2025-12-18",
+   "authority": "UK",
+   "country": "",
+   "aliases": 0,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "UK-17274",
+   "date": "2025-12-18",
+   "authority": "UK",
+   "country": "Uzbekistan",
+   "aliases": 1,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "UK-17282",
+   "date": "2025-12-18",
+   "authority": "UK",
+   "country": "United Arab Emirates",
+   "aliases": 0,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "UK-17275",
+   "date": "2025-12-18",
+   "authority": "UK",
+   "country": "Kyrgyzstan",
+   "aliases": 0,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "UK-17276",
+   "date": "2025-12-18",
+   "authority": "UK",
+   "country": "Uzbekistan",
+   "aliases": 3,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "UK-17264",
+   "date": "2025-12-18",
+   "authority": "UK",
+   "country": "Russia",
+   "aliases": 2,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "UK-17262",
+   "date": "2025-12-18",
+   "authority": "UK",
+   "country": "Russia",
+   "aliases": 1,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "UK-17277",
+   "date": "2025-12-18",
+   "authority": "UK",
+   "country": "Russia",
+   "aliases": 6,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "UK-17278",
+   "date": "2025-12-18",
+   "authority": "UK",
+   "country": "Russia",
+   "aliases": 0,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "UK-17284",
+   "date": "2025-12-18",
+   "authority": "UK",
+   "country": "United Arab Emirates",
+   "aliases": 0,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "UK-17266",
+   "date": "2025-12-18",
+   "authority": "UK",
+   "country": "Pakistan",
+   "aliases": 0,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "UK-17261",
+   "date": "2025-12-18",
+   "authority": "UK",
+   "country": "Russia",
+   "aliases": 0,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "UK-17263",
+   "date": "2025-12-18",
+   "authority": "UK",
+   "country": "Russia",
+   "aliases": 1,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "UK-17279",
+   "date": "2025-12-18",
+   "authority": "UK",
+   "country": "Uzbekistan",
+   "aliases": 4,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "UK-17283",
+   "date": "2025-12-18",
+   "authority": "UK",
+   "country": "United Arab Emirates",
+   "aliases": 0,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "UK-17280",
+   "date": "2025-12-18",
+   "authority": "UK",
+   "country": "Uzbekistan",
+   "aliases": 0,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "UK-17270",
+   "date": "2025-12-18",
+   "authority": "UK",
+   "country": "United Arab Emirates",
+   "aliases": 1,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "UK-17269",
+   "date": "2025-12-18",
+   "authority": "UK",
+   "country": "Russia",
+   "aliases": 1,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "UK-17268",
+   "date": "2025-12-18",
+   "authority": "UK",
+   "country": "",
+   "aliases": 0,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "UK-17257",
+   "date": "2025-12-12",
+   "authority": "UK",
+   "country": "Sudan",
+   "aliases": 7,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "UK-17258",
+   "date": "2025-12-12",
+   "authority": "UK",
+   "country": "Sudan",
+   "aliases": 4,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "UK-17259",
+   "date": "2025-12-12",
+   "authority": "UK",
+   "country": "Sudan",
+   "aliases": 3,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "UK-17260",
+   "date": "2025-12-12",
+   "authority": "UK",
+   "country": "Sudan",
+   "aliases": 1,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "UK-17243",
+   "date": "2025-12-09",
+   "authority": "UK",
+   "country": "Russia",
+   "aliases": 0,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "UK-17245",
+   "date": "2025-12-09",
+   "authority": "UK",
+   "country": "Russia",
+   "aliases": 1,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "UK-17241",
+   "date": "2025-12-09",
+   "authority": "UK",
+   "country": "Belgium",
+   "aliases": 0,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "UN-6909474",
+   "date": "2025-10-17",
+   "authority": "UN",
+   "country": "",
+   "aliases": 0,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "UN-6909475",
+   "date": "2025-10-17",
+   "authority": "UN",
+   "country": "",
+   "aliases": 0,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "UN-6909349",
+   "date": "2025-07-08",
+   "authority": "UN",
+   "country": "Haiti",
+   "aliases": 3,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "UN-6909350",
+   "date": "2025-07-08",
+   "authority": "UN",
+   "country": "Haiti",
+   "aliases": 8,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "UN-6909290",
+   "date": "2025-06-16",
+   "authority": "UN",
+   "country": "Uganda",
+   "aliases": 2,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "UN-6909269",
+   "date": "2024-11-08",
+   "authority": "UN",
+   "country": "Sudan",
+   "aliases": 0,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "UN-6909270",
+   "date": "2024-11-08",
+   "authority": "UN",
+   "country": "Sudan",
+   "aliases": 0,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "UN-6909388",
+   "date": "2024-09-27",
+   "authority": "UN",
+   "country": "Haiti",
+   "aliases": 0,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "UN-6909386",
+   "date": "2024-09-27",
+   "authority": "UN",
+   "country": "Haiti",
+   "aliases": 0,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "UN-6909265",
+   "date": "2024-05-21",
+   "authority": "UN",
+   "country": "Somalia",
+   "aliases": 5,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "UN-6909266",
+   "date": "2024-05-21",
+   "authority": "UN",
+   "country": "Somalia",
+   "aliases": 1,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "UN-6909267",
+   "date": "2024-05-21",
+   "authority": "UN",
+   "country": "Somalia",
+   "aliases": 5,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "UN-6908994",
+   "date": "2024-02-20",
+   "authority": "UN",
+   "country": "Tanzania",
+   "aliases": 13,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "UN-6908993",
+   "date": "2024-02-20",
+   "authority": "UN",
+   "country": "Rwanda",
+   "aliases": 3,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "UN-6908995",
+   "date": "2024-02-20",
+   "authority": "UN",
+   "country": "DR Congo",
+   "aliases": 1,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "UN-6908996",
+   "date": "2024-02-20",
+   "authority": "UN",
+   "country": "Uganda",
+   "aliases": 9,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "UN-6908997",
+   "date": "2024-02-20",
+   "authority": "UN",
+   "country": "DR Congo",
+   "aliases": 1,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "UN-6908998",
+   "date": "2024-02-20",
+   "authority": "UN",
+   "country": "DR Congo",
+   "aliases": 0,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "UN-6909378",
+   "date": "2023-12-08",
+   "authority": "UN",
+   "country": "Haiti",
+   "aliases": 1,
+   "measures": [
+    "Asset freeze"
+   ]
+  },
+  {
+   "id": "UN-6909380",
+   "date": "2023-12-08",
+   "authority": "UN",
+   "country": "Haiti",
+   "aliases": 1,
+   "measures": [
+    "Asset freeze"
+   ]
+  }
+ ]
+}
