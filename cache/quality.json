@@ -1,7 +1,7 @@
 {
- "generatedAt": "2026-08-13T23:32:55.670Z",
+ "generatedAt": "2026-08-14T23:14:18.411Z",
  "publicationId": "941",
- "retrievedAt": "2026-08-13T23:32:54.475Z",
+ "retrievedAt": "2026-08-14T23:14:17.447Z",
  "count": 38223,
  "authorities": {
   "OFAC": {
@@ -25,7 +25,7 @@
   "UN": {
    "count": 1011,
    "aliasRate": 0.7091988130563798,
-   "addressRate": 0.5479723046488625,
+   "addressRate": 0.5489614243323442,
    "identifierRate": 0.29475766567754697,
    "birthDateRate": 0.675568743818002,
    "nationalityRate": 0.6271018793273986,
@@ -60,13 +60,13 @@
   }
  },
  "derived": {
-  "dobParseRate": 0.9999410724808485,
-  "countryResolveRate": 0.9995672953995633,
+  "dobParseRate": 0.9999410794249352,
+  "countryResolveRate": 0.9995673039099993,
   "attributeUnclassifiedRate": 0,
   "identifierUnclassifiedRate": 0.050237743892441386,
-  "dobValues": 16970,
-  "countryValues": 50843,
-  "attributes": 104343,
+  "dobValues": 16972,
+  "countryValues": 50844,
+  "attributes": 104344,
   "identifiers": 30495
  }
 }
