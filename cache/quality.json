@@ -1,8 +1,8 @@
 {
- "generatedAt": "2026-09-02T00:41:30.269Z",
+ "generatedAt": "2026-09-03T00:53:41.989Z",
  "publicationId": "966",
- "retrievedAt": "2026-09-02T00:41:29.078Z",
- "count": 38344,
+ "retrievedAt": "2026-09-03T00:53:40.761Z",
+ "count": 38358,
  "authorities": {
   "OFAC": {
    "count": 19709,
@@ -50,8 +50,8 @@
    "relationshipEdges": 0
   },
   "State": {
-   "count": 948,
-   "aliasRate": 0.14873417721518986,
+   "count": 962,
+   "aliasRate": 0.14760914760914762,
    "addressRate": 0,
    "identifierRate": 0,
    "birthDateRate": 0,
@@ -66,7 +66,7 @@
   "identifierUnclassifiedRate": 0.0501983223876715,
   "dobValues": 17011,
   "countryValues": 51008,
-  "attributes": 104783,
+  "attributes": 104797,
   "identifiers": 30758
  }
 }
