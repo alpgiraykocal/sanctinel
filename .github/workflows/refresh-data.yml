@@ -14,6 +14,7 @@ on:
 
 permissions:
   contents: write
+  issues: write   # open / close the data-refresh alarm issue
 
 jobs:
   refresh:
@@ -45,8 +46,9 @@ jobs:
           ONLY_IF_DEGRADED: ${{ github.event.schedule == '0 11 * * *' && '1' || '' }}
         run: |
           set +e
-          node scripts/build-cache.js
-          code=$?
+          # Teed to a file so a failure can quote the build's own verdict.
+          node scripts/build-cache.js 2>&1 | tee build.log
+          code=${PIPESTATUS[0]}
           echo "code=$code" >> "$GITHUB_OUTPUT"
           if [ "$code" -ne 0 ] && [ "$code" -ne 3 ]; then exit "$code"; fi
 
@@ -74,3 +76,42 @@ jobs:
         run: |
           echo "::error::Snapshot published with a standing alarm — an authority is missing or carried forward, or a measured field is below its floor. See the build log."
           exit 1
+
+      # A red run is only an alarm if someone hears it. Open one issue (or add
+      # to the open one) with the build's own findings, and close it the first
+      # time a run comes back clean. See .github/scripts/issue.sh.
+      - name: Open or update the alarm issue
+        if: failure()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          CODE: ${{ steps.build.outputs.code }}
+        run: |
+          {
+            echo "The data refresh run ended red (build exit code \`${CODE:-none}\`): $RUN_URL"
+            echo
+            case "$CODE" in
+              3) echo "The snapshot **was published**, but with a standing alarm — some data is carried forward or incomplete." ;;
+              1) echo "The snapshot **was not published**. The site keeps serving the previous one, and every authority in it is ageing." ;;
+              *) echo "The run failed before or after the build; see the log." ;;
+            esac
+            echo
+            echo '```'
+            if [ -f build.log ]; then
+              grep -E 'REGRESSION|BELOW FLOOR|ALARM|STALE|WARNING|CARRY-FORWARD|unrecognised|refused|failed|FAIL ' build.log | head -40 || true
+            else
+              echo "(no build log)"
+            fi
+            echo '```'
+          } > issue-body.md
+          .github/scripts/issue.sh open data-refresh "Data refresh is failing" issue-body.md
+
+      - name: Close the alarm issue on a clean run
+        if: success() && steps.build.outputs.code == '0'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          .github/scripts/issue.sh close data-refresh "Clean run: $RUN_URL"

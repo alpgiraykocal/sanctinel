@@ -98,3 +98,13 @@ test('every page and script referenced by the pages is served', async () => {
     }
   }
 });
+
+test('check-deployment flags demo data, missing authorities and an old snapshot', async () => {
+  const { assess } = require('../scripts/check-deployment');
+  const demo = await (await get('/api/meta')).json();
+  assert.ok(assess(demo).problems.some((p) => /non-live/.test(p)), 'the demo instance is flagged');
+  const good = { isLive: true, missingAuthorities: [], snapshotAgeHours: 10, staleAuthorities: [] };
+  assert.deepEqual(assess(good).problems, []);
+  assert.equal(assess(Object.assign({}, good, { snapshotAgeHours: 324 })).problems.length, 1);
+  assert.equal(assess(Object.assign({}, good, { missingAuthorities: ['EU'] })).problems.length, 1);
+});

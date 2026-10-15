@@ -336,6 +336,22 @@ One test is marked `todo`, deliberately: a misspelled descriptor word
 drags an exact name under the threshold. It is a known recall gap, listed in
 every run, not hidden.
 
+## Alarms
+
+A red workflow run notifies nobody who is not watching the Actions tab; the
+nightly build went red for thirteen days in October 2026 before anyone looked.
+So alarms are issues:
+
+- **`data-refresh`** — opened (or commented on) by
+  [`refresh-data.yml`](.github/workflows/refresh-data.yml) whenever a run ends
+  red, quoting the build's own findings; closed by the next clean run.
+- **`site-monitor`** — [`monitor.yml`](.github/workflows/monitor.yml) checks
+  the deployed instance every six hours with `scripts/check-deployment.js`: is
+  it up, is it serving live data, is any authority missing, is the snapshot
+  older than 36h. Set the repository variable `DEPLOY_URL` to enable it.
+
+Watch the repository (or just issues) to be told.
+
 ## iPhone app
 
 > **Not on this branch yet.** The app, its conformance workflow and
@@ -871,6 +887,10 @@ sanctions compliance.
 | `lib/quality.js` | Field-level quality profile and the gate that blocks a build which emptied one |
 | `lib/memory.js` | The container's real memory ceiling, and whether a runtime refresh fits under it |
 | `scripts/quality-report.js` | Prints that profile and the gate verdict without a rebuild |
+| `scripts/check-deployment.js` | Is the deployed instance up and screening live, complete, current data |
+| `scripts/check-syntax.js` | Parses every shipped script, browser ones included |
+| `test/` | `npm test` — unit and HTTP tests on node:test |
+| `.github/scripts/issue.sh` | Keeps one open alarm issue per label; used by the data and monitor workflows |
 | `scripts/verify-recall.js` | Proves the prefilter returns what a full scan would, non-Latin scripts included |
 | `cache/changes.json` | What the last rebuild added and removed; written beside the snapshot |
 | `cache/quality.json` | Field fill rates the last published build measured; the next build's baseline |

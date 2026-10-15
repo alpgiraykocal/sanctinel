@@ -1,0 +1,62 @@
+name: Monitor deployment
+
+# The nightly build can be green while the site is down, crash-looping, or
+# serving the fictional sample data — and the site can be up while the build
+# has been red for days. This checks what the deployed instance is actually
+# screening against, and keeps one "site-monitor" issue open while it is not
+# good enough.
+#
+# Set the repository variable DEPLOY_URL (Settings → Secrets and variables →
+# Actions → Variables), e.g. https://sanctinel.onrender.com. Without it the job
+# does nothing.
+
+on:
+  schedule:
+    - cron: '17 */6 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v5
+        if: vars.DEPLOY_URL != ''
+      - uses: actions/setup-node@v5
+        if: vars.DEPLOY_URL != ''
+        with:
+          node-version: "22"
+
+      - name: Check the deployed instance
+        id: check
+        if: vars.DEPLOY_URL != ''
+        env:
+          DEPLOY_URL: ${{ vars.DEPLOY_URL }}
+        run: |
+          set +e
+          node scripts/check-deployment.js "$DEPLOY_URL" | tee check.log
+          echo "code=${PIPESTATUS[0]}" >> "$GITHUB_OUTPUT"
+
+      - name: Open or update the monitor issue
+        if: steps.check.outputs.code == '1'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          { echo "The deployed instance failed its check: $RUN_URL"; echo; echo '```'; cat check.log; echo '```'; } > issue-body.md
+          .github/scripts/issue.sh open site-monitor "Deployed site is down or serving stale data" issue-body.md
+          exit 1
+
+      - name: Close the monitor issue when healthy
+        if: steps.check.outputs.code == '0'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          .github/scripts/issue.sh close site-monitor "Healthy again: $RUN_URL"
