@@ -1,0 +1,124 @@
+{
+ "source": "OFAC SLS (advanced /entities) + EU + UN + UK + BIS + State",
+ "sources": [
+  {
+   "label": "OFAC SLS (advanced /entities)",
+   "authorities": [
+    "OFAC"
+   ],
+   "ok": true,
+   "count": 20487,
+   "error": ""
+  },
+  {
+   "label": "EU FSD",
+   "authorities": [
+    "EU"
+   ],
+   "ok": false,
+   "count": 6241,
+   "error": "HTTP 401 for https://webgate.ec.europa.eu/fsd/fsf/public/files/xmlFullSanctionsList_1_1/content?token=dG9rZW4tMjAxNw",
+   "carriedForward": true,
+   "asOf": "2026-10-01T01:43:19.144Z"
+  },
+  {
+   "label": "UN Security Council",
+   "authorities": [
+    "UN"
+   ],
+   "ok": true,
+   "count": 1011,
+   "error": ""
+  },
+  {
+   "label": "UK OFSI",
+   "authorities": [
+    "UK"
+   ],
+   "ok": true,
+   "count": 5135,
+   "error": ""
+  },
+  {
+   "label": "U.S. export-control (BIS + State)",
+   "authorities": [
+    "BIS",
+    "State"
+   ],
+   "ok": true,
+   "count": 6269,
+   "error": ""
+  }
+ ],
+ "publicationId": "1041",
+ "publishedDate": "2026-10-01T12:36:06.27788",
+ "publications": [
+  {
+   "id": 1041,
+   "date": "2026-10-01T12:36:06.27788"
+  },
+  {
+   "id": 1039,
+   "date": "2026-09-30T10:05:00.159019"
+  },
+  {
+   "id": 1037,
+   "date": "2026-09-29T13:10:41.348061"
+  },
+  {
+   "id": 984,
+   "date": "2026-09-23T10:07:28.650545"
+  },
+  {
+   "id": 977,
+   "date": "2026-09-18T10:01:54.865286"
+  },
+  {
+   "id": 976,
+   "date": "2026-09-17T13:32:59.55116"
+  },
+  {
+   "id": 974,
+   "date": "2026-09-16T10:03:25.555527"
+  },
+  {
+   "id": 973,
+   "date": "2026-09-14T14:35:42.331626"
+  },
+  {
+   "id": 972,
+   "date": "2026-09-10T14:31:49.724412"
+  },
+  {
+   "id": 971,
+   "date": "2026-09-09T09:31:52.738571"
+  },
+  {
+   "id": 970,
+   "date": "2026-09-08T10:02:38.025909"
+  },
+  {
+   "id": 969,
+   "date": "2026-09-04T10:01:40.034358"
+  }
+ ],
+ "retrievedAt": "2026-10-02T01:53:13.344Z",
+ "isLive": true,
+ "authorityFreshness": {
+  "OFAC": "2026-10-02T01:53:13.344Z",
+  "EU": "2026-10-01T01:43:19.144Z",
+  "UN": "2026-10-02T01:53:13.344Z",
+  "UK": "2026-10-02T01:53:13.344Z",
+  "BIS": "2026-10-02T01:53:13.344Z",
+  "State": "2026-10-02T01:53:13.344Z"
+ },
+ "shards": [
+  "BIS",
+  "EU",
+  "OFAC",
+  "State",
+  "UK",
+  "UN"
+ ],
+ "count": 38527
+}

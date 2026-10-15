@@ -1,8 +1,10 @@
 'use strict';
 
 /*
- * Build the repo-bundled OFAC snapshot: fetch + parse the full live dataset and
- * write it gzipped to cache/snapshot.json.gz. Run daily by the GitHub Action
+ * Build the repo-bundled snapshot: fetch + parse the full live dataset and write
+ * it to cache/snapshot/ (one NDJSON file per authority, committed) and
+ * cache/snapshot.json.gz (one download, published as a release asset, not
+ * committed — see lib/ingest SNAPSHOT_DIR). Run daily by the GitHub Action
  * (.github/workflows/refresh-data.yml) so every deploy ships fresh data and the
  * server never needs a heavy runtime fetch.
  *
@@ -31,7 +33,7 @@
 const fs = require('fs');
 const path = require('path');
 const zlib = require('zlib');
-const { buildLiveSnapshot, assertAuthorityCoverage, replaceAuthorities, EXPECTED_AUTHORITIES, CACHE_GZ_PATH } = require('../lib/ingest');
+const { buildLiveSnapshot, assertAuthorityCoverage, replaceAuthorities, readRawSnapshot, writeSnapshotDir, EXPECTED_AUTHORITIES, CACHE_GZ_PATH, SNAPSHOT_DIR } = require('../lib/ingest');
 const quality = require('../lib/quality');
 
 const CHANGES_PATH = path.join(path.dirname(CACHE_GZ_PATH), 'changes.json');
@@ -46,8 +48,8 @@ const MAX_LISTED = 3000; // per side, so one bad day cannot produce a huge file
  */
 function previousSnapshot() {
   try {
-    if (!fs.existsSync(CACHE_GZ_PATH)) return null;
-    const prev = JSON.parse(zlib.gunzipSync(fs.readFileSync(CACHE_GZ_PATH)).toString('utf8'));
+    const prev = readRawSnapshot();
+    if (!prev) return null;
     const byId = new Map();
     for (const e of prev.entities || []) {
       byId.set(String(e.id), { id: String(e.id), name: e.name, authority: e.authority, list: e.list, type: e.type });
@@ -241,13 +243,14 @@ function computeChanges(prev, next) {
     authorityFreshness: s.authorityFreshness || {},
   };
   fs.mkdirSync(path.dirname(CACHE_GZ_PATH), { recursive: true });
+  writeSnapshotDir(meta, s.entities);
   const gz = zlib.gzipSync(Buffer.from(JSON.stringify({ meta, entities: s.entities })), { level: 9 });
   fs.writeFileSync(CACHE_GZ_PATH, gz);
   // Written next to the snapshot so the NEXT build has something to compare
   // against. Committed with it for the same reason the delta is: a regression
   // is only visible against what was actually published.
   fs.writeFileSync(QUALITY_PATH, JSON.stringify(qualityNow, null, 1));
-  console.log(`built ${path.basename(CACHE_GZ_PATH)}: ${s.count} entities, ${(gz.length / 1048576).toFixed(1)}MB gz, in ${((Date.now() - t) / 1000).toFixed(0)}s`);
+  console.log(`built ${path.relative(process.cwd(), SNAPSHOT_DIR)}/: ${s.count} entities (${(gz.length / 1048576).toFixed(1)}MB as .gz), in ${((Date.now() - t) / 1000).toFixed(0)}s`);
   console.log(`authorities: ${s.authorities.join(', ')}`);
 
   // Written even when empty, so the app can distinguish "nothing changed" from

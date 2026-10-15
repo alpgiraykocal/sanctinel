@@ -20,10 +20,10 @@
 
 const fs = require('fs');
 const path = require('path');
-const { readCache, CACHE_GZ_PATH } = require('../lib/ingest');
+const { readCache, SNAPSHOT_DIR } = require('../lib/ingest');
 const quality = require('../lib/quality');
 
-const QUALITY_PATH = path.join(path.dirname(CACHE_GZ_PATH), 'quality.json');
+const QUALITY_PATH = path.join(path.dirname(SNAPSHOT_DIR), 'quality.json');
 
 const cached = readCache();
 if (!cached) {

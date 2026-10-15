@@ -53,6 +53,7 @@ jobs:
           if [ "$code" -ne 0 ] && [ "$code" -ne 3 ]; then exit "$code"; fi
 
       - name: Commit and push if changed
+        id: commit
         run: |
           git config user.name "ofac-data-bot"
           git config user.email "actions@github.com"
@@ -60,13 +61,30 @@ jobs:
           # from the snapshot alone once the previous one is gone. The quality
           # profile ships too, because a field regression is only visible
           # against the numbers that were actually published.
-          git add cache/snapshot.json.gz cache/changes.json cache/quality.json
+          # -A on the directory so a shard for a vanished authority is removed.
+          git add -A cache/snapshot
+          git add cache/changes.json cache/quality.json
           if git diff --cached --quiet; then
             echo "No data change."
           else
             git commit -m "data: refresh OFAC snapshot ($(date -u +%Y-%m-%d))"
             git push
+            echo "changed=1" >> "$GITHUB_OUTPUT"
           fi
+
+      # One download for anything that wants the whole snapshot at once. A
+      # release asset rather than a commit: a gzip stream cannot be delta-
+      # compressed, so committing it daily grew the history ~5MB a day.
+      - name: Publish the snapshot as a release asset
+        if: steps.commit.outputs.changed == '1'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          gh release view data-latest >/dev/null 2>&1 || gh release create data-latest \
+            --title "Latest data snapshot" --latest=false \
+            --notes "Rebuilt nightly by the refresh-data workflow. snapshot.json.gz is the whole snapshot; the same data is committed as cache/snapshot/."
+          gh release upload data-latest cache/snapshot.json.gz cache/changes.json cache/quality.json --clobber
 
       # Runs last so the data still lands. A red run is the point: a screening
       # list that covers less than it claims is a false-negative source, and

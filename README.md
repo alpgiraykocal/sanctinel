@@ -299,7 +299,8 @@ node server.js
 ```
 
 Then open http://localhost:3000. **Live by default** — the server boots instantly from
-the on-disk cache (`cache/snapshot.json`) when present, and refreshes in the background
+the on-disk cache (the committed `cache/snapshot/`, or `cache/snapshot.json` from a
+runtime refresh, whichever is newer) when present, and refreshes in the background
 (worker thread) when the cache is missing or older than 12h, so a restart shows real
 data immediately instead of waiting ~2 min for the parse. A blue pulsing dot + "loading
 live…" shows while a refresh runs; the UI polls and swaps in the fresh snapshot with no
@@ -310,6 +311,32 @@ Offline / fictional-demo mode (no network):
 ```bash
 node server.js --demo
 ```
+
+## How the snapshot is stored
+
+`cache/snapshot/` holds one newline-delimited JSON file per authority — one
+party per line, sorted by id — plus `meta.json`, which records the shard list
+and the party count so a cut-short file fails loudly on read instead of
+loading as a smaller list.
+
+It used to be one committed `cache/snapshot.json.gz`. Git cannot delta-compress
+a gzip stream — a one-line change rewrites all of it — so every nightly commit
+added another ~5.3MB to the history permanently. Measured over twelve real
+consecutive snapshots:
+
+| Stored as | Packed `.git` after 12 days | Growth per day |
+|---|---|---|
+| `snapshot.json.gz` | 64.4 MB | ~5.3 MB |
+| `snapshot/*.ndjson` | 5.9 MB | tens of KB |
+
+It also loads faster and lighter (1.8s / 248MB peak RSS against 2.3s / 272MB
+here), and a data commit's diff now shows which parties were added, removed or
+changed. History already committed keeps its old blobs; rewriting it would
+need a force-push to `main`, which is a call for the owner.
+
+The build still writes `cache/snapshot.json.gz` for anything that wants one
+download, and the workflow publishes it — with `changes.json` and
+`quality.json` — as assets on the `data-latest` release.
 
 ## Tests
 
@@ -362,7 +389,9 @@ Watch the repository (or just issues) to be told.
 
 `ios/` holds a native SwiftUI app that screens **entirely on the device** — no
 server, no query leaving the phone, works with no network at all. It downloads
-`cache/snapshot.json.gz` (the same file the GitHub Action rebuilds nightly),
+`cache/snapshot.json.gz` (the same file the GitHub Action rebuilds nightly —
+now published as an asset on the `data-latest` release instead of committed,
+so the app's download URL has to move with it when the branch is merged),
 builds its own search index on the device, and does the rest locally.
 
 ```bash
@@ -524,7 +553,7 @@ on each — and on a 512MB container that is the difference between booting and 
 OOM-killed. The scorer instead derives a record's kinds once and memoizes them for the
 life of the snapshot, so records that are never scored cost nothing; statistics and the
 quality gate call `lib/vocab` directly and run once per snapshot. It also keeps
-`cache/snapshot.json.gz` exactly what the authorities published, with this layer's
+the committed snapshot exactly what the authorities published, with this layer's
 opinions correctable by shipping code rather than by a rebuild.
 
 Both derivations are frozen in the iOS conformance fixture over the **real inventory** —
@@ -892,6 +921,7 @@ sanctions compliance.
 | `test/` | `npm test` — unit and HTTP tests on node:test |
 | `.github/scripts/issue.sh` | Keeps one open alarm issue per label; used by the data and monitor workflows |
 | `scripts/verify-recall.js` | Proves the prefilter returns what a full scan would, non-Latin scripts included |
+| `cache/snapshot/` | The committed snapshot: one NDJSON file per authority plus `meta.json` |
 | `cache/changes.json` | What the last rebuild added and removed; written beside the snapshot |
 | `cache/quality.json` | Field fill rates the last published build measured; the next build's baseline |
 | `public/record.js` | How a listed party renders — shared by the results and the permalink page so they cannot disagree |
