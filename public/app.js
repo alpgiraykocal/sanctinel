@@ -519,7 +519,12 @@ function syncUrl(q) {
 
 function initFromUrl() {
   const p = new URLSearchParams(location.search);
-  if (p.get('threshold')) { $('threshold').value = p.get('threshold'); $('threshOut').textContent = parseFloat(p.get('threshold')).toFixed(2); }
+  // The label shows what the slider actually holds. A range input clamps an
+  // out-of-range value and moves an unparseable one to its midpoint, so echoing
+  // the raw parameter displayed 0.50 or NaN over a slider set to something else.
+  const t = Number(p.get('threshold'));
+  if (p.get('threshold') && Number.isFinite(t)) $('threshold').value = String(t);
+  $('threshOut').textContent = parseFloat($('threshold').value).toFixed(2);
   if (p.get('authority')) $('authority').value = p.get('authority');
   if (p.get('list')) $('list').value = p.get('list');
   if (p.get('program')) $('program').value = p.get('program');

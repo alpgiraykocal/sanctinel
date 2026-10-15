@@ -607,6 +607,18 @@ a.rel-id:hover { text-decoration: underline; }
   .notice-bar, .coverage-bar { margin: 10px 14px 0; padding: 8px 12px; align-items: flex-start; }
   .notice-bar p, .coverage-bar p { font-size: .72rem; line-height: 1.45; }
   .notice-bar svg, .coverage-bar svg { margin-top: 2px; }
+  /* The right-hand group never shrinks, so on a 360px phone the theme toggle
+     was pushed 6px past the edge and the page scrolled sideways. The brand is
+     the side that gives: tighter gaps, and an ellipsis rather than overflow on
+     anything narrower still. */
+  .brand { gap: 8px; min-width: 0; }
+  .wordmark { min-width: 0; }
+  .brand-name { overflow: hidden; text-overflow: ellipsis; }
+  .theme-toggle { flex-shrink: 0; }
+}
+@media (max-width: 400px) {
+  .site-header { gap: 6px; padding: 10px 12px; }
+  .brand-name { font-size: .92rem; }
 }
 
 /* Layout */
