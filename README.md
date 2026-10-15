@@ -59,6 +59,7 @@ Environment variables:
 | `ALLOW_AUTHORITY_DROP` | *(unset)* | build-cache escape hatch: publish a snapshot even if it lost an authority. Only for an authority that is genuinely retired — see "Coverage guard" below |
 | `ALLOW_QUALITY_DROP` | *(unset)* | build-cache escape hatch: publish even if a measured field regressed. Only for a field a publisher genuinely stopped providing — see "Field-level quality gate" below |
 | `EU_FSF_TOKEN` | *(unset)* | a token registered on the Commission's FSF application. The EU list is otherwise fetched with the public token the Commission prints in its own download links, which it can rotate; when every token is refused, the current URL is discovered from the dataset's data.europa.eu record (Commission host only). Any fallback ends the nightly build red. Set it as a repository secret for the workflow |
+| `SANCTIONS_CACHE_DIR` | `./cache` | where the snapshot, `changes.json` and `history.ndjson` are read from and written to |
 | `MEMORY_LIMIT_MB` | *(detected)* | override the container memory ceiling used to decide whether a runtime refresh fits. Read from cgroups when available; set this on a platform that hides them — see "Runtime refresh and the memory ceiling" below |
 
 ### Cold start and refresh recovery
@@ -365,7 +366,17 @@ download, and the workflow publishes it — with `changes.json` and
 npm test             # unit + HTTP tests, < 1s, no network (node:test, zero dependencies)
 npm run check        # syntax-check every shipped script, browser ones included
 npm run test:recall  # the slow one: fast path == full scan over the real snapshot
+npm run test:ui      # browser tests; needs: npm install --no-save playwright axe-core
 ```
+
+`test:ui` serves a temporary snapshot built from the demo data with an HTML
+payload planted in every text field (`SANCTIONS_CACHE_DIR` points the server
+at it), then checks in Chromium that the payload never becomes markup, that no
+page scrolls sideways at 320–390px, that the theme toggle survives blocked
+storage, that shared links restore what they say, that the graph and change
+history work, and that axe-core finds no WCAG 2 AA violations on any page in
+either theme. It runs as its own CI job; the browser is installed there with
+`--no-save`, so the app keeps its zero dependencies.
 
 `npm test` runs `test/*.test.js`: the CSL label mapping, the quality gate and
 its per-authority carry-forward, OFAC list carry-forward against a stubbed

@@ -1140,3 +1140,11 @@ code { font-family: var(--mono); color: var(--color-primary); }
 .h-bulk-note { font-size: .78rem; color: var(--color-muted-fg); margin: 4px 0 0; }
 .chg-name a { text-decoration: underline; text-underline-offset: 2px; }
 .url-note { margin: 6px 0 0; padding: 8px 12px; border: 1px solid var(--color-border-strong); border-radius: var(--radius-sm); background: var(--color-warn-bg); color: var(--color-warn-fg); font-size: .8rem; }
+
+/* Long unbroken values — a 95-character crypto address, an email, a URL, an
+   identifier — set the minimum width of whatever holds them. One expanded
+   record (SOUTHFRONT) made a 320px phone page 828px wide, and every card
+   after it scrolled sideways. Let them wrap anywhere, and let the grid and
+   flex children that hold them shrink. */
+.result-card, .entity-detail, .changes-list, .btl-panel, .result-summary, .no-hits, .url-note, #printArea { overflow-wrap: anywhere; }
+.result-card, .result-card > *, .rc-detail, .attr-group, .detail-row, .detail-row dd, .layout > * { min-width: 0; }

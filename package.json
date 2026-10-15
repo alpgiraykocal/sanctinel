@@ -7,7 +7,8 @@
     "start": "node server.js",
     "test": "node --test test/*.test.js",
     "test:recall": "node scripts/verify-recall.js 20",
-    "check": "node scripts/check-syntax.js"
+    "check": "node scripts/check-syntax.js",
+    "test:ui": "node --test test/ui/*.test.js"
   },
   "engines": {
     "node": ">=18"

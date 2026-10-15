@@ -35,12 +35,12 @@ const path = require('path');
 const { Worker } = require('worker_threads');
 const { refreshFeasibility } = require('./lib/memory');
 const { screenEntity } = require('./lib/matcher');
-const { finalizeSnapshot, readCache, staleAuthorities: staleAuthoritiesOf, EXPECTED_AUTHORITIES } = require('./lib/ingest');
+const { finalizeSnapshot, readCache, staleAuthorities: staleAuthoritiesOf, EXPECTED_AUTHORITIES, CACHE_DIR } = require('./lib/ingest');
+// Written by scripts/build-cache.js when it replaces the snapshot.
+const CHANGES_PATH = path.join(CACHE_DIR, 'changes.json');
 const { egoNetwork } = require('./lib/graph');
 const { profile: ownershipProfile, summary: ownershipSummary, clusterOf: ownershipCluster } = require('./lib/ownership');
 const { crossListing } = require('./lib/crosslist');
-// Written by scripts/build-cache.js when it replaces the snapshot.
-const CHANGES_PATH = path.join(__dirname, 'cache', 'changes.json');
 const history = require('./lib/history');
 const { createLimiter, clientAddress } = require('./lib/ratelimit');
 const { snapshotStats } = require('./lib/stats');
