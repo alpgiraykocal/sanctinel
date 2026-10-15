@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>About &amp; Methodology — Sanctions Search</title>
-  <meta name="description" content="How Sanctions Search screens against the OFAC, EU, UN and UK sanctions lists plus the U.S. BIS and State Department export-control lists: data sources, refresh cadence, the matching algorithms, coverage, and limitations." />
+  <meta name="description" content="How Sanctions Search works: its six official sources and how fresh they are, how the data is built and corrected, how matching, identifiers, ownership chains and cross-listing work, how quality is checked, privacy, and limitations." />
   <meta name="referrer" content="no-referrer" />
   <link rel="icon" href="favicon.svg" type="image/svg+xml" />
   <script src="theme.js"></script>
@@ -52,61 +52,263 @@
   <main id="main" class="doc-shell">
     <nav class="toc pane" id="toc" aria-label="On this page"></nav>
     <div class="doc pane" id="docPane" tabindex="-1">
-    <h1>About &amp; methodology</h1>
-    <p class="lede">Sanctions Search screens names, entities, vessels and identifiers against the U.S. Treasury <abbr title="Office of Foreign Assets Control">OFAC</abbr>, <abbr title="European Union">EU</abbr>, <abbr title="United Nations Security Council">UN</abbr>, and UK <abbr title="Office of Financial Sanctions Implementation">OFSI</abbr> sanctions lists — plus the U.S. <abbr title="Bureau of Industry and Security">BIS</abbr> and State Department <strong>export-control restricted-party lists</strong> — with multilingual fuzzy matching, non-name identifier screening, and 50%-Rule ownership networks. It is an <strong>educational analysis tool</strong> — not legal advice, and not a system of record for compliance decisions.</p>
-
-    <section class="doc-stats" id="stats" aria-label="Coverage summary"></section>
-
-    <section>
-      <h2>Data source &amp; freshness</h2>
-      <p>Data comes directly from the issuing authorities — OFAC's <a href="https://sanctionslistservice.ofac.treas.gov" rel="noreferrer noopener" target="_blank">Sanctions List Service</a>, the <a href="https://data.europa.eu/data/datasets/consolidated-list-of-persons-groups-and-entities-subject-to-eu-financial-sanctions" rel="noreferrer noopener" target="_blank">EU Consolidated Financial Sanctions List</a>, the <a href="https://www.un.org/securitycouncil/content/un-sc-consolidated-list" rel="noreferrer noopener" target="_blank">UN Security Council Consolidated List</a>, the <a href="https://www.gov.uk/government/publications/financial-sanctions-consolidated-list-of-targets" rel="noreferrer noopener" target="_blank">UK OFSI Consolidated List</a>, and the U.S. export-control lists (BIS Entity, Denied Persons, Unverified and Military End-User lists; State Department ITAR Debarred and nonproliferation measures) via the <a href="https://www.trade.gov/consolidated-screening-list" rel="noreferrer noopener" target="_blank">Consolidated Screening List</a> (all government, public domain). The full dataset is rebuilt automatically every day and versioned to OFAC's publication id. Always confirm a hit against the issuing authority's own list before acting.</p>
-      <h3>Recent OFAC publications <span class="h3-note">(snapshot version marker)</span></h3>
-      <div id="pubs" class="pub-list">Loading…</div>
-    </section>
-
-    <section>
-      <h2>How matching works</h2>
-      <p>Every query is compared against each entity's primary name <em>and</em> every alias, plus its structured identifiers. Names are normalized (case, accents, corporate suffixes) and scored by an ensemble — the best signal across all of these wins:</p>
+      <h1>About &amp; methodology</h1>
+      <p class="lede">Sanctions Search screens names, companies, vessels, aircraft and identifiers against six issuing authorities in one search:</p>
       <ul class="doc-list">
-        <li><strong>Jaro-Winkler</strong> — typo and prefix similarity.</li>
-        <li><strong>Damerau-Levenshtein</strong> — edit distance that counts adjacent letter swaps as one edit.</li>
-        <li><strong>Sørensen-Dice &amp; trigram Jaccard</strong> — character n-gram overlap, robust to insertions and reordering.</li>
-        <li><strong>Metaphone phonetic</strong> — collapses sound-alike spellings (Mohammed / Muhammad, Smith / Smyth, Philip / Filip).</li>
-        <li><strong>Transliteration folding</strong> — links romanization variants (Kadyrov / Kadirov).</li>
-        <li><strong>Acronym &amp; initials</strong> — “CML” ↔ Caspian Maritime Logistics; “J.” ↔ John.</li>
-        <li><strong>IDF term weighting</strong> — a match on a rare, distinctive surname counts far more than one on a common word like “Company” or “Mohammed”.</li>
-        <li><strong>Multilingual legal-form handling</strong> — company and legal-form descriptors are recognised across languages (GmbH, OOO, ТОВ, Kompaniya, Sh.p.k., Sdn Bhd …) so the same entity matches whichever form its name is written in.</li>
-        <li><strong>Homoglyph defence</strong> — Cyrillic look-alike characters are folded to their Latin twins, so a disguised “Gazprоm” screens identically to “Gazprom”.</li>
+        <li>the <strong>financial-sanctions lists</strong> of the U.S. Treasury (<abbr title="Office of Foreign Assets Control">OFAC</abbr>), the European Union, the UN Security Council and the UK (<abbr title="Office of Financial Sanctions Implementation">OFSI</abbr>);</li>
+        <li>the U.S. <strong>export-control restricted-party lists</strong> of the Commerce Department (<abbr title="Bureau of Industry and Security">BIS</abbr>) and the State Department.</li>
       </ul>
-      <p>Tokens are assigned one-to-one and order-independently, so “Mohammed Ali” matches “Ali Ali Mohammed”. Optional <strong>year-of-birth</strong> and <strong>country</strong> inputs act as corroboration modifiers — raising a hit they confirm, lowering one they contradict. Each result shows exactly which tokens matched and by which method.</p>
-    </section>
+      <p>It adds multilingual fuzzy matching, identifier screening, cross-authority linking and 50 Percent Rule ownership chains. It is an <strong>analysis tool</strong>: a hit is a lead to verify, not a determination, and it is not a system of record for compliance decisions.</p>
 
-    <section>
-      <h2>Identifiers &amp; ownership</h2>
-      <p>Beyond names, an exact match on a <strong>passport, national / tax / registration id, IMO, MMSI, call sign, aircraft tail, or digital-currency address</strong> is flagged directly. Relationship data drives an ownership graph implementing OFAC's <strong>50 Percent Rule</strong>: entities owned 50%+ by a blocked party are themselves blocked even when unlisted — the network view traces those chains.</p>
-      <p>Any hit with relationships opens in two views. <strong>Radial</strong> rings every listed relationship by hop distance. <strong>Hierarchy</strong> stacks the same data — principals above, subordinates below — so a chain reads top-down, whether it is an ownership chain or a support chain. Direction is resolved per relationship type: OFAC phrases a relationship outward from the listed party (“Providing support <em>to</em>”, “Owned or Controlled <em>By</em>”), so the named party is the principal and sits above, while types phrased the other way (“Owns, controls, or operates”) sit below and symmetric ones (family, association) sit level. Position shows who is superior; the arrowhead points at the party named in the relationship, which is not always the one below. <strong>Only ownership links drive the 50 Percent Rule</strong>, so they are drawn solid red and counted separately from support, agency, office and family links.</p>
-    </section>
+      <section class="doc-stats" id="stats" aria-label="Coverage summary"></section>
 
-    <section>
-      <h2>Coverage</h2>
-      <h3>Issuing authorities</h3>
-      <p id="authCov" class="prog-cov"></p>
-      <div class="two-col">
-        <div><h3>Lists</h3><ul id="listCov" class="doc-list"></ul></div>
-        <div><h3>Programs / regimes</h3><p id="progCov" class="prog-cov"></p></div>
-      </div>
-    </section>
+      <section id="sec-sources">
+        <h2>Sources</h2>
+        <p>Every record comes directly from the authority that publishes it. All six are public government data.</p>
+        <div class="dq-table-wrap">
+          <table class="doc-table">
+            <thead><tr><th scope="col">Authority</th><th scope="col">Source and format</th><th scope="col">What it covers</th></tr></thead>
+            <tbody>
+              <tr><th scope="row">OFAC</th><td><a href="https://sanctionslistservice.ofac.treas.gov" rel="noreferrer noopener" target="_blank">Sanctions List Service</a>, the full entity model (XML), fetched list by list</td><td>SDN List and every non-SDN list (SSI, FSE, NS-MBS, CMIC, PLC, CAPTA): names in every published script, addresses, features, identity documents, relationships</td></tr>
+              <tr><th scope="row">EU</th><td><a href="https://data.europa.eu/data/datasets/consolidated-list-of-persons-groups-and-entities-subject-to-eu-financial-sanctions" rel="noreferrer noopener" target="_blank">Consolidated Financial Sanctions List</a> (XML)</td><td>All EU asset-freeze regimes, with each listing's Council Regulation and Official Journal link</td></tr>
+              <tr><th scope="row">UN</th><td><a href="https://www.un.org/securitycouncil/content/un-sc-consolidated-list" rel="noreferrer noopener" target="_blank">Security Council Consolidated List</a> (XML)</td><td>Every sanctions committee's listings, with original-script names and INTERPOL-UN notice links</td></tr>
+              <tr><th scope="row">UK</th><td><a href="https://www.gov.uk/government/publications/financial-sanctions-consolidated-list-of-targets" rel="noreferrer noopener" target="_blank">OFSI Consolidated List</a> (CSV, one row per name variant)</td><td>All UK financial-sanctions regimes, with statements of reasons</td></tr>
+              <tr><th scope="row">BIS</th><td rowspan="2"><a href="https://www.trade.gov/consolidated-screening-list" rel="noreferrer noopener" target="_blank">Consolidated Screening List</a> (JSON)</td><td>Entity List, Denied Persons List, Unverified List, Military End-User List</td></tr>
+              <tr><th scope="row">State</th><td>ITAR Debarred List and nonproliferation sanctions</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <h3>Freshness of this snapshot</h3>
+        <p class="card-note">When each authority's data in the snapshot you are searching was retrieved, and whether it is fresh or carried forward from an earlier build.</p>
+        <div id="freshness" class="dq-table-wrap">Loading…</div>
+        <h3>Recent OFAC publications <span class="h3-note">(the snapshot is versioned to OFAC's publication id)</span></h3>
+        <div id="pubs" class="pub-list">Loading…</div>
+      </section>
 
-    <section>
-      <h2>Limitations</h2>
-      <ul class="doc-list">
-        <li>A hit is a <strong>lead to verify</strong>, not a determination; absence of a hit is not a clearance.</li>
-        <li>Covers the <strong>OFAC, EU, UN and UK OFSI</strong> financial-sanctions lists and the <strong>U.S. BIS / State Department export-control</strong> lists — not every national regime, and not the EU dual-use list. The 50% Rule ownership graph is OFAC-specific.</li>
-        <li>The snapshot may lag an authority by up to a day. Confirm anything material against the issuing authority directly.</li>
-        <li>Regimes differ: an OFAC blocking designation, an EU or UN asset freeze, a UK OFSI designation and a <strong>BIS/State export-control listing</strong> carry entirely <strong>different legal obligations</strong> — an export-control listing means a licence requirement or loss of export privileges, <em>not</em> an asset freeze. Each result states its authority and the operative restriction; never carry OFAC doctrine across to another regime.</li>
-        <li>Queries are processed in memory and <strong>never stored or logged</strong>.</li>
-      </ul>
-    </section>
+      <section id="sec-pipeline">
+        <h2>How the data is built</h2>
+        <ul class="doc-list">
+          <li><strong>Nightly rebuild.</strong> All six authorities are fetched every night at 23:00 UTC. The result is committed with the code, so the search, the insights and the change log are always computed from the same snapshot. If any source failed or was carried forward, a <strong>recovery run</strong> at 11:00 UTC tries again; on a clean day it does nothing.</li>
+          <li><strong>One source failing does not stop the others.</strong> If a source, or a single OFAC list, cannot be fetched, its records are <strong>carried forward</strong> from the last good build. The rest of the data still updates on time. A carried-forward source is reported with the date of the data it holds.</li>
+          <li><strong>Coverage guard.</strong> A build that would lose an authority the previous snapshot had is refused, and the complete snapshot stays in place. A list that silently gets shorter produces false negatives, so this is treated as an error, not a warning.</li>
+          <li><strong>Field-level quality gate.</strong> Every build measures how complete each field is, per authority, and compares the result with the last published build. See <a href="#sec-quality">how quality is checked</a>.</li>
+          <li><strong>What gets published.</strong>
+            <ul class="doc-list">
+              <li>The snapshot, as one file per authority.</li>
+              <li>The change list: who was added and who was removed.</li>
+              <li>The quality profile.</li>
+              <li>An append-only history of every build's changes, which <a href="changes.html">What changed</a> reads.</li>
+              <li>The whole snapshot as a downloadable release asset.</li>
+            </ul>
+          </li>
+          <li><strong>Failures raise an alarm.</strong> A failed or degraded build opens an issue in the repository, naming what failed. The issue closes itself on the next clean run.</li>
+          <li><strong>On disk, the data stays as published.</strong> Labels, spellings and country names are kept exactly as each authority wrote them, because they are what an analyst cites. The fixes described next are applied when the snapshot is loaded, so they reach the data even on a night a source is down.</li>
+        </ul>
+      </section>
+
+      <section id="sec-hygiene">
+        <h2>What is done to the data</h2>
+        <p>The fixes below correct defects without rewriting what a publisher said. Each one is idempotent, tested, and measured by the quality gate.</p>
+        <h3>Everything the feeds publish is read</h3>
+        <p>A parser only reads what it asks for. Each feed is therefore inventoried field by field against what the parsers extract (see <a href="#sec-quality">quality</a>). That inventory found fields that had been silently dropped. All of them are read now:</p>
+        <ul class="doc-list">
+          <li><strong>OFAC:</strong>
+            <ul class="doc-list">
+              <li>street, city, region and postcode of every address;</li>
+              <li>issue and expiry dates of identity documents, the issuing authority and location, and OFAC's own <em>invalid</em> flag;</li>
+              <li>the reliability grade of each feature (Confirmed, Reported or False);</li>
+              <li>remarks, titles, and the names of related parties.</li>
+            </ul>
+          </li>
+          <li><strong>EU:</strong>
+            <ul class="doc-list">
+              <li>email, phone, website and fax (published inside the address);</li>
+              <li>gender, every function and title, and every remark;</li>
+              <li>the designation details and Official Journal links;</li>
+              <li>identity-document dates and issuers, with the known-false, revoked, lost and expired flags;</li>
+              <li>year-range and Hijri birth dates.</li>
+            </ul>
+          </li>
+          <li><strong>UN:</strong> the name in its original script (mostly Arabic), titles and designations, approximate birth dates, document dates, places of issue and notes, and INTERPOL-UN notice links.</li>
+          <li><strong>UK:</strong>
+            <ul class="doc-list">
+              <li>The labelled fields OFSI packs into one free-text column become separate fields: list reference, statement of reasons, UN reference, company registration number, IMO number, phone, email, website, parent company, subsidiaries and vessel details.</li>
+              <li>Passports and national IDs become documents, kept with OFSI's own description of them.</li>
+            </ul>
+          </li>
+        </ul>
+        <h3>Defects corrected on read</h3>
+        <ul class="doc-list">
+          <li><strong>Dates.</strong> Listing dates become <code>yyyy-mm-dd</code> (UK dates are day-first, U.S. dates month-first). Sorting, the timeline and the change log compare them as text.</li>
+          <li><strong>Exact repeats.</strong> Repeated addresses, attributes, identifiers and aliases are dropped. Different published spellings of a name are kept.</li>
+          <li><strong>Formatting debris.</strong> Doubled and non-breaking spaces, invisible bidirectional marks, and stray leading or trailing punctuation from list splitting are removed.</li>
+          <li><strong>Numbered values.</strong> A field holding <code>(1) MM611523 (2) EE947317</code> becomes one identifier per number, so each one matches on its own.</li>
+          <li><strong>Name scripts.</strong> Each name is labelled with the script it is actually written in.</li>
+          <li><strong>Party type.</strong> The Consolidated Screening List carries no person/entity flag. A BIS or State listing whose name contains a legal form or organisation word (LTD, LLC, GMBH, JSC, INSTITUTE…) is classed as an entity. Every other one stays “Listed party”: nothing else is guessed.</li>
+          <li><strong>Country names.</strong> Country wordings from the four feeds (ISO codes, “Iran (Islamic Republic of)”, “Korea, North”, demonyms, “Region: Gaza”, multi-country fields) resolve to one jurisdiction for matching and statistics. The published wording stays on the record.</li>
+        </ul>
+        <h3>What the sources say about their own data</h3>
+        <ul class="doc-list">
+          <li><strong>Flagged documents.</strong> A document the source flags as invalid, expired, revoked, lost or false keeps that flag on the record card. It still matches, because it is often the document the party actually uses, but the match explanation names its status.</li>
+          <li><strong>Values marked false.</strong> A value its publisher marks false (OFAC's reliability grade) stays on the record, struck through. It is never used as evidence by the year-of-birth and country modifiers or by cross-listing. A value that is only reported, not confirmed, is labelled as such.</li>
+          <li><strong>Lapsed BIS denial orders.</strong> A Denied Persons order whose end date has passed is still published by the Consolidated Screening List. Such a record is marked <strong>expired</strong>, on its card and in its sanctions type, and search ranks it below every live restriction. It is not deleted, because it is history a reviewer may need.</li>
+        </ul>
+      </section>
+
+      <section id="sec-matching">
+        <h2>How matching works</h2>
+        <p>Every query is compared with each party's primary name, every alias, the name in its own script, and its identifiers. Names are normalized first:</p>
+        <ul class="doc-list">
+          <li>case and accents are removed;</li>
+          <li>Cyrillic, Greek, Arabic and Hebrew are transliterated;</li>
+          <li>Chinese, Japanese and Korean are matched as characters;</li>
+          <li>legal-form and descriptor words are recognised across languages (GmbH, OOO, ТОВ, Sh.p.k., Sdn Bhd…).</li>
+        </ul>
+        <p>Each pair of words is then scored by an ensemble, and the best signal wins:</p>
+        <ul class="doc-list">
+          <li><strong>Jaro-Winkler</strong>: typos and shared prefixes.</li>
+          <li><strong>Damerau-Levenshtein</strong>: edit distance, counting an adjacent swap as one edit. Confusable characters (0/O, 1/L) cost half.</li>
+          <li><strong>Sørensen-Dice and trigram Jaccard</strong>: character overlap, robust to insertions and reordering.</li>
+          <li><strong>Metaphone</strong>: sound-alike spellings (Mohammed and Muhammad, Philip and Filip).</li>
+          <li><strong>Transliteration folding</strong>: romanization variants (Kadyrov and Kadirov, Yousef and Yusuf).</li>
+          <li><strong>Acronyms and initials</strong>: “CML” matches Caspian Maritime Logistics, and “J.” matches John.</li>
+          <li><strong>Rarity weighting</strong>: a match on a rare surname counts far more than one on “Company” or “Mohammed”.</li>
+          <li><strong>Homoglyph defence</strong>: Cyrillic look-alike letters inside a Latin word are folded back, so “Gazprоm” screens like “Gazprom”.</li>
+          <li><strong>Misspelled descriptors</strong>: a query word one edit from a legal form (“Tradng”, “Limted”) is also scored without that word.</li>
+        </ul>
+        <p>Words are paired one-to-one regardless of order, so “Mohammed Ali” matches “Ali Mohammed”. A one-word query that exactly matches one word of a longer name scores 0.96: above the default threshold, below a full-name match. Each result shows which words matched, and by which method.</p>
+        <h3>Threshold and completeness</h3>
+        <ul class="doc-list">
+          <li><strong>Threshold.</strong> The default threshold is <strong>0.95</strong>. At and above it, search uses a candidate index proven to return every party a full scan would; a CI check verifies this on every change to the matcher.</li>
+          <li><strong>Below-the-line check.</strong> Lowering the threshold is done with the below-the-line check. It scans the whole list down to 0.80, shows how many hits each step would add, and lists the parties just under the line, plus any name that literally starts with the query.</li>
+          <li><strong>Result limits.</strong> Results show the top 200 hits, and the true total is always reported.</li>
+        </ul>
+        <h3>Corroboration and ranking</h3>
+        <ul class="doc-list">
+          <li><strong>Year of birth and country</strong> are optional. A matching year adds 0.05 and a contradicting one subtracts 0.06; a matching country adds 0.04 and a contradicting one subtracts 0.04. Ranges, “circa” and Hijri dates are respected, a territory corroborates its sovereign state, and values a source marks false are ignored.</li>
+          <li><strong>Ties are disclosed.</strong> When several hits share the top score, the page says so, and it says what separates them (date of birth, nationality, country). Their order is stable, but it is not a ranking.</li>
+          <li><strong>Lapsed restrictions rank last</strong>, after every live one.</li>
+        </ul>
+      </section>
+
+      <section id="sec-identifiers">
+        <h2>Identifiers</h2>
+        <p>An exact match on any of these is reported as an identifier hit with score 1.00:</p>
+        <ul class="doc-list">
+          <li>passport, national ID, tax ID or company registration number;</li>
+          <li>IMO number, MMSI or call sign;</li>
+          <li>aircraft tail or serial number;</li>
+          <li>LEI, ISIN or SWIFT/BIC;</li>
+          <li>email, or a digital-currency address.</li>
+        </ul>
+        <p>Comparison ignores case, spaces and punctuation. Identifier types are classified across the four authorities' wordings. Some generic types (“Identification Number”, “Other identification number”) are named more precisely by the issuing authority or a remark, for example INN or OGRN; that more precise name is used. A country name filed as an identity number by mistake is never treated as one.</p>
+        <p>When a query looks like an identifier, the below-the-line panel says how it was read (IMO, MMSI, crypto address…), and how many parties in the snapshot carry that kind of identifier. A miss on a kind few parties carry is then not mistaken for a clearance.</p>
+      </section>
+
+      <section id="sec-ownership">
+        <h2>Ownership &amp; the 50 Percent Rule</h2>
+        <p>OFAC publishes relationships between listed parties. They drive a graph implementing OFAC's <strong>50 Percent Rule</strong>: an entity owned 50% or more, alone or in aggregate, by blocked persons is itself blocked even when it is not listed.</p>
+        <ul class="doc-list">
+          <li><strong>Blocked owners.</strong> Each result says whether its ownership chain reaches a blocked owner, how many hops away the nearest one is, and whether several blocked owners together (the aggregate case) may cross the threshold.</li>
+          <li><strong>Ownership structures.</strong> Results that belong to the same ownership structure are grouped and labelled, so a long result list reads as a few corporate groups rather than as unrelated parties.</li>
+          <li><strong>Two network views.</strong>
+            <ul class="doc-list">
+              <li><strong>Radial</strong> rings every relationship by hop distance.</li>
+              <li><strong>Hierarchy</strong> stacks principals above subordinates. Direction is resolved per relationship type: OFAC phrases relationships outward from the listed party (“Owned or Controlled <em>By</em>”, “Providing support <em>to</em>”).</li>
+            </ul>
+          </li>
+          <li><strong>Which links count.</strong> Only ownership links count for the rule. They are drawn solid red and counted separately from support, agency, office and family links.</li>
+        </ul>
+        <p>OFAC publishes <strong>no ownership percentages</strong>, so the 50% threshold itself cannot be computed from list data. The chain is a lead to confirm against corporate-registry or KYC records. The rule is OFAC doctrine; the EU, UN and UK apply their own ownership-and-control tests.</p>
+      </section>
+
+      <section id="sec-crosslisting">
+        <h2>Cross-listing</h2>
+        <p>The authorities designate independently, so one shipowner can appear four times under four spellings. Listings of the same real party are <strong>linked</strong>, so a result says “also listed by the EU and the UK”. They are <strong>never merged</strong>: obligations differ by regime, so each record stands as its authority published it.</p>
+        <ul class="doc-list">
+          <li><strong>Shared identifier, high confidence.</strong> The listings share a document number or a UN Security Council reference (the reference the EU and UK publish on the listings that implement a UN designation), and their names share a rare word. Tax-office and other shared codes do not count.</li>
+          <li><strong>Same name and overlapping birth year, high confidence.</strong> This applies to people.</li>
+          <li><strong>Same company name and a shared jurisdiction, medium confidence.</strong> This applies only to entities. A personal name alone never links two records.</li>
+        </ul>
+        <p>Precision is preferred over recall: a wrong link would tell a reviewer that two different people are one.</p>
+      </section>
+
+      <section id="sec-quality">
+        <h2>How quality is checked</h2>
+        <ul class="doc-list">
+          <li><strong>Field-level quality gate</strong>, on every build. Per authority it measures:
+            <ul class="doc-list">
+              <li>the share of records with aliases, an address, an address with more than its country, an identifier, a birth date and a nationality;</li>
+              <li>the number of ownership edges.</li>
+            </ul>
+            Across the whole snapshot it measures the share of listing dates in ISO form, of birth dates the parser reads, of country values it resolves, and of identifier types it can classify.
+          </li>
+          <li><strong>Two outcomes.</strong>
+            <ul class="doc-list">
+              <li>A build materially worse than the last published one is a <strong>regression</strong>: it is not published, and the regressed authority is carried forward.</li>
+              <li>A build that is merely below a fixed floor publishes, and ends red so it is noticed.</li>
+            </ul>
+            Floors are written in code, so moving one is a reviewable change. A genuine change by a publisher can be accepted for a single run, by hand.
+          </li>
+          <li><strong>Source inventory and parse check.</strong> A read-only CI workflow lists every field each live feed publishes. It also builds the snapshot from the live feeds in memory and reports what the parsers extract. A parser change is checked against real data before it is merged.</li>
+          <li><strong>Tests.</strong>
+            <ul class="doc-list">
+              <li>Unit tests cover the parsers, the normalization, the matcher, the quality gate and the server.</li>
+              <li>Browser tests cover every page, in light and dark themes, including an automated WCAG 2 AA accessibility audit.</li>
+              <li>A recall check proves the fast search path returns everything a full scan would.</li>
+            </ul>
+          </li>
+          <li><strong>Live numbers.</strong> The current numbers are on <a href="insights.html">Insights → Data quality &amp; sources</a>.</li>
+        </ul>
+      </section>
+
+      <section id="sec-coverage">
+        <h2>Coverage</h2>
+        <h3>Issuing authorities</h3>
+        <p id="authCov" class="prog-cov"></p>
+        <div class="two-col">
+          <div><h3>Lists</h3><ul id="listCov" class="doc-list"></ul></div>
+          <div><h3>Programs / regimes</h3><p id="progCov" class="prog-cov"></p></div>
+        </div>
+      </section>
+
+      <section id="sec-using">
+        <h2>Using the results</h2>
+        <ul class="doc-list">
+          <li><strong>Every card names the operative restriction</strong> for its authority and list: block and freeze, asset freeze, rejection, a securities or correspondent-account restriction, a licence requirement, or a denial of export privileges.</li>
+          <li><strong>Every record has a permalink.</strong> Its page can copy the full record as JSON. Each hit prints as a screening memo. The result set exports as CSV, recording the query, threshold, snapshot and authorities screened, and each hit's score and reasoning.</li>
+          <li><strong><a href="changes.html">What changed</a></strong> lists who entered and left the lists in each build. It is the rescreening trigger for an existing book.</li>
+          <li><strong><a href="insights.html">Insights</a></strong> describes what is inside the snapshot, and how complete and current it is.</li>
+        </ul>
+      </section>
+
+      <section id="sec-privacy">
+        <h2>Privacy &amp; security</h2>
+        <ul class="doc-list">
+          <li><strong>Search text is never stored or logged.</strong> Queries are processed in memory. The access log records the path and status of a request, not its query.</li>
+          <li><strong>No third parties.</strong> The page loads nothing from any other site: no analytics, no trackers, and fonts are served locally. A strict content-security policy enforces this.</li>
+          <li><strong>Rate limits.</strong> Requests are rate-limited per client: 120 a minute, and 30 a minute for searches.</li>
+        </ul>
+      </section>
+
+      <section id="sec-limits">
+        <h2>Limitations</h2>
+        <ul class="doc-list">
+          <li><strong>A hit is a lead to verify</strong>, not a determination, and the absence of a hit is not a clearance. Confirm anything material against the issuing authority's own list.</li>
+          <li><strong>Regimes differ.</strong> An OFAC blocking designation, an EU or UN asset freeze, a UK designation and a BIS or State export-control listing carry different legal obligations. An export-control listing means a licence requirement or loss of export privileges, <em>not</em> an asset freeze. Never carry OFAC doctrine across to another regime.</li>
+          <li><strong>The snapshot can lag.</strong> It may be up to a day behind an authority, longer for a source that is being carried forward. The freshness table above shows which.</li>
+          <li><strong>Gaps in the sources themselves.</strong>
+            <ul class="doc-list">
+              <li>State Department lists carry no addresses, and the ITAR Debarred List carries no listing dates.</li>
+              <li>Some OFAC addresses are published with no content at all, and are shown as “address on file”.</li>
+              <li>Some OFAC records carry no legal authority.</li>
+            </ul>
+            None of these is inferred.
+          </li>
+          <li><strong>Cross-listing is conservative</strong>, so some real matches across authorities stay unlinked.</li>
+          <li><strong>Not covered:</strong> other national regimes, or the EU dual-use export-control list.</li>
+        </ul>
+      </section>
     </div>
   </main>
 

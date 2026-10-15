@@ -1297,7 +1297,7 @@ body.app main.dash {
 .card-time { grid-column: 2; grid-row: 1; }
 .card-recent { grid-column: 3; grid-row: 1 / span 2; }
 .card-comp { grid-column: 1; grid-row: 2; }
-.card-prog { grid-column: 2; grid-row: 2; }
+.card-quality { grid-column: 2; grid-row: 2; }
 .card {
   background: var(--color-surface); border: 1px solid var(--color-border);
   border-radius: var(--radius); box-shadow: var(--shadow); padding: 0 16px 16px;
@@ -1636,3 +1636,51 @@ select { padding-right: 26px; }
   background: var(--color-surface-2); border-color: var(--color-border-strong); color: var(--color-muted-fg);
   font-weight: 700; text-transform: uppercase; letter-spacing: .03em;
 }
+
+/* Insights: data quality & sources */
+.dq-table-wrap { overflow-x: auto; }
+.dq-table { width: 100%; border-collapse: collapse; font-size: .78rem; font-variant-numeric: tabular-nums; }
+.dq-table th, .dq-table td { padding: 6px 8px; border-bottom: 1px solid var(--color-border); text-align: left; vertical-align: top; }
+.dq-table thead th { font-size: .68rem; font-weight: 700; color: var(--color-muted-fg); text-transform: uppercase; letter-spacing: .04em; white-space: nowrap; }
+.dq-table tbody th { font-weight: 600; color: var(--color-foreground); }
+.dq-table td.num { text-align: right; white-space: nowrap; }
+.dq-grid td.num { text-align: center; }
+.dq-sub { display: block; font-weight: 400; font-size: .7rem; color: var(--color-muted-fg); }
+.dq-hi { color: var(--color-foreground); font-weight: 600; }
+.dq-mid { color: var(--color-body); }
+.dq-lo { color: var(--color-muted-fg); }
+.dq-grid th, .dq-grid td { padding: 6px 4px; }
+.dq-grid thead th { text-align: center; }
+.dq-grid thead th:first-child { text-align: left; }
+.dq-grid abbr { text-decoration: none; cursor: help; }
+.dq-table .nowrap { white-space: nowrap; }
+.dq-status { display: inline-block; padding: 1px 6px; border-radius: var(--radius-xs); font-size: .7rem; font-weight: 600; white-space: nowrap; }
+.dq-status.ok { background: rgba(22, 163, 74, .1); color: #166534; }
+.dq-status.warn { background: var(--color-warn-bg); color: var(--color-warn-fg); }
+:root[data-theme="dark"] .dq-status.ok { color: #4ADE80; background: rgba(74, 222, 128, .12); }
+:root[data-theme="dark"] .dq-status.warn { color: #FCD34D; background: rgba(245, 158, 11, .16); }
+.card .doc-stats .stat-sub { display: block; font-size: .7rem; color: var(--color-muted-fg); margin-top: 2px; }
+
+/* What changed: per-authority source status of the build */
+.rebuild-sources { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin: 6px 0 0; }
+.src-chip {
+  display: inline-flex; gap: 5px; align-items: baseline; padding: 1px 7px; border-radius: var(--radius-xs);
+  border: 1px solid var(--color-border); background: var(--color-surface); font-size: .72rem; font-weight: 700; color: var(--color-foreground);
+}
+.src-chip span { font-weight: 400; color: var(--color-muted-fg); font-variant-numeric: tabular-nums; }
+.src-chip.warn { border-color: var(--color-warn); background: var(--color-warn-bg); }
+.src-chip.warn span { color: var(--color-warn-fg); }
+:root[data-theme="dark"] .src-chip.warn { background: rgba(245, 158, 11, .14); }
+:root[data-theme="dark"] .src-chip.warn span { color: #FCD34D; }
+
+/* About: reference tables */
+.doc-table { width: 100%; border-collapse: collapse; font-size: .84rem; margin: 6px 0 4px; }
+.doc-table th, .doc-table td { padding: 8px 10px; border-bottom: 1px solid var(--color-border); text-align: left; vertical-align: top; }
+.doc-table thead th { font-size: .7rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--color-muted-fg); }
+.doc-table tbody th { font-weight: 700; color: var(--color-foreground); white-space: nowrap; }
+.doc-table td { color: var(--color-body); }
+.doc .doc-list .doc-list { margin-top: 6px; font-size: .86rem; }
+.doc code { font-family: var(--mono); font-size: .82em; background: var(--color-surface-2); border-radius: var(--radius-xs); padding: 0 4px; }
+.doc > .doc-list, .doc section > .doc-list { margin: 8px 0 16px; }
+.doc > .doc-list + p, .doc section > .doc-list + p { margin-top: 0; }
+.card-note a, .chart-note a, .doc a { color: var(--color-primary); }
