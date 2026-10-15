@@ -4,7 +4,9 @@ services:
     runtime: node
     plan: free
     buildCommand: ""
-    startCommand: node --max-old-space-size=400 server.js
+    # Semi-space 8MB (V8 defaults to 16): measured ~15-20MB less resident
+    # memory on this workload with no measurable change in search latency.
+    startCommand: node --max-old-space-size=400 --max-semi-space-size=8 server.js
     healthCheckPath: /healthz
     autoDeploy: true
     envVars:
