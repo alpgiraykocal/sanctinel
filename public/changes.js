@@ -49,7 +49,11 @@ function row(r, linked) {
 function renderList(which, reset) {
   const rows = filterRows(DATA[which] || []);
   const isAdded = which === 'added';
-  if (reset) { if (isAdded) shownAdded = 0; else shownRemoved = 0; }
+  if (reset) {
+    if (isAdded) shownAdded = 0; else shownRemoved = 0;
+    const pane = $(isAdded ? 'addedList' : 'removedList').closest('.pane');
+    if (pane) pane.scrollTop = 0;
+  }
   const shown = Math.min(rows.length, (isAdded ? shownAdded : shownRemoved) + PAGE);
   if (isAdded) shownAdded = shown; else shownRemoved = shown;
 
@@ -161,7 +165,7 @@ function renderHistory() {
 
 async function loadHistory(reset) {
   const seq = ++hState.seq;
-  if (reset) { hState.offset = 0; hState.rows = []; }
+  if (reset) { hState.offset = 0; hState.rows = []; $('historySection').scrollTop = 0; }
   const { body } = await window.SS.getJson(historyQuery(hState.offset, H_PAGE));
   if (seq !== hState.seq) return; // a newer filter change already superseded this
   hState.total = body.total;
@@ -209,6 +213,31 @@ $('hText').addEventListener('input', () => { clearTimeout(hTimer); hTimer = setT
 $('historyMore').addEventListener('click', () => loadHistory(false).catch(() => {}));
 $('hExport').addEventListener('click', () => exportHistory().catch(() => {}));
 reloadHistory();
+
+/*
+ * On a phone the three columns cannot sit side by side, and stacking them
+ * would bring back the one long page scroll. They become tabs instead: one
+ * column fills the screen and scrolls on its own. On a wide screen the tab
+ * row is hidden and all three show (see .dash-cols in styles.css).
+ */
+const tabs = [...document.querySelectorAll('.col-tabs [role=tab]')];
+function selectTab(name) {
+  $('changesCols').dataset.active = name;
+  for (const t of tabs) {
+    const on = t.dataset.tab === name;
+    t.setAttribute('aria-selected', String(on));
+    t.tabIndex = on ? 0 : -1;
+  }
+}
+tabs.forEach((t, i) => {
+  t.addEventListener('click', () => selectTab(t.dataset.tab));
+  t.addEventListener('keydown', (e) => {
+    if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+    const next = tabs[(i + (e.key === 'ArrowRight' ? 1 : tabs.length - 1)) % tabs.length];
+    next.focus(); selectTab(next.dataset.tab);
+  });
+});
+selectTab('added');
 
 $('cAuthority').addEventListener('change', () => renderAll(true));
 $('cText').addEventListener('input', () => renderAll(true));

@@ -314,6 +314,26 @@ Offline / fictional-demo mode (no network):
 node server.js --demo
 ```
 
+## Layout: the page never scrolls
+
+Every page is an app shell exactly one viewport tall. The header carries the
+main navigation (Screen · What changed · Insights · About — a bottom tab bar on
+phones), the coverage warning and the legal notice are one line each with the
+detail a click away, and every region that can grow scrolls inside its own
+pane:
+
+| Page | Panes |
+|---|---|
+| Screen | search form (Screen button pinned at its foot) · results (summary and actions pinned at the top) |
+| Record | identity, verdict and actions · full record |
+| Insights | headline figures fixed; each card scrolls (one scrolling column below 1100px) |
+| What changed | latest additions · latest removals · full history (tabs below 1100px) |
+| About | contents (tracks the section in view) · text |
+
+Before this, the results page was 25,830px of document on a laptop and the
+search controls scrolled away with it. `test:ui` checks that no page scrolls,
+vertically or sideways, at 320px through 1440px.
+
 ## Change history
 
 `cache/changes.json` holds only the last rebuild's additions and removals, and

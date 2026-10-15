@@ -79,8 +79,14 @@ window.SS = (function () {
      * hidden the staleness one behind it indefinitely.
      */
     const parts = [];
+    // One short phrase per problem, for the always-visible summary line. The
+    // full explanation sits behind it, a click away: a banner several lines
+    // tall on every page took a fifth of a laptop screen and over a third of a
+    // phone's before any content, which is how a warning stops being read.
+    const short = [];
 
     if (missing.length) {
+      short.push(`${missing.join(' and ')} not screened`);
       const why = ((m && m.sourceFailures) || []).map((f) => `${f.label}: ${f.error}`).join(' · ');
       const plural = missing.length > 1;
       parts.push(
@@ -100,6 +106,7 @@ window.SS = (function () {
      */
     const stale = (m && m.staleAuthorities) || [];
     if (stale.length) {
+      short.push(stale.map((x) => `${x.authority} data ${x.ageHours}h old`).join(', '));
       parts.push(
         `<strong>${stale.map((x) => `${esc(x.authority)} data is ${esc(String(x.ageHours))}h old`).join(', ')}.</strong> ` +
         `${stale.length > 1 ? 'Those sources' : 'That source'} could not be refreshed when this snapshot was built — unreachable, or its new data failed validation — so the last good records were kept. ` +
@@ -115,12 +122,14 @@ window.SS = (function () {
      * since the pipeline republishes daily and a few hours of lag is normal.
      */
     if (blocked && ageHours != null && ageHours >= 24) {
+      short.push(`snapshot ${ageHours}h old, not refreshing`);
       parts.push(
         `<strong>This snapshot is ${esc(String(ageHours))} hours old and is not refreshing on this instance.</strong> ` +
         'Anything designated since then is not screened here. ' +
         `<span class="coverage-why">(${esc(blocked.reason)})</span>`
       );
     } else if (ageHours != null && ageHours >= 36) {
+      short.push(`snapshot ${ageHours}h old`);
       /*
        * Old for any other reason — most often the daily build refusing to
        * publish. Without this the whole snapshot could go a fortnight stale with
@@ -136,6 +145,8 @@ window.SS = (function () {
 
     if (!parts.length) { bar.hidden = true; return; }
     document.getElementById('coverageText').innerHTML = parts.join('<br>');
+    const summary = document.getElementById('coverageSummary');
+    if (summary) summary.innerHTML = `<strong>Coverage warning:</strong> ${esc(short.join(' · '))} <span class="bar-more">— details</span>`;
     bar.hidden = false;
   }
 

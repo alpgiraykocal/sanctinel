@@ -33,7 +33,10 @@ function render(data) {
   const hint = R.determinationHint(r);
   document.title = `${r.name} — Sanctions Search`;
 
+  // Two panes on a wide screen: the record's identity and verdict stay put on
+  // the left while its full detail scrolls on the right.
   $('entityBody').innerHTML = `
+    <div class="entity-summary pane" tabindex="-1">
     <p class="entity-breadcrumb"><a href="./">Screening</a> › Record ${esc(r.id)}</p>
     <h1 class="entity-name">${esc(r.name)}</h1>
     <p class="entity-sub">${esc(r.type)} · ${esc(r.authority || 'OFAC')} entity ID ${esc(r.id)}</p>
@@ -50,15 +53,15 @@ function render(data) {
       <button id="jsonBtn" class="btn-ghost" type="button">Copy JSON</button>
     </div>
 
-    <div class="entity-detail">${R.detailHtml(r).replace(/<(\/?)h4\b/g, '<$1h2')}</div>
-
     <p class="entity-provenance">${esc(provenanceLine(m))}</p>
     <p class="entity-foot">
       Screening analysis only — <strong>not a determination and not legal advice</strong>.
       Confirm against the issuing authority's own list before any compliance decision:
       ${esc(R.AUTHORITY_SOURCE[r.authority] || R.AUTHORITY_SOURCE.OFAC)}.
       This record reflects the snapshot named above, which may lag the authority by up to a day.
-    </p>`;
+    </p>
+    </div>
+    <div class="entity-detail pane" tabindex="-1" aria-label="Full record">${R.detailHtml(r).replace(/<(\/?)h4\b/g, '<$1h2')}</div>`;
 
   $('entityBody').hidden = false;
   wireActions(r);
