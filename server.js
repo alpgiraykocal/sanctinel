@@ -52,6 +52,10 @@ const TTL_MS = Number(process.env.CACHE_TTL_MS) || 12 * 60 * 60 * 1000;
 const DEMO_ONLY = process.argv.includes('--demo');
 const ADMIN_TOKEN = process.env.ADMIN_TOKEN || ''; // if empty, manual /api/refresh is disabled
 const TRUST_PROXY = process.env.TRUST_PROXY !== 'false';
+// How many proxies in front of this process append to X-Forwarded-For. 1 for
+// Render alone; 2 when Cloudflare (proxied DNS or the path Worker) sits in front
+// of Render too. See clientIp.
+const TRUST_PROXY_HOPS = Math.max(1, Math.floor(Number(process.env.TRUST_PROXY_HOPS)) || 1);
 const PUBLIC_DIR = path.join(__dirname, 'public');
 
 const MAX_Q = 120, MAX_FIELD = 80;
@@ -139,8 +143,24 @@ function securityHeaders() {
   };
 }
 
+/*
+ * The client address, for rate limiting.
+ *
+ * Read from the RIGHT of X-Forwarded-For. Each proxy appends the address it
+ * received the connection from, so the trustworthy entries are the last ones;
+ * the first is whatever the client chose to send. Taking the first meant any
+ * client could put a fresh random address in the header on every request,
+ * get a fresh rate-limit bucket each time — the limits simply did not apply —
+ * and grow the limiter's map without bound while doing it.
+ */
 function clientIp(req) {
-  if (TRUST_PROXY) { const xf = req.headers['x-forwarded-for']; if (xf) return String(xf).split(',')[0].trim(); }
+  if (TRUST_PROXY) {
+    const xf = req.headers['x-forwarded-for'];
+    if (xf) {
+      const hops = String(xf).split(',').map((x) => x.trim()).filter(Boolean);
+      if (hops.length) return hops[Math.max(0, hops.length - TRUST_PROXY_HOPS)];
+    }
+  }
   return req.socket.remoteAddress || '?';
 }
 

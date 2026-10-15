@@ -54,6 +54,7 @@ Environment variables:
 | `CACHE_TTL_MS` | `43200000` (12h) | background refresh when the cache is older than this |
 | `RATE_MAX` / `SEARCH_RATE_MAX` | `120` / `30` per min | per-IP limits |
 | `TRUST_PROXY` | `true` | read client IP from `X-Forwarded-For` (set `false` if not behind a proxy) |
+| `TRUST_PROXY_HOPS` | `1` | how many proxies append to `X-Forwarded-For`; the client IP is read that many entries from the right. `1` for Render alone, `2` with Cloudflare (proxied DNS or the path Worker) in front of Render. The leftmost entry is client-controlled and is never trusted |
 | `SANCTIONS_SEARCH_CONTACT` | *(unset)* | mailbox put in the outgoing `User-Agent`. OFAC asks data consumers to identify themselves; set this to an address you read, so a publisher can reach you instead of silently throttling |
 | `ALLOW_AUTHORITY_DROP` | *(unset)* | build-cache escape hatch: publish a snapshot even if it lost an authority. Only for an authority that is genuinely retired — see "Coverage guard" below |
 | `ALLOW_QUALITY_DROP` | *(unset)* | build-cache escape hatch: publish even if a measured field regressed. Only for a field a publisher genuinely stopped providing — see "Field-level quality gate" below |
@@ -311,6 +312,12 @@ node server.js --demo
 ```
 
 ## iPhone app
+
+> **Not on this branch yet.** The app, its conformance workflow and
+> `scripts/gen-conformance-fixtures.js` live on the
+> [`ios-app`](../../tree/ios-app) branch, which has not been merged. Until it
+> is, nothing on `main` checks the Swift port against the JS scorer — a scorer
+> change here is not caught by any iOS build.
 
 `ios/` holds a native SwiftUI app that screens **entirely on the device** — no
 server, no query leaving the phone, works with no network at all. It downloads
@@ -848,6 +855,6 @@ sanctions compliance.
 | `public/changes.html` · `changes.js` | What changed between snapshot builds |
 | `public/fonts/` | Self-hosted IBM Plex (SIL OFL 1.1) — no third-party font requests |
 | `public/` | Frontend (HTML / CSS / JS) |
-| `ios/` | Native SwiftUI iPhone app; screens on-device via `ios/SanctinelCore`, a Swift port of `lib/` |
-| `scripts/gen-conformance-fixtures.js` | Freezes the JS scorer's output so the Swift port can be proved identical |
+| `ios/` *(ios-app branch)* | Native SwiftUI iPhone app; screens on-device via `ios/SanctinelCore`, a Swift port of `lib/` |
+| `scripts/gen-conformance-fixtures.js` *(ios-app branch)* | Freezes the JS scorer's output so the Swift port can be proved identical |
 | `sample-data/` | Fictional offline demo dataset |
