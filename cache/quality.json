@@ -1,34 +1,34 @@
 {
- "generatedAt": "2026-10-02T01:53:14.504Z",
- "publicationId": "1041",
- "retrievedAt": "2026-10-02T01:53:13.344Z",
- "count": 38527,
+ "generatedAt": "2026-10-15T15:14:29.555Z",
+ "publicationId": "1050",
+ "retrievedAt": "2026-10-15T15:14:27.408Z",
+ "count": 38466,
  "authorities": {
   "OFAC": {
-   "count": 19871,
-   "aliasRate": 0.5204066227165216,
+   "count": 19818,
+   "aliasRate": 0.5200322938742558,
    "addressRate": 1,
-   "identifierRate": 0.734789391575663,
-   "birthDateRate": 0.38125912133259526,
-   "nationalityRate": 0.3090433294751145,
-   "relationshipEdges": 9322
+   "identifierRate": 0.7369563023513978,
+   "birthDateRate": 0.3804117468967605,
+   "nationalityRate": 0.3098698153194066,
+   "relationshipEdges": 9381
   },
   "EU": {
-   "count": 6241,
-   "aliasRate": 0.8812690273994552,
-   "addressRate": 0.32334561768947284,
-   "identifierRate": 0.3201410030443839,
-   "birthDateRate": 0.6007050152219195,
-   "nationalityRate": 0.42829674731613526,
+   "count": 6234,
+   "aliasRate": 0.8812961180622393,
+   "addressRate": 0.32354828360603144,
+   "identifierRate": 0.32001924927815206,
+   "birthDateRate": 0.6004170676932948,
+   "nationalityRate": 0.42829643888354185,
    "relationshipEdges": 0
   },
   "UN": {
-   "count": 1011,
-   "aliasRate": 0.7091988130563798,
-   "addressRate": 0.5489614243323442,
-   "identifierRate": 0.29475766567754697,
-   "birthDateRate": 0.675568743818002,
-   "nationalityRate": 0.6271018793273986,
+   "count": 1010,
+   "aliasRate": 0.7089108910891089,
+   "addressRate": 0.5485148514851486,
+   "identifierRate": 0.29504950495049503,
+   "birthDateRate": 0.6762376237623763,
+   "nationalityRate": 0.6277227722772277,
    "relationshipEdges": 0
   },
   "UK": {
@@ -60,13 +60,13 @@
   }
  },
  "derived": {
-  "dobParseRate": 0.9999413902238894,
-  "countryResolveRate": 0.9995902918682691,
+  "dobParseRate": 0.999941197224509,
+  "countryResolveRate": 0.9995888238403853,
   "attributeUnclassifiedRate": 0,
-  "identifierUnclassifiedRate": 0.04972607154366742,
-  "dobValues": 17062,
-  "countryValues": 51256,
-  "attributes": 105453,
-  "identifiers": 31030
+  "identifierUnclassifiedRate": 0.050473186119873815,
+  "dobValues": 17006,
+  "countryValues": 51073,
+  "attributes": 105544,
+  "identifiers": 31066
  }
 }
