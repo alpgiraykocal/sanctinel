@@ -31,7 +31,7 @@
 const fs = require('fs');
 const path = require('path');
 const zlib = require('zlib');
-const { buildLiveSnapshot, assertAuthorityCoverage, EXPECTED_AUTHORITIES, CACHE_GZ_PATH } = require('../lib/ingest');
+const { buildLiveSnapshot, assertAuthorityCoverage, replaceAuthorities, EXPECTED_AUTHORITIES, CACHE_GZ_PATH } = require('../lib/ingest');
 const quality = require('../lib/quality');
 
 const CHANGES_PATH = path.join(path.dirname(CACHE_GZ_PATH), 'changes.json');
@@ -144,15 +144,26 @@ function computeChanges(prev, next) {
    * for a timestamp change.
    */
   if (process.env.ONLY_IF_DEGRADED && prev) {
-    const missing = EXPECTED_AUTHORITIES.filter((a) => !prev.authorities.includes(a));
-    if (!missing.length) {
-      console.log('Retry run: existing snapshot has full authority coverage — nothing to recover, exiting.');
+    /*
+     * Degraded means anything the build had to paper over, not only an
+     * authority that is gone. Since carry-forward, a source that is down keeps
+     * its authority present with old records — so checking coverage alone made
+     * this pass exit on exactly the days it exists for.
+     */
+    const missing = EXPECTED_AUTHORITIES.filter((a) => !(prev.authorities || []).includes(a));
+    const stale = (prev.meta.sources || []).filter((src) => !src.ok || src.carriedForward
+      || (src.qualityCarriedForward && src.qualityCarriedForward.length) || (src.failedLists && src.failedLists.length));
+    if (!missing.length && !stale.length) {
+      console.log('Retry run: existing snapshot is complete and fresh — nothing to recover, exiting.');
       return;
     }
-    console.log(`Retry run: existing snapshot is missing ${missing.join(', ')} — attempting to recover.`);
+    console.log('Retry run: attempting to recover — ' + [
+      missing.length ? `missing ${missing.join(', ')}` : '',
+      stale.length ? `degraded ${stale.map((x) => x.label).join(', ')}` : '',
+    ].filter(Boolean).join('; '));
   }
 
-  const s = await buildLiveSnapshot(prev && prev.carryForward);
+  let s = await buildLiveSnapshot(prev && prev.carryForward);
 
   for (const src of s.sources || []) {
     const state = src.ok ? 'ok  ' : (src.carriedForward ? 'STALE' : 'FAIL');
@@ -181,9 +192,9 @@ function computeChanges(prev, next) {
    * regression means the snapshot on disk is better and this one must not
    * replace it.
    */
-  const qualityNow = quality.profile(s);
+  let qualityNow = quality.profile(s);
   const qualityPrev = previousQuality();
-  const gate = quality.compare(qualityNow, qualityPrev);
+  let gate = quality.compare(qualityNow, qualityPrev);
   const qualityOverride = !!process.env.ALLOW_QUALITY_DROP;
 
   if (gate.findings.length) {
@@ -191,6 +202,29 @@ function computeChanges(prev, next) {
     console.log(quality.format(gate));
   } else {
     console.log('quality gate: no findings');
+  }
+
+  /*
+   * A regression confined to some authorities does not hold the rest back.
+   * Those authorities keep the records the last good build had — exactly what
+   * an unreachable source gets — and the others publish fresh. Refusing the
+   * whole build here is what froze every authority for thirteen days in
+   * October 2026 over one renamed State list. A regression in a global measure
+   * (date parsing, country resolution) still refuses: carrying one authority
+   * forward cannot fix that.
+   */
+  let qualityCarried = [];
+  if (!gate.publishable && !qualityOverride && prev) {
+    const scoped = quality.regressedAuthorities(gate, s.authorities);
+    const swapped = scoped && scoped.length ? replaceAuthorities(s, scoped, prev.carryForward) : null;
+    if (swapped) {
+      console.log(`\ncarrying forward ${scoped.join(', ')} from the previous snapshot; publishing the other authorities fresh.`);
+      s = swapped;
+      qualityCarried = scoped;
+      qualityNow = quality.profile(s);
+      gate = quality.compare(qualityNow, qualityPrev);
+      if (gate.findings.length) console.log(quality.format(gate));
+    }
   }
 
   if (!gate.publishable && !qualityOverride) {
@@ -245,11 +279,25 @@ function computeChanges(prev, next) {
   // A below-floor finding that is not a regression ships for the same reason a
   // standing coverage gap does — the other fields are fresh and withholding them
   // helps nobody — but the run still ends red so it cannot become the new normal.
+  // An OFAC list that failed on its own is carried forward inside the OFAC
+  // source, which still reads ok — it needs its own alarm or it is silent.
+  for (const src of s.sources || []) {
+    if (!src.failedLists || !src.failedLists.length) continue;
+    console.error(`\nSTALE LIST: ${src.error}`);
+    process.exitCode = 3;
+  }
+
   const carried = (s.sources || []).filter((src) => src.carriedForward);
   if (carried.length) {
     console.error(`\nSTALE AUTHORITY: ${carried.map((c) => `${c.authorities.join('/')} (${c.error})`).join('; ')}`);
     console.error('Their records were carried forward from the last good build so the other authorities could publish.');
     console.error('The app shows the per-authority as-of date. Fix the upstream source.');
+    process.exitCode = 3;
+  }
+
+  if (qualityCarried.length) {
+    console.error(`\nQUALITY CARRY-FORWARD: ${qualityCarried.join(', ')} failed the field-level gate; their previous records were kept.`);
+    console.error('Check that source\'s format: a renamed list or field looks exactly like this from the outside.');
     process.exitCode = 3;
   }
 

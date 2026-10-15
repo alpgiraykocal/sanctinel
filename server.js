@@ -229,7 +229,10 @@ function meta() {
     snapshotAgeHours: snapshot.retrievedAt
       ? Math.round((Date.now() - Date.parse(snapshot.retrievedAt)) / 36e5) : null,
     // Why each one is missing, when the snapshot recorded it.
-    sourceFailures: (snapshot.sources || []).filter((s) => !s.ok).map((s) => ({ label: s.label, authorities: s.authorities, error: s.error })),
+    // A source that succeeded overall but lost a list on the way (an OFAC list
+    // carried forward) is a failure too, just a partial one.
+    sourceFailures: (snapshot.sources || []).filter((s) => !s.ok || (s.failedLists && s.failedLists.length))
+      .map((s) => ({ label: s.label, authorities: s.authorities, error: s.error, partial: !!s.ok })),
   };
 }
 

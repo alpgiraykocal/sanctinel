@@ -102,7 +102,7 @@ window.SS = (function () {
     if (stale.length) {
       parts.push(
         `<strong>${stale.map((x) => `${esc(x.authority)} data is ${esc(String(x.ageHours))}h old`).join(', ')}.</strong> ` +
-        `That source was unreachable when this snapshot was built, so its last good records were kept. ` +
+        `${stale.length > 1 ? 'Those sources' : 'That source'} could not be refreshed when this snapshot was built — unreachable, or its new data failed validation — so the last good records were kept. ` +
         `Anything ${stale.length > 1 ? 'those authorities have' : 'that authority has'} designated since is not screened here.`
       );
     }
