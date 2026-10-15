@@ -390,10 +390,14 @@ and `quality-report.js` on every push to `main` and every pull request, on
 Node 20 and 22. The recall check ([`recall.yml`](.github/workflows/recall.yml))
 runs only when the scorer, the index or their data change.
 
-One test is marked `todo`, deliberately: a misspelled descriptor word
-("Tradng" for "Trading") is not stripped like the correctly spelled one, and
-drags an exact name under the threshold. It is a known recall gap, listed in
-every run, not hidden.
+A misspelled descriptor word ("Tradng" for "Trading") used to stay in the
+query as a token nothing could match and drag an exact name under the
+threshold. The matcher now also scores a query without a token that is one
+edit from a descriptor **and appears in no listed name** — so USAMA, ANSAR or
+ZVEZDA, real name tokens one edit from a descriptor, are never dropped (with
+that check, none of the 105,411 listed names triggers the variant). Scores can
+only go up, and `verify-recall.js` has a `descriptor` query family proving the
+index still returns every such hit.
 
 ## Alarms
 

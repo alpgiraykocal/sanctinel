@@ -50,16 +50,28 @@ test('exact, alias and reordered names find the party', () => {
 });
 
 /*
- * Known gap, kept visible rather than encoded as expected behaviour. Legal-form
- * and descriptor words (TRADING, LIMITED, COMPANY…) are stripped before
- * scoring, but only when spelled exactly — so a typo in one ("Tradng") stays in
- * the query as an unmatched token and drags an otherwise exact name from 1.00
- * to 0.78, under the default threshold. Fixing it changes the scorer, the
- * candidate index's recall invariant and the iOS port, so it is its own change.
+ * Descriptor words (TRADING, LIMITED…) are stripped before scoring. A typo in
+ * one used to stay in the query as a token nothing could match, and dragged an
+ * exact name from 1.00 to 0.78 — under the default threshold. The matcher now
+ * also scores the query without a token one edit from a descriptor.
  */
-test('a misspelled descriptor word does not sink an exact name', { todo: 'descriptor typos are not stripped — see comment' }, () => {
-  const hits = top('Northern Star Tradng LLC');
-  assert.ok(hits.length && String(hits[0].e.id) === '90002');
+test('a misspelled descriptor word does not sink an exact name', () => {
+  for (const q of ['Northern Star Tradng LLC', 'Northern Star Trading Limted', 'Caspian Maritme Logistics']) {
+    const hits = top(q);
+    assert.ok(hits.length, `no hit for ${q}`);
+  }
+  assert.equal(String(top('Northern Star Tradng LLC')[0].e.id), '90002');
+  assert.equal(top('Northern Star Tradng LLC')[0].m.score, 1);
+});
+
+test('the descriptor-typo variant never lowers a score', () => {
+  const { screenEntity: score } = require('../lib/matcher');
+  for (const e of snap.entities) {
+    for (const n of e.names) {
+      const m = score(n.name, e, 0);
+      assert.ok(m && m.score >= 0.95, `${n.name} against its own record: ${m && m.score}`);
+    }
+  }
 });
 
 test('Cyrillic input is transliterated, not deleted', () => {
