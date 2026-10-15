@@ -200,6 +200,18 @@ window.SSRecord = (function () {
       </div>`;
   }
 
+  // The relationship network this party belongs to (lib/networks), with a
+  // link to see the whole of it.
+  function networkHtml(r) {
+    const n = r.network;
+    if (!n) return '';
+    return `
+      <div class="attr-group net-group">
+        <h4 class="attr-group-title">Relationship network</h4>
+        <p class="cross-note">Part of the <a href="networks.html#${encodeURIComponent(n.id)}">${esc(n.name)} network</a>: ${Number(n.size).toLocaleString()} parties linked by relationships OFAC publishes.</p>
+      </div>`;
+  }
+
   // The identity strip shown before the record is expanded.
   function factsHtml(r) {
     const facts = identityFacts(r);
@@ -285,6 +297,7 @@ window.SSRecord = (function () {
       ${crossListedHtml(r)}
       ${derivativeHtml(r)}
       ${relHtml}
+      ${networkHtml(r)}
       ${idsHtml ? `<div class="attr-group"><h4 class="attr-group-title">Screening Identifiers</h4>${idsHtml}</div>` : ''}
       <div class="attr-group">
         <h4 class="attr-group-title">Program &amp; Provenance</h4>

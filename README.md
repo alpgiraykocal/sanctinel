@@ -957,6 +957,24 @@ inside a record link through to their own pages, so an ownership chain can be wa
 clicking. The record body is rendered by `public/record.js`, shared with the search
 results, so the two views cannot give different compliance guidance for the same party.
 
+## Relationship networks (whole list)
+
+`lib/networks.js` + `public/networks.html` (`GET /api/networks`, `GET /api/network?id=`)
+follow OFAC's ~9,400 published relationships across the whole list and list the
+networks they form, ranked by size, ownership links, cross-listed members or most recent
+designation, each drawn with a deterministic force-directed layout.
+
+- **Connected components** of the undirected relationship graph (ownership links weigh
+  2, others 1). Pairs are counted, not listed.
+- **One component is ~2,700 parties** (Iran, Hizballah and their facilitators, chained by
+  "providing support to"). Components above 400 parties are divided with **Louvain**
+  modularity maximisation, run in a fixed order with deterministic tie-breaks; each
+  community becomes a network, and its links to sibling communities are reported. On the
+  live snapshot that gives 47 networks such as the IRGC-QF, MODAFL, Hizballah, NITC,
+  IRISL and Mahan Air.
+- A network's id is its hub's record id (`N<id>`), so a link to it survives rebuilds
+  while the hub does. Computed once per snapshot (~250 ms), warmed at boot.
+
 ## Relationship network (ego graph)
 
 Any hit with relationships shows a **View network** button that opens a radial ego-graph

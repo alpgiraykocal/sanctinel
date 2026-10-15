@@ -1416,7 +1416,7 @@ body.app #docPane.doc > * { max-width: 860px; }
   /* The main navigation moves to a tab bar at the bottom of the screen. */
   .site-nav { display: none; }
   .tabbar {
-    display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 2px;
+    display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 2px;
     padding: 4px 6px calc(4px + env(safe-area-inset-bottom));
     background: var(--color-surface); border-top: 1px solid var(--color-border);
   }
@@ -1684,3 +1684,114 @@ select { padding-right: 26px; }
 .doc > .doc-list, .doc section > .doc-list { margin: 8px 0 16px; }
 .doc > .doc-list + p, .doc section > .doc-list + p { margin-top: 0; }
 .card-note a, .chart-note a, .doc a { color: var(--color-primary); }
+
+/* =====================================================================
+   Relationship networks (networks.html): list | drawing | members.
+   Node colours are the first three categorical slots, validated as a set
+   in both themes (all pairs, since every type can sit next to every
+   other). Aqua is under 3:1 on the light surface, so vessels and aircraft
+   also carry a shape and every party is named in the members list.
+   ===================================================================== */
+:root {
+  --net-entity: #2a78d6; --net-individual: #eb6834; --net-vessel: #1baf7a; --net-unlisted: #94A3B8;
+  --net-edge: #CBD5E1; --net-edge-own: #475569;
+}
+:root[data-theme="dark"] {
+  --net-entity: #3987e5; --net-individual: #d95926; --net-vessel: #199e70; --net-unlisted: #64748B;
+  --net-edge: #34405E; --net-edge-own: #94A3B8;
+}
+.net-cols {
+  flex: 1; min-height: 0; display: grid; gap: 14px;
+  grid-template-columns: minmax(260px, 340px) minmax(0, 1fr) minmax(240px, 320px);
+}
+.net-list-pane, .net-members-pane { min-height: 0; }
+.net-controls { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 8px; margin-top: 4px; }
+.net-controls input[type=search], .net-controls select { padding: 8px 10px; width: 100%; min-width: 0; }
+.net-list, .net-members, .net-neigh { list-style: none; margin: 0; padding: 0; }
+.net-item {
+  display: block; padding: 9px 10px; margin: 0 -6px; border-radius: 8px;
+  color: var(--color-foreground); text-decoration: none;
+}
+.net-item:hover { background: var(--color-surface-2); }
+.net-item[aria-current] { background: rgba(37, 99, 235, .1); box-shadow: inset 3px 0 0 var(--color-primary); }
+:root[data-theme="dark"] .net-item[aria-current] { background: rgba(96, 165, 250, .14); }
+.net-item-name { display: block; font-size: .86rem; font-weight: 600; overflow-wrap: anywhere; }
+.net-item-meta { display: block; font-size: .72rem; color: var(--color-muted-fg); margin-top: 2px; overflow-wrap: anywhere; }
+.net-item-bar { display: block; height: 4px; margin-top: 6px; border-radius: 4px; background: var(--color-surface-2); }
+.net-item-bar > span { display: block; height: 100%; border-radius: 4px; background: var(--color-primary); opacity: .55; }
+
+.net-view { display: flex; flex-direction: column; min-height: 0; padding: 0; overflow: hidden; }
+.net-head { flex: none; padding: 14px 16px 10px; border-bottom: 1px solid var(--color-border); max-height: 45%; overflow: auto; }
+.net-head h2 { font-size: 1.05rem; font-weight: 700; margin: 0 0 2px; overflow-wrap: anywhere; }
+.net-head .card-note { margin-bottom: 8px; }
+.net-head .card-note a { color: var(--color-primary); }
+.net-figs { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; margin: 0 0 8px; }
+.net-figs > div { background: var(--color-surface-2); border-radius: 8px; padding: 6px 8px; min-width: 0; }
+.net-figs dt { font-size: .64rem; text-transform: uppercase; letter-spacing: .04em; color: var(--color-muted-fg); }
+.net-figs dd { margin: 0; font-size: 1rem; font-weight: 700; font-variant-numeric: tabular-nums; color: var(--color-foreground); }
+.net-line { margin: 4px 0 0; font-size: .78rem; color: var(--color-body); display: flex; flex-wrap: wrap; gap: 4px; align-items: center; }
+.net-line-lbl { font-size: .64rem; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; color: var(--color-muted-fg); min-width: 88px; }
+.net-line .tag em { font-style: normal; color: var(--color-muted-fg); margin-left: 2px; }
+.net-stage { position: relative; flex: 1; min-height: 280px; background: var(--color-surface); }
+#netCanvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; cursor: grab; touch-action: none; }
+.net-legend {
+  position: absolute; left: 10px; bottom: 10px; display: flex; flex-wrap: wrap; gap: 4px 12px; max-width: calc(100% - 140px);
+  padding: 6px 10px; border-radius: 8px; font-size: .72rem; color: var(--color-body);
+  background: color-mix(in srgb, var(--color-surface) 88%, transparent); border: 1px solid var(--color-border);
+}
+.net-legend span { display: inline-flex; align-items: center; gap: 5px; white-space: nowrap; }
+.net-zoom { position: absolute; right: 10px; bottom: 10px; display: flex; gap: 4px; }
+.net-zoom .btn-ghost { min-width: 34px; padding: 5px 9px; background: var(--color-surface); }
+.net-tip {
+  position: absolute; z-index: 5; max-width: 280px; pointer-events: none; padding: 8px 10px;
+  background: var(--color-surface); border: 1px solid var(--color-border-strong); border-radius: 8px;
+  box-shadow: var(--shadow-lg); font-size: .76rem; color: var(--color-body);
+}
+.net-tip strong { display: block; color: var(--color-foreground); font-size: .82rem; overflow-wrap: anywhere; }
+.net-tip span { display: block; margin-top: 2px; overflow-wrap: anywhere; }
+.net-swatch { display: inline-block; flex: none; width: 10px; height: 10px; border-radius: 50%; }
+.sw-entity { background: var(--net-entity); }
+.sw-individual { background: var(--net-individual); }
+.sw-vessel { background: var(--net-vessel); border-radius: 1px; transform: rotate(45deg) scale(.85); }
+.sw-aircraft { background: none; border-radius: 0; width: 0; height: 0; border-left: 6px solid transparent; border-right: 6px solid transparent; border-bottom: 10px solid var(--net-vessel); }
+.sw-unlisted { background: transparent; border: 1.5px solid var(--net-unlisted); }
+.net-line-key { display: inline-block; width: 18px; height: 0; border-top: 1px solid var(--net-edge); }
+.net-line-key.own { border-top: 2px solid var(--net-edge-own); }
+:root[data-theme="dark"] .net-line-key { border-top-color: #4A587A; }
+
+.net-member { display: flex; align-items: flex-start; gap: 6px; border-bottom: 1px solid var(--color-border); }
+.net-member-btn {
+  flex: 1; min-width: 0; display: grid; grid-template-columns: 14px minmax(0, 1fr); column-gap: 6px; align-items: center;
+  padding: 7px 4px; text-align: left; font: inherit; color: inherit; background: none; border: 0; border-radius: 6px; cursor: pointer;
+}
+.net-member-btn:hover { background: var(--color-surface-2); }
+.net-member-btn:focus-visible { box-shadow: var(--ring); outline: none; }
+.net-member.is-selected .net-member-btn { background: rgba(37, 99, 235, .1); }
+:root[data-theme="dark"] .net-member.is-selected .net-member-btn { background: rgba(96, 165, 250, .14); }
+.net-member-name { font-size: .82rem; font-weight: 600; color: var(--color-foreground); overflow-wrap: anywhere; }
+.net-member-meta { grid-column: 2; font-size: .7rem; color: var(--color-muted-fg); overflow-wrap: anywhere; }
+.net-member-open { flex: none; align-self: center; font-size: .72rem; font-weight: 600; color: var(--color-primary); padding: 4px 2px; }
+.net-sub-h { margin-top: 16px !important; }
+.net-neigh li { display: flex; justify-content: space-between; gap: 8px; padding: 6px 0; border-bottom: 1px solid var(--color-border); font-size: .8rem; }
+.net-neigh a { color: var(--color-primary); overflow-wrap: anywhere; }
+.net-neigh span { flex: none; color: var(--color-muted-fg); font-size: .72rem; }
+
+@media (max-width: 1100px) {
+  /* One scrolling page: list, drawing, members stacked. */
+  body.app main.dash-networks { display: block; overflow: auto; overscroll-behavior: contain; }
+  main.dash-networks .dash-top { margin-bottom: 12px; }
+  .net-cols { display: grid; grid-template-columns: minmax(0, 1fr); }
+  .net-list-pane { max-height: 46vh; max-height: 46dvh; }
+  .net-view { min-height: 0; }
+  .net-head { max-height: none; }
+  .net-stage { flex: none; height: 62vh; height: 62dvh; min-height: 320px; }
+  .net-members-pane { max-height: 60vh; max-height: 60dvh; }
+  .net-figs { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (max-width: 760px) {
+  .net-controls { grid-template-columns: minmax(0, 1fr); }
+  .net-figs { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .net-line-lbl { min-width: 0; width: 100%; }
+  .net-legend { max-width: calc(100% - 20px); bottom: 52px; }
+}
+.net-group a { color: var(--color-primary); }
