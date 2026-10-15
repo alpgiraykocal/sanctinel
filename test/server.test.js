@@ -108,3 +108,11 @@ test('check-deployment flags demo data, missing authorities and an old snapshot'
   assert.equal(assess(Object.assign({}, good, { snapshotAgeHours: 324 })).problems.length, 1);
   assert.equal(assess(Object.assign({}, good, { missingAuthorities: ['EU'] })).problems.length, 1);
 });
+
+test('below-the-line returns a cumulative curve from the async scan', async () => {
+  const j = await (await get('/api/below-the-line?q=' + encodeURIComponent('Dmitri Ivanov'))).json();
+  assert.equal(j.floor, 0.8);
+  assert.ok(j.steps.length > 5);
+  for (let i = 1; i < j.steps.length; i++) assert.ok(j.steps[i].count <= j.steps[i - 1].count, 'counts fall as the threshold rises');
+  assert.ok(j.steps[0].count >= 1);
+});

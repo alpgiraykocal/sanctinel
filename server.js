@@ -332,7 +332,19 @@ function identifierCoverage() {
   return idCoverageCache;
 }
 
-function belowTheLine(params) {
+/*
+ * The scan runs in slices with the event loop free between them, the way
+ * searchindex.buildAsync builds the index. It used to run in one synchronous
+ * pass — 2 to 7 seconds on the free tier during which the process answered
+ * nobody, every other visitor's search included. A worker thread would need
+ * its own copy of the snapshot, ~250MB that a 512MB instance does not have;
+ * yielding costs nothing. One scan at a time (see the route): two interleaved
+ * scans would each take twice as long and hold twice the transient memory.
+ */
+const BTL_SLICE = 1500;
+let btlRunning = false;
+
+async function belowTheLine(params) {
   const q = (params.get('q') || '').trim().slice(0, MAX_Q);
   const listFilter = (params.get('list') || '').slice(0, MAX_FIELD);
   const programFilter = (params.get('program') || '').slice(0, MAX_FIELD);
@@ -372,7 +384,13 @@ function belowTheLine(params) {
     return at > 0 && /[^A-Z0-9]/.test(n[at - 1]);
   };
 
-  for (const e of snapshot.entities) {
+  // Pinned for the whole scan: a refresh that swaps `snapshot` between slices
+  // must not leave half the counts from one list and half from another.
+  const scanned = snapshot;
+  const entities = scanned.entities;
+  for (let i = 0; i < entities.length; i++) {
+    if (i && i % BTL_SLICE === 0) await new Promise((r) => setImmediate(r));
+    const e = entities[i];
     if (authorityFilter && e.authority !== authorityFilter) continue;
     if (listFilter && !(e.lists || [e.list]).includes(listFilter)) continue;
     if (programFilter && !e.programs.includes(programFilter)) continue;
@@ -429,7 +447,7 @@ function belowTheLine(params) {
   const identifier = shape ? {
     shape,
     carriers: coverage.get(shape) || 0,
-    total: snapshot.count,
+    total: scanned.count,
     // Every identifier type present, so "we hold almost no IMOs" is visible
     // rather than inferred.
     types: [...coverage.entries()].sort((a, b) => b[1] - a[1]).slice(0, 12).map(([type, n]) => ({ type, count: n })),
@@ -717,7 +735,15 @@ function handle(req, res) {
           reason: room.reason,
         }, { 'Retry-After': '120' }, req);
       }
-      return sendJson(res, 200, belowTheLine(url.searchParams), null, req);
+      if (btlRunning) {
+        return sendJson(res, 503, { error: 'another below-the-line scan is running — try again in a few seconds' }, { 'Retry-After': '5' }, req);
+      }
+      btlRunning = true;
+      belowTheLine(url.searchParams)
+        .then((out) => sendJson(res, 200, out, null, req))
+        .catch((e) => { console.error('below-the-line error:', e && e.stack || e); if (!res.headersSent) sendJson(res, 500, { error: 'internal error' }); })
+        .finally(() => { btlRunning = false; });
+      return;
     }
 
     if (p === '/api/graph/ego-network') {
