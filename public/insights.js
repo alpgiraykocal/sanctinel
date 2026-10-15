@@ -104,7 +104,7 @@ function filtered() {
 
 function renderRecent(reset) {
   const rows = filtered();
-  if (reset) shown = 0;
+  if (reset) { shown = 0; const pane = $('recentList').closest('.pane'); if (pane) pane.scrollTop = 0; }
   shown = Math.min(rows.length, shown + PAGE);
   $('recentList').innerHTML = rows.slice(0, shown).map(renderRecentRow).join('') ||
     '<p class="chart-empty">No designations match these filters.</p>';

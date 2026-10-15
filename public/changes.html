@@ -11,7 +11,7 @@
   <script src="theme.js"></script>
   <link rel="stylesheet" href="styles.css" />
 </head>
-<body>
+<body class="app page-changes">
   <a class="skip-link" href="#main">Skip to content</a>
 
   <header class="site-header">
@@ -29,9 +29,13 @@
         <span class="brand-tag">Sanctions screening &amp; ownership intelligence</span>
       </span>
     </a>
+    <nav class="site-nav" aria-label="Main">
+      <a href="./" class="nav-item"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M10 3a7 7 0 0 1 5.6 11.2l4.6 4.6-1.4 1.4-4.6-4.6A7 7 0 1 1 10 3Zm0 2a5 5 0 1 0 0 10 5 5 0 0 0 0-10Z"/></svg><span>Screen</span></a>
+      <a href="changes.html" class="nav-item" aria-current="page"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 1 1 0 20 10 10 0 0 1 0-20Zm0 2a8 8 0 1 0 0 16 8 8 0 0 0 0-16Zm1 3v4.6l3.2 3.2-1.4 1.4L11 12.4V7h2Z"/></svg><span>What changed</span></a>
+      <a href="insights.html" class="nav-item"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M4 20V10h3v10H4Zm6.5 0V4h3v16h-3ZM17 20v-7h3v7h-3Z"/></svg><span>Insights</span></a>
+      <a href="about.html" class="nav-item"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 1 1 0 20 10 10 0 0 1 0-20Zm0 2a8 8 0 1 0 0 16 8 8 0 0 0 0-16Zm1 6v7h-2v-7h2Zm0-3v2h-2V7h2Z"/></svg><span>About</span></a>
+    </nav>
     <div class="header-right">
-      <a class="btn-ghost" href="./">← Back to screening</a>
-      <a class="btn-ghost nav-link" href="insights.html">Insights</a>
       <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle dark mode" title="Toggle dark mode">
         <svg class="sun" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10Zm0-5v3m0 14v3M4.2 4.2l2.1 2.1m11.4 11.4 2.1 2.1M2 12h3m14 0h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/></svg>
         <svg class="moon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"/></svg>
@@ -41,45 +45,76 @@
 
   <div class="coverage-bar" id="coverageBar" role="alert" hidden>
     <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M12 2 1 21h22L12 2Zm1 15h-2v-2h2v2Zm0-4h-2V9h2v4Z"/></svg>
-    <p id="coverageText"></p>
+    <details class="bar-details"><summary id="coverageSummary"></summary><p id="coverageText"></p></details>
   </div>
 
-  <main id="main" class="doc doc-wide">
-    <h1>What changed</h1>
-    <p class="lede">Parties that entered or left the lists when the snapshot was last rebuilt. This is the rescreening trigger: a party added here may already be in your book, and a party removed here may be one whose funds you are still holding.</p>
-    <p id="changesProvenance" class="snap-provenance">Loading…</p>
+  <main id="main" class="dash dash-changes">
+    <div class="dash-top">
+      <div class="dash-title">
+        <h1>What changed</h1>
+        <p id="changesProvenance" class="snap-provenance">Loading…</p>
+        <details class="help-more page-help"><summary>Reading this page</summary>
+          <div class="page-help-body">
+          <p>Parties that entered or left the lists when the snapshot was last rebuilt, and every rebuild before it. This is the rescreening trigger: a party added here may already be in your book, and a party removed here may be one whose funds you are still holding.</p>
+          <ul class="doc-list">
+        <li>The comparison is between <strong>two consecutive snapshot builds</strong>, not between two dates you chose. If a build was skipped, its changes fold into the next one.</li>
+        <li>A party is matched by the authority's own entity id. An authority that reissues a party under a new id will show as one removal plus one addition.</li>
+        <li>A <strong>bulk swing</strong> is one authority adding or removing hundreds of parties in a single rebuild. That is an authority returning to or leaving the snapshot, or reissuing its ids — not a day of designations — so the history hides those rows unless you ask for them.</li>
+        <li>Changes <em>within</em> a record — a new alias, a corrected date of birth, an added address — are not listed here. Only parties entering or leaving the lists are.</li>
+        <li>If an authority is missing from the snapshot entirely, its parties will appear as a mass removal. The banner at the top of the page says when that is the case, and it means the data is incomplete, not that thousands were delisted.</li>
+        <li>None of this is a determination. Verify any specific party against the issuing authority — see <a href="about.html">about &amp; methodology</a>.</li>
+      </ul>
+          </div>
+        </details>
+      </div>
+      <div id="changesUnavailable" class="no-hits" hidden></div>
+      <section class="doc-stats" id="changesHeadline" aria-label="Change totals" hidden></section>
+    </div>
 
-    <div id="changesUnavailable" class="no-hits" hidden></div>
+    <div class="col-tabs" role="tablist" aria-label="Change lists">
+      <button type="button" role="tab" id="tabAdded" data-tab="added" aria-selected="true">Added</button>
+      <button type="button" role="tab" id="tabRemoved" data-tab="removed" aria-selected="false">Removed</button>
+      <button type="button" role="tab" id="tabHistory" data-tab="history" aria-selected="false">History</button>
+    </div>
 
-    <section class="doc-stats" id="changesHeadline" aria-label="Change totals" hidden></section>
+    <div class="dash-cols" id="changesCols" data-active="added">
+      <div id="changesBody" class="cols-contents" hidden>
+        <div class="changes-controls" data-col="added removed">
+          <span class="ctl-label">Latest rebuild</span>
+          <label class="field">
+            <span class="field-label">Authority</span>
+            <select id="cAuthority"><option value="">All authorities</option></select>
+          </label>
+          <label class="field">
+            <span class="field-label">Find</span>
+            <input id="cText" type="search" placeholder="Name or list" autocomplete="off" />
+          </label>
+          <button class="btn-ghost" id="cExport" type="button">Export CSV</button>
+        </div>
 
-    <section id="changesBody" hidden>
-      <div class="changes-controls">
-        <label class="field">
-          <span class="field-label">Authority</span>
-          <select id="cAuthority"><option value="">All authorities</option></select>
-        </label>
-        <label class="field">
-          <span class="field-label">Find</span>
-          <input id="cText" type="search" placeholder="Name or list" autocomplete="off" />
-        </label>
-        <button class="btn-ghost" id="cExport" type="button">Export CSV</button>
+        <section class="card pane col-added" data-col="added" tabindex="-1" aria-labelledby="addedTitle">
+          <div class="card-sticky">
+            <h2 id="addedTitle">Added <span class="h3-note" id="addedNote"></span></h2>
+            <p class="card-note">New designations. Screen these against your existing book — a party added today may have been your counterparty yesterday.</p>
+          </div>
+          <div id="addedList" class="changes-list"></div>
+          <button id="addedMore" class="btn-ghost more-btn" type="button" hidden>Show more</button>
+        </section>
+
+        <section class="card pane col-removed" data-col="removed" tabindex="-1" aria-labelledby="removedTitle">
+          <div class="card-sticky">
+            <h2 id="removedTitle">Removed <span class="h3-note" id="removedNote"></span></h2>
+            <p class="card-note">Present in the previous snapshot, absent from this one — typically a delisting, occasionally a reissued id. A removal is <strong>not</strong> self-executing: confirm the delisting with the issuing authority before releasing anything.</p>
+          </div>
+          <div id="removedList" class="changes-list"></div>
+          <button id="removedMore" class="btn-ghost more-btn" type="button" hidden>Show more</button>
+        </section>
       </div>
 
-      <h2>Added <span class="h3-note" id="addedNote"></span></h2>
-      <p>New designations. Screen these against your existing book — a party added today may have been your counterparty yesterday.</p>
-      <div id="addedList" class="changes-list"></div>
-      <button id="addedMore" class="btn-ghost more-btn" type="button" hidden>Show more</button>
-
-      <h2>Removed <span class="h3-note" id="removedNote"></span></h2>
-      <p>Parties present in the previous snapshot and absent from this one — typically a delisting, occasionally a re-identification by the authority. A removal is <strong>not</strong> self-executing: confirm the delisting against the issuing authority before releasing anything, and keep the blocking record either way.</p>
-      <div id="removedList" class="changes-list"></div>
-      <button id="removedMore" class="btn-ghost more-btn" type="button" hidden>Show more</button>
-    </section>
-
-    <section id="historySection" aria-labelledby="historyTitle" hidden>
+      <section id="historySection" class="card pane col-history" data-col="history" tabindex="-1" aria-labelledby="historyTitle" hidden>
+      <div class="card-sticky">
       <h2 id="historyTitle">History <span class="h3-note" id="historyNote"></span></h2>
-      <p>Every rebuild's additions and removals, newest first — so the date a party came off a list is still here after the next rebuild. <span id="historySpan"></span></p>
+      <p class="card-note">Every rebuild's additions and removals, newest first — so the date a party came off a list is still here after the next rebuild. <span id="historySpan"></span></p>
       <div class="changes-controls">
         <label class="field">
           <span class="field-label">Change</span>
@@ -104,32 +139,21 @@
         <button class="btn-ghost" id="hExport" type="button">Export CSV</button>
       </div>
       <p class="h-bulk-note" id="hBulkNote" hidden></p>
+      </div>
       <div id="historyList" class="changes-list" aria-live="polite"></div>
       <button id="historyMore" class="btn-ghost more-btn" type="button" hidden>Show more</button>
     </section>
-
-    <section>
-      <h2>Reading this page</h2>
-      <ul class="doc-list">
-        <li>The comparison is between <strong>two consecutive snapshot builds</strong>, not between two dates you chose. If a build was skipped, its changes fold into the next one.</li>
-        <li>A party is matched by the authority's own entity id. An authority that reissues a party under a new id will show as one removal plus one addition.</li>
-        <li>A <strong>bulk swing</strong> is one authority adding or removing hundreds of parties in a single rebuild. That is an authority returning to or leaving the snapshot, or reissuing its ids — not a day of designations — so the history hides those rows unless you ask for them.</li>
-        <li>Changes <em>within</em> a record — a new alias, a corrected date of birth, an added address — are not listed here. Only parties entering or leaving the lists are.</li>
-        <li>If an authority is missing from the snapshot entirely, its parties will appear as a mass removal. The banner at the top of the page says when that is the case, and it means the data is incomplete, not that thousands were delisted.</li>
-        <li>None of this is a determination. Verify any specific party against the issuing authority — see <a href="about.html">about &amp; methodology</a>.</li>
-      </ul>
-    </section>
+    </div>
   </main>
 
-  <footer class="site-footer">
-    <div class="foot-brand"><strong>Sanctions Search</strong><span>Sanctions screening &amp; ownership intelligence</span></div>
-    <div class="foot-meta">
-      <span>Data: OFAC · EU · UN · UK OFSI · BIS · State Dept — public domain, refreshed daily.</span>
-      <span><a href="./">Screening tool</a> · <a href="changes.html">What changed</a> · <a href="insights.html">List insights</a> · <a href="about.html">About &amp; methodology</a> · not legal advice</span>
-    </div>
-  </footer>
-
   <script src="chrome.js"></script>
+  <nav class="tabbar" aria-label="Main">
+    <a href="./" class="nav-item"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M10 3a7 7 0 0 1 5.6 11.2l4.6 4.6-1.4 1.4-4.6-4.6A7 7 0 1 1 10 3Zm0 2a5 5 0 1 0 0 10 5 5 0 0 0 0-10Z"/></svg><span>Screen</span></a>
+    <a href="changes.html" class="nav-item" aria-current="page"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 1 1 0 20 10 10 0 0 1 0-20Zm0 2a8 8 0 1 0 0 16 8 8 0 0 0 0-16Zm1 3v4.6l3.2 3.2-1.4 1.4L11 12.4V7h2Z"/></svg><span>What changed</span></a>
+    <a href="insights.html" class="nav-item"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M4 20V10h3v10H4Zm6.5 0V4h3v16h-3ZM17 20v-7h3v7h-3Z"/></svg><span>Insights</span></a>
+    <a href="about.html" class="nav-item"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 1 1 0 20 10 10 0 0 1 0-20Zm0 2a8 8 0 1 0 0 16 8 8 0 0 0 0-16Zm1 6v7h-2v-7h2Zm0-3v2h-2V7h2Z"/></svg><span>About</span></a>
+  </nav>
+
   <script src="changes.js"></script>
 </body>
 </html>

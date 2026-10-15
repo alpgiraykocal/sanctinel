@@ -30,3 +30,29 @@ const fmtDate = (iso) => { const t = Date.parse(iso); return t ? new Date(t).toL
   document.getElementById('listCov').innerHTML = (m.lists || []).map((l) => `<li>${esc(l)}</li>`).join('');
   document.getElementById('progCov').innerHTML = (m.programs || []).map((p) => `<span class="prog-chip">${esc(p)}</span>`).join(' ');
 })();
+
+/*
+ * Table of contents for the left pane, built from the page's own section
+ * headings so it can never list a section that is not there. The current
+ * section is highlighted as the content pane scrolls.
+ */
+(function buildToc() {
+  const toc = document.getElementById('toc');
+  const pane = document.getElementById('docPane');
+  if (!toc || !pane) return;
+  const heads = [...pane.querySelectorAll('section > h2')];
+  heads.forEach((h, i) => { if (!h.id) h.id = 'sec-' + (i + 1); });
+  toc.innerHTML = '<p class="toc-title">On this page</p>' + heads.map((h) => `<a href="#${h.id}">${window.SS.esc(h.textContent)}</a>`).join('');
+  const links = [...toc.querySelectorAll('a')];
+  const mark = () => {
+    const top = pane.getBoundingClientRect().top;
+    let cur = heads[0];
+    for (const h of heads) if (h.getBoundingClientRect().top - top < 80) cur = h;
+    for (const a of links) {
+      if (a.getAttribute('href') === '#' + cur.id) a.setAttribute('aria-current', 'location');
+      else a.removeAttribute('aria-current');
+    }
+  };
+  pane.addEventListener('scroll', mark, { passive: true });
+  mark();
+})();

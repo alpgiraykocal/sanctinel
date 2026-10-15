@@ -1148,3 +1148,289 @@ code { font-family: var(--mono); color: var(--color-primary); }
    flex children that hold them shrink. */
 .result-card, .entity-detail, .changes-list, .btl-panel, .result-summary, .no-hits, .url-note, #printArea { overflow-wrap: anywhere; }
 .result-card, .result-card > *, .rc-detail, .attr-group, .detail-row, .detail-row dd, .layout > * { min-width: 0; }
+
+/* =====================================================================
+   App shell — the page never scrolls; each region scrolls on its own.
+
+   The document is exactly one viewport tall. The header (with the main
+   navigation), the one-line status bars and, on phones, the tab bar are
+   fixed rows; <main> takes what is left, and inside it every region that
+   can grow — the search form, the results, a record's detail, each
+   dashboard card, each change column, the about text — is its own scroll
+   container (.pane). Before this, the results page alone was 25,830px of
+   document on a laptop and the search controls scrolled away with it.
+   ===================================================================== */
+html:has(body.app) { height: 100%; }
+body.app {
+  display: flex; flex-direction: column;
+  height: 100vh; height: 100dvh; min-height: 0; overflow: hidden;
+}
+body.app > * { flex: none; }
+body.app > main { flex: 1 1 auto; min-height: 0; overflow: hidden; }
+.pane { overflow: auto; overscroll-behavior: contain; min-height: 0; }
+.pane:focus { outline: none; }
+.pane:focus-visible { box-shadow: var(--ring); }
+
+/* Header + main navigation */
+body.app .site-header {
+  position: relative; top: auto; flex-wrap: nowrap; gap: 14px;
+  padding: 9px clamp(16px, 3vw, 32px);
+}
+body.app .brand-name { font-size: 1.12rem; }
+body.app .brand-logo svg { width: 30px; height: 30px; }
+.site-nav { display: flex; align-items: center; gap: 2px; margin-right: auto; margin-left: 8px; min-width: 0; }
+.nav-item {
+  display: inline-flex; align-items: center; gap: 6px; white-space: nowrap;
+  padding: 7px 12px; border-radius: 999px; text-decoration: none;
+  color: var(--color-body); font-size: .84rem; font-weight: 600;
+  transition: background .15s ease, color .15s ease;
+}
+.nav-item:hover { background: var(--color-surface-2); color: var(--color-foreground); }
+.nav-item[aria-current="page"] { background: rgba(37, 99, 235, .1); color: var(--color-primary); }
+:root[data-theme="dark"] .nav-item[aria-current="page"] { background: rgba(96, 165, 250, .14); }
+.site-nav .nav-item svg { display: none; }
+.tabbar { display: none; }
+@media (max-width: 1200px) { body.app .brand-tag { display: none; } }
+
+/* Status bars: one line each, details on demand */
+body.app .coverage-bar, body.app .notice-bar {
+  margin: 8px clamp(16px, 3vw, 32px) 0; padding: 6px 12px; align-items: center; gap: 8px;
+}
+.bar-details { flex: 1; min-width: 0; font-size: .8rem; }
+.bar-details > summary {
+  cursor: pointer; list-style: none; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.bar-details > summary::-webkit-details-marker { display: none; }
+.bar-details[open] > summary { white-space: normal; }
+.bar-details > p { margin: 6px 0 2px; max-height: 32vh; overflow: auto; }
+.bar-more { color: var(--color-muted-fg); font-weight: 500; }
+.bar-details[open] .bar-more { display: none; }
+
+/* Disclosure used for help text and page notes */
+.help-more > summary {
+  cursor: pointer; font-size: .74rem; font-weight: 600; color: var(--color-primary);
+  list-style: none; display: inline-flex; align-items: center; gap: 4px;
+}
+.help-more > summary::-webkit-details-marker { display: none; }
+.help-more > summary::before { content: '▸'; font-size: .7em; transition: transform .15s ease; }
+.help-more[open] > summary::before { transform: rotate(90deg); }
+.help-more > p { margin: 6px 0 0; }
+
+/* ---- Screening page: form pane | results pane ---- */
+body.app main.layout {
+  height: 100%; grid-template-columns: 360px minmax(0, 1fr); gap: 20px;
+  padding: 14px clamp(16px, 3vw, 32px) 0; align-items: stretch;
+}
+body.app .search-panel {
+  position: static; top: auto; padding: 0; display: flex; flex-direction: column;
+  margin-bottom: 14px;
+}
+body.app .search-panel form { padding: 16px 18px 0; gap: 14px; flex: 1 0 auto; }
+.filters-box { border-top: 1px solid var(--color-border); padding-top: 12px; }
+.filters-box > summary {
+  cursor: pointer; list-style: none; display: flex; align-items: center; gap: 8px;
+  font-size: .8rem; font-weight: 600; color: var(--color-body);
+}
+.filters-box > summary::-webkit-details-marker { display: none; }
+.filters-box > summary::after { content: '▾'; margin-left: auto; color: var(--color-muted-fg); transition: transform .15s ease; }
+.filters-box:not([open]) > summary::after { transform: rotate(-90deg); }
+.filters-box .filters { padding-top: 14px; gap: 14px; }
+.filters-count {
+  font-size: .68rem; font-weight: 700; color: var(--color-on-primary); background: var(--color-primary);
+  border-radius: 999px; padding: 1px 8px;
+}
+.submit-bar {
+  position: sticky; bottom: 0; z-index: 2; margin: auto -18px 0; padding: 12px 18px 16px;
+  background: linear-gradient(to top, var(--color-surface) 72%, transparent);
+}
+.submit-bar .btn-primary { width: 100%; }
+body.app .results { padding: 0 6px 20px 2px; }
+body.app .results-head {
+  position: sticky; top: 0; z-index: 4; padding: 2px 0 10px;
+  background: var(--color-background);
+  box-shadow: 0 8px 10px -10px rgba(15, 23, 42, .18);
+}
+body.app .grp-head { position: static; }
+
+/* ---- Record page: identity pane | detail pane ---- */
+body.app main.entity-main { height: 100%; padding: 14px clamp(16px, 3vw, 32px); }
+#entityBody:not([hidden]) {
+  height: 100%; display: grid; gap: 20px;
+  grid-template-columns: minmax(300px, 440px) minmax(0, 1fr);
+}
+.entity-summary, .entity-detail {
+  background: var(--color-surface); border: 1px solid var(--color-border);
+  border-radius: var(--radius); box-shadow: var(--shadow); padding: 20px 22px;
+}
+#entityBody .entity-detail { margin-top: 0; }
+.entity-summary .entity-actions { margin-bottom: 14px; }
+
+/* ---- Dashboards (insights, what changed): fixed top, scrolling cards ---- */
+body.app main.dash {
+  height: 100%; display: flex; flex-direction: column; gap: 12px;
+  padding: 12px clamp(16px, 3vw, 32px) 14px;
+}
+.dash-top {
+  flex: none; display: grid; grid-template-columns: minmax(240px, 1fr) minmax(0, 2fr);
+  gap: 16px; align-items: center;
+}
+.dash-title { position: relative; min-width: 0; }
+.dash-title h1 { font-size: 1.35rem; font-weight: 700; letter-spacing: -.02em; margin: 0 0 2px; }
+.dash .snap-provenance { margin: 0 0 4px; }
+.dash .doc-stats { margin: 0; gap: 10px; }
+.dash .stat { padding: 10px 8px; }
+.dash .stat-num { font-size: 1.3rem; }
+.page-help-body {
+  position: absolute; z-index: 30; left: 0; top: 100%; width: min(640px, 90vw);
+  max-height: 60vh; overflow: auto; margin-top: 6px; padding: 14px 16px;
+  background: var(--color-surface); border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-sm); box-shadow: var(--shadow-lg); font-size: .84rem;
+}
+.page-help-body p { margin: 0 0 10px; color: var(--color-body); }
+.page-help-body .doc-list { font-size: .82rem; }
+
+.dash-grid {
+  flex: 1; min-height: 0; display: grid; gap: 14px;
+  grid-template-columns: repeat(3, minmax(0, 1fr)); grid-template-rows: repeat(2, minmax(0, 1fr));
+}
+.card-auth { grid-column: 1; grid-row: 1; }
+.card-time { grid-column: 2; grid-row: 1; }
+.card-recent { grid-column: 3; grid-row: 1 / span 2; }
+.card-comp { grid-column: 1; grid-row: 2; }
+.card-prog { grid-column: 2; grid-row: 2; }
+.card {
+  background: var(--color-surface); border: 1px solid var(--color-border);
+  border-radius: var(--radius); box-shadow: var(--shadow); padding: 0 16px 16px;
+}
+.card > h2, .card-sticky {
+  position: sticky; top: 0; z-index: 3; background: var(--color-surface);
+}
+.card > h2, .card-sticky > h2 { font-size: 1rem; font-weight: 600; margin: 0; padding: 14px 0 8px; }
+.card-sticky { padding-bottom: 10px; border-bottom: 1px solid var(--color-border); margin-bottom: 10px; }
+.card-sticky > h2 { position: static; }
+.card h3 { font-size: .72rem; text-transform: uppercase; letter-spacing: .05em; color: var(--color-primary); margin: 14px 0 8px; }
+.card-note { font-size: .78rem; color: var(--color-muted-fg); margin: 0 0 10px; }
+.card .col-chart { height: 120px; box-shadow: none; }
+.card .doc-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.card .recent-controls { grid-template-columns: repeat(3, minmax(0, 1fr)); margin: 10px 0 8px; gap: 8px; }
+.card .recent-count { margin-bottom: 0; }
+.card .recent-item { grid-template-columns: 96px 1fr; box-shadow: none; }
+.card .recent-item > :last-child:not(:nth-child(2)) { grid-column: 2; }
+
+/* What changed: latest rebuild (two columns) + history */
+.col-tabs { display: none; }
+.dash-cols {
+  flex: 1; min-height: 0; display: grid; gap: 14px;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1.25fr);
+  grid-template-rows: auto minmax(0, 1fr);
+  grid-template-areas: "ctl ctl hist" "add rem hist";
+}
+.cols-contents { display: contents; }
+.dash-cols .changes-controls {
+  grid-area: ctl; display: flex; align-items: flex-end; gap: 10px; flex-wrap: wrap; margin: 0;
+}
+.ctl-label { align-self: center; font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--color-muted-fg); }
+.dash-cols .changes-controls .field { min-width: 150px; flex: 1; }
+.dash-cols .changes-controls select, .dash-cols .changes-controls input[type=search] { padding: 8px 10px; }
+.col-added { grid-area: add; }
+.col-removed { grid-area: rem; }
+.col-history { grid-area: hist; }
+.col-history .changes-controls { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin: 8px 0 0; }
+.col-history .changes-controls .field-check, .col-history #hExport { align-self: center; }
+.dash-cols .chg-row { box-shadow: none; }
+.field-check > span { font-size: .8rem; font-weight: 600; color: var(--color-body); }
+
+/* ---- About: contents pane | text pane ---- */
+body.app main.doc-shell { height: 100%; display: grid; grid-template-columns: 240px minmax(0, 1fr); }
+.toc { padding: 22px 12px 22px clamp(16px, 3vw, 32px); border-right: 1px solid var(--color-border); }
+.toc-title { margin: 0 0 8px 10px; font-size: .7rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--color-muted-fg); }
+.toc a { display: block; padding: 6px 10px; border-radius: 8px; font-size: .84rem; color: var(--color-body); text-decoration: none; }
+.toc a:hover { background: var(--color-surface-2); }
+.toc a[aria-current] { background: rgba(37, 99, 235, .1); color: var(--color-primary); font-weight: 600; }
+body.app #docPane.doc { max-width: none; margin: 0; padding: 22px clamp(16px, 4vw, 48px) 48px; scroll-padding-top: 12px; }
+body.app #docPane.doc > * { max-width: 860px; }
+
+/* ---- Narrower screens ---- */
+@media (max-width: 1100px) {
+  /* Dashboards: the whole of <main> becomes the one scrolling region and the
+     cards take their natural height — nested scrollers on a small screen are
+     harder to use than one. */
+  body.app main.dash:not(.dash-changes) { display: block; overflow: auto; overscroll-behavior: contain; }
+  main.dash:not(.dash-changes) .dash-top { margin-bottom: 12px; }
+  main.dash:not(.dash-changes) .dash-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: none; }
+  main.dash:not(.dash-changes) .dash-grid > .card { grid-column: auto; grid-row: auto; overflow: visible; }
+  main.dash:not(.dash-changes) .card-recent { grid-column: 1 / -1 !important; }
+  main.dash:not(.dash-changes) .card > h2, main.dash:not(.dash-changes) .card-sticky { position: static; }
+
+  /* What changed: the three columns become tabs, one column on screen. */
+  .col-tabs { display: flex; gap: 4px; flex: none; border-bottom: 1px solid var(--color-border); }
+  .col-tabs [role=tab] {
+    flex: 1; padding: 8px 6px; font: inherit; font-size: .84rem; font-weight: 600; cursor: pointer;
+    background: none; border: 0; border-bottom: 2px solid transparent; color: var(--color-muted-fg);
+  }
+  .col-tabs [role=tab][aria-selected=true] { color: var(--color-primary); border-bottom-color: var(--color-primary); }
+  .dash-cols { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr); grid-template-areas: "ctl" "col"; }
+  .col-added, .col-removed, .col-history { grid-area: col; }
+  .dash-cols[data-active="added"] .col-removed,
+  .dash-cols[data-active="added"] .col-history,
+  .dash-cols[data-active="removed"] .col-added,
+  .dash-cols[data-active="removed"] .col-history,
+  .dash-cols[data-active="history"] .col-added,
+  .dash-cols[data-active="history"] .col-removed,
+  .dash-cols[data-active="history"] .changes-controls[data-col] { display: none; }
+  .dash-cols[data-active="history"] { grid-template-rows: minmax(0, 1fr); grid-template-areas: "col"; }
+}
+@media (max-width: 900px) {
+  /* Screening: the form on top (capped, scrolls itself), results below. */
+  body.app main.layout {
+    grid-template-columns: minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr);
+    gap: 10px; padding: 8px 12px 0;
+  }
+  body.app .search-panel { max-height: 48vh; max-height: 48dvh; margin-bottom: 0; }
+  /* On a phone the results pane is a few hundred pixels tall; a pinned header
+     with the summary, a tie note and the actions would fill most of it. */
+  body.app .results-head { position: static; box-shadow: none; }
+  #q-help { display: none; }
+  body.app .search-panel form { padding: 12px 14px 0; gap: 10px; }
+  .submit-bar { margin: auto -14px 0; padding: 10px 14px 12px; }
+
+  /* Record: one scrolling column. */
+  body.app main.entity-main { overflow: auto; overscroll-behavior: contain; padding: 10px 12px; }
+  #entityBody:not([hidden]) { display: block; height: auto; }
+  #entityBody .entity-summary, #entityBody .entity-detail { overflow: visible; }
+  #entityBody .entity-detail { margin-top: 12px; }
+
+  /* About: text only; the headings are the contents. */
+  body.app main.doc-shell { grid-template-columns: minmax(0, 1fr); }
+  .toc { display: none; }
+
+  .dash-top { grid-template-columns: minmax(0, 1fr); gap: 8px; }
+  .dash .doc-stats { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
+  .dash .stat { padding: 8px 4px; }
+  .dash .stat-num { font-size: 1.05rem; }
+  .dash .stat-sub { display: none; }
+  .dash .stat-lbl { font-size: .64rem; }
+  body.app main.dash { padding: 8px 12px 10px; gap: 8px; }
+}
+@media (max-width: 760px) {
+  /* The main navigation moves to a tab bar at the bottom of the screen. */
+  .site-nav { display: none; }
+  .tabbar {
+    display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 2px;
+    padding: 4px 6px calc(4px + env(safe-area-inset-bottom));
+    background: var(--color-surface); border-top: 1px solid var(--color-border);
+  }
+  .tabbar .nav-item { flex-direction: column; gap: 2px; padding: 6px 2px; border-radius: 10px; font-size: .68rem; justify-content: center; }
+  body.app .coverage-bar, body.app .notice-bar { margin: 6px 12px 0; }
+  main.dash:not(.dash-changes) .dash-grid { grid-template-columns: minmax(0, 1fr); }
+  .card .recent-controls, .col-history .changes-controls { grid-template-columns: minmax(0, 1fr); }
+  .dash-cols .changes-controls { gap: 6px; }
+  .ctl-label { display: none; }
+}
+
+/* Printing: give the document back its natural height. */
+@media print {
+  html:has(body.app), body.app { height: auto !important; overflow: visible !important; display: block !important; }
+  body.app > main, body.app .pane, body.app main.dash { height: auto !important; overflow: visible !important; }
+  .tabbar, .site-nav, .col-tabs { display: none !important; }
+}

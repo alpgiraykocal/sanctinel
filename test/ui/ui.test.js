@@ -112,15 +112,52 @@ test('hostile data renders as text everywhere, never as markup', { skip }, async
   await ctx.close();
 });
 
-test('no page scrolls sideways on a phone', { skip }, async () => {
-  for (const width of [320, 360, 390]) {
+/*
+ * The page itself never scrolls, in either direction, at any width: every
+ * region that can grow scrolls inside its own pane (see "App shell" in
+ * styles.css). Checked on phones, a tablet and a laptop.
+ */
+test('no page scrolls — vertically or sideways — at any width', { skip }, async () => {
+  for (const [width, height] of [[320, 640], [360, 740], [390, 844], [1024, 768], [1440, 900]]) {
     for (const url of PAGES) {
-      const { page, ctx } = await open(url, { viewport: { width, height: 800 } });
-      const [scroll, client] = await page.evaluate(() => [document.documentElement.scrollWidth, document.documentElement.clientWidth]);
-      assert.ok(scroll <= client, `${url} at ${width}px: ${scroll} > ${client}`);
+      const { page, ctx } = await open(url, { viewport: { width, height } });
+      for (const t of await page.$$('.rc-toggle')) await t.click().catch(() => {});
+      const [sw, cw, sh, ch] = await page.evaluate(() => {
+        const d = document.documentElement;
+        return [d.scrollWidth, d.clientWidth, d.scrollHeight, d.clientHeight];
+      });
+      assert.ok(sw <= cw, `${url} at ${width}px scrolls sideways: ${sw} > ${cw}`);
+      assert.ok(sh <= ch, `${url} at ${width}x${height} scrolls the page: ${sh} > ${ch}`);
       await ctx.close();
     }
   }
+});
+
+test('results scroll in their own pane and start at the top for a new search', { skip }, async () => {
+  const { page, ctx } = await open('/?q=Ivanov', { viewport: { width: 1280, height: 600 } });
+  for (const t of await page.$$('.rc-toggle')) await t.click();
+  const pane = await page.$('#resultsPane');
+  const scrollable = await pane.evaluate((el) => el.scrollHeight > el.clientHeight && getComputedStyle(el).overflowY === 'auto');
+  assert.ok(scrollable, 'the results pane is the scroller');
+  await pane.evaluate((el) => { el.scrollTop = el.scrollHeight; });
+  await page.fill('#q', 'NORTHERN STAR TRADING');
+  await page.press('#q', 'Enter');
+  await page.waitForTimeout(600);
+  assert.equal(await pane.evaluate((el) => el.scrollTop), 0);
+  await ctx.close();
+});
+
+test('on a phone, What changed shows one column at a time as tabs', { skip }, async () => {
+  const { page, ctx, errors } = await open('/changes.html', { viewport: { width: 390, height: 844 } });
+  assert.ok(await page.isVisible('.col-tabs'));
+  assert.ok(await page.isVisible('.col-added'));
+  assert.equal(await page.isVisible('.col-removed'), false);
+  await page.click('#tabHistory');
+  assert.ok(await page.isVisible('#historySection'));
+  assert.equal(await page.isVisible('.col-added'), false);
+  assert.equal(await page.getAttribute('#tabHistory', 'aria-selected'), 'true');
+  assert.deepEqual(errors, []);
+  await ctx.close();
 });
 
 test('the theme toggle works when storage is blocked', { skip }, async () => {

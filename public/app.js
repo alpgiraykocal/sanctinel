@@ -111,6 +111,9 @@ async function runSearch(e) {
   $('resultSummary').hidden = true;
   $('searchBtn').disabled = true;
   $('resultList').innerHTML = '<div class="skeleton"></div><div class="skeleton" style="margin-top:14px"></div>';
+  // The results pane keeps its scroll position between searches; a new result
+  // set must start at the top, not wherever the last one was left.
+  $('resultsPane').scrollTop = 0;
 
   try {
     const { res, body: data } = await window.SS.getJson('api/search?' + params, {
@@ -564,8 +567,27 @@ function initFromUrl() {
   if (p.get('yob')) $('yob').value = p.get('yob');
   if (p.get('country')) $('country').value = p.get('country');
   noteDroppedFilters(p);
+  updateFiltersCount();
   if (p.get('q')) { $('q').value = p.get('q'); runSearch(); }
 }
+
+/*
+ * The filters live in a collapsible box so the query and the Screen button stay
+ * in view. Its summary says how many are active, so a closed box can never
+ * hide a filter that is narrowing the results; on a phone it starts closed,
+ * since there the whole panel shares the screen with the results.
+ */
+function updateFiltersCount() {
+  const n = ['authority', 'list', 'program', 'yob', 'country'].filter((id) => $(id).value.trim()).length
+    + ($('threshold').value !== '0.95' ? 1 : 0);
+  $('filtersCount').hidden = !n;
+  $('filtersCount').textContent = `${n} active`;
+}
+for (const id of ['authority', 'list', 'program', 'yob', 'country', 'threshold']) {
+  $(id).addEventListener('input', updateFiltersCount);
+  $(id).addEventListener('change', updateFiltersCount);
+}
+if (window.matchMedia && window.matchMedia('(max-width: 900px)').matches) $('filtersBox').open = false;
 
 // The dropped-filter note describes the link as opened; once the filters are
 // touched it no longer describes anything.
