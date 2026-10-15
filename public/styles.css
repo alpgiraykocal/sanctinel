@@ -1620,3 +1620,19 @@ select { padding-right: 26px; }
 .card .recent-name {
   color: var(--color-foreground); font-size: .88rem; font-weight: 600; letter-spacing: 0; text-transform: none; margin: 0 0 4px;
 }
+
+/* Source annotations: notes, document status, refuted values, lapsed listings */
+.src-note { color: var(--color-muted-fg); font-size: .78rem; }
+.src-note::before { content: '— '; }
+.detail-row.refuted dd { text-decoration: line-through; text-decoration-color: var(--color-muted-fg); }
+.detail-row.refuted .src-note { text-decoration: none; display: inline-block; }
+.doc-status {
+  display: inline-block; margin-left: 4px; padding: 0 5px; border-radius: var(--radius-xs);
+  font-size: .66rem; font-weight: 700; text-transform: uppercase; letter-spacing: .03em;
+  color: var(--color-warn-fg, #92400E); background: var(--color-warn-bg, #FEF3C7);
+}
+:root[data-theme="dark"] .doc-status { color: #FCD34D; background: rgba(245, 158, 11, .16); }
+.tag.tag-expired, :root[data-theme="dark"] .tag.tag-expired {
+  background: var(--color-surface-2); border-color: var(--color-border-strong); color: var(--color-muted-fg);
+  font-weight: 700; text-transform: uppercase; letter-spacing: .03em;
+}

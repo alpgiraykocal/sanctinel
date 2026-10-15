@@ -45,6 +45,7 @@ const history = require('./lib/history');
 const { createLimiter, clientAddress } = require('./lib/ratelimit');
 const { snapshotStats } = require('./lib/stats');
 const searchIndex = require('./lib/searchindex');
+const { expiredOn } = require('./lib/normalize');
 const { securityHeaders, sendJson, encodeJson, sendEncoded, createStaticHandler } = require('./lib/http');
 
 // ---- config (env-overridable) ----
@@ -494,6 +495,10 @@ async function belowTheLine(params) {
  * threshold that did not before.
  */
 function rankResults(a, b) {
+  // A lapsed restriction (an expired BIS denial order) ranks below every live
+  // one: it is history, not an obligation, and must not head a result list
+  // that a reviewer reads top-down. See lib/normalize lapsedDenial.
+  if (!a.expired !== !b.expired) return a.expired ? 1 : -1;
   if (b.score !== a.score) return b.score - a.score;
   const primary = (r) => (r.matchedField === 'primary name' ? 0 : 1);
   if (primary(a) !== primary(b)) return primary(a) - primary(b);
@@ -558,6 +563,7 @@ function search({ q, listFilter, programFilter, authorityFilter, threshold, mods
       relationships: e.relationships || [], attributes: e.attributes, identifiers: e.identifiers, remarks: e.remarks,
       score: m.score, matchType: m.matchType, matchedName: m.matchedName, matchedField: m.matchedField,
       explain: m.explain || '', corroborated: !!m.corroborated, conflict: !!m.conflict,
+      expired: expiredOn(e),
       // 50 Percent Rule lead: does this party's ownership chain reach a blocked
       // person, and are there several of them (the aggregate case). Null when
       // there is nothing to report, so the row stays quiet unless it matters.
@@ -581,8 +587,9 @@ function search({ q, listFilter, programFilter, authorityFilter, threshold, mods
   // one value, and a reader takes the first row for the best answer unless told
   // the leaders are indistinguishable — so tell them, and say what separates
   // them (date of birth, nationality, the corroborating-identifier inputs).
-  const topScore = results.length ? results[0].score : 0;
-  const topScoreTies = results.filter((r) => r.score === topScore).length;
+  const live = results.filter((r) => !r.expired);
+  const topScore = live.length ? live[0].score : (results.length ? results[0].score : 0);
+  const topScoreTies = (live.length ? live : results).filter((r) => r.score === topScore).length;
 
   const payload = {
     query: q, threshold, count: results.length,
