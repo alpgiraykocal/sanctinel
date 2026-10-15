@@ -236,6 +236,15 @@ comparing only to last time ratchets, and one degraded publish would become the 
 normal. Moving a floor is a reviewable diff. `ALLOW_QUALITY_DROP=1` overrides, for a
 field a publisher genuinely stopped providing.
 
+On GitHub that override is a checkbox, not an edit: **Actions → Refresh OFAC
+data → Run workflow → "Accept a field-level quality regression"**. It applies to
+that one run only (the schedule never sets it), the log lists every regression
+it accepted by name, and the accepted numbers become the baseline the next
+build is compared against. Use it after reading the `data-refresh` issue and
+confirming the publisher really changed — State's move of nonproliferation
+designations from its ACN list to OFAC's SDN list in October 2026 is the
+example it was added for.
+
 Exercised against six synthetic degradations — a renamed label, an emptied address block,
 a vanished ownership graph, an unparseable date format, country fields replaced with
 internal codes, and an ordinary day of churn. The first five block or alarm; the ordinary

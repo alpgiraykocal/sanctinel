@@ -216,6 +216,16 @@ function computeChanges(prev, next) {
    * (date parsing, country resolution) still refuses: carrying one authority
    * forward cannot fix that.
    */
+  /*
+   * An accepted regression is recorded in the log, by name: the override is
+   * the one way a measured field can fall without the build going red, so a
+   * run that used it has to say what it let through.
+   */
+  if (qualityOverride && gate.regressions && gate.regressions.length) {
+    console.log('\nALLOW_QUALITY_DROP set — accepting these regressions as the new baseline:');
+    for (const f of gate.regressions) console.log(`  ACCEPTED  ${f.message}`);
+  }
+
   let qualityCarried = [];
   if (!gate.publishable && !qualityOverride && prev) {
     const scoped = quality.regressedAuthorities(gate, s.authorities);
