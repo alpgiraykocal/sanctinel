@@ -42,3 +42,24 @@ test('the committed snapshot directory reads and matches its own meta count', ()
   assert.ok(back.entities.length > 30000);
   assert.ok(back.meta.authorityFreshness);
 });
+
+// Shards are split on raw bytes and decoded line by line; a multi-byte name
+// must come back intact, including one that ends a shard without a newline.
+test('non-Latin names survive the byte-level line split', () => {
+  const dir = tmp();
+  const names = ['ГУСЕВ Денис', 'محمد علي', '金正恩', 'Ελληνικά', 'Zoë Ñúñez'];
+  const entities = names.map((n, i) => ({ id: String(i + 1), authority: 'UK', name: n, names: [{ name: n }] }));
+  writeSnapshotDir({}, entities, dir);
+  const f = path.join(dir, 'UK.ndjson');
+  fs.writeFileSync(f, fs.readFileSync(f, 'utf8').replace(/\n$/, ''));
+  assert.deepEqual(readSnapshotDir(dir).entities.map((e) => e.name).sort(), names.slice().sort());
+});
+
+test('interning shared strings leaves every record deep-equal', () => {
+  const { internStrings } = require('../lib/ingest');
+  const make = () => [
+    { id: '1', lists: ['SDN List'], attributes: [{ group: 'Other', label: 'Secondary sanctions risk', value: 'Section 1(b)' }], n: 3, x: null, ok: true },
+    { id: '2', lists: ['SDN List'], attributes: [{ group: 'Other', label: 'Secondary sanctions risk', value: 'Section 1(b)' }], n: 4, x: null, ok: false },
+  ];
+  assert.deepEqual(internStrings(make()), make());
+});

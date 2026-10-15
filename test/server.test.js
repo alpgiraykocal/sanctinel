@@ -138,3 +138,16 @@ test('static files: gzip when accepted, identical bytes on repeat, directories a
   const h = await fetch(BASE + '/app.js', { method: 'HEAD' });
   assert.equal(h.status, 200);
 });
+
+// Search responses are cached encoded (gzipped); a client that does not accept
+// gzip must get the same document, decompressed, and a repeat must match.
+test('search: gzip and identity clients get the same cached result', async () => {
+  const q = '/api/search?q=' + encodeURIComponent('Northern Star Trading');
+  const a = await get(q, { 'Accept-Encoding': 'gzip' });
+  const plain = await get(q, { 'Accept-Encoding': 'identity' });
+  assert.equal(plain.headers.get('content-encoding'), null);
+  const ja = await a.json(), jp = await plain.json();
+  assert.deepEqual(jp, ja);
+  assert.deepEqual(await (await get(q, { 'Accept-Encoding': 'gzip' })).json(), ja);
+  assert.equal(ja.results[0].name, 'NORTHERN STAR TRADING LLC');
+});

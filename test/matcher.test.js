@@ -105,3 +105,53 @@ test('a contradicting year of birth is flagged as a conflict', () => {
   const hit = top('Dmitri Sergeyevich Ivanov', 0.95, { yob: '1800', country: '' })[0];
   if (hit) assert.equal(!!hit.m.conflict || hit.m.score < 1, true);
 });
+
+// bestNameFor skips names whose best possible score is under the floor (less
+// the most the year-of-birth/country modifiers can add). That is only sound if
+// it never changes an answer: every hit at a floor must be exactly the hit a
+// floor-free run returns, and nothing below the floor may appear.
+test('floor pruning returns exactly the floor-free hits above the floor', () => {
+  const typo = (s) => (s.length > 6 ? s.slice(0, 3) + s.slice(4) : s);
+  const queries = [];
+  for (const e of snap.entities.slice(0, 40)) queries.push(e.name, typo(e.name), e.name.split(' ')[0]);
+  // Plus each record's OWN year of birth and country, with near-miss spellings
+  // of its name: the case where the modifiers lift a sub-floor name over it.
+  const own = [];
+  for (const e of snap.entities) {
+    const dob = (e.attributes || []).find((a) => /date of birth/i.test(a.label));
+    const yob = dob && (String(dob.value).match(/\b(19|20)\d\d\b/) || [])[0];
+    const country = ((e.addresses || []).find((a) => a.country) || {}).country || '';
+    if (!yob && !country) continue;
+    const variants = [];
+    for (let i = 1; i < e.name.length - 1; i += 2) variants.push(e.name.slice(0, i) + e.name.slice(i + 1));
+    own.push({ mods: { yob: yob || '', country }, variants });
+  }
+  const modsList = [null, { yob: '1970', country: '' }, { yob: '', country: 'Russia' }, { yob: '1965', country: 'Iran' }];
+  for (const o of own) for (const v of o.variants) for (const e of snap.entities) {
+    const free = screenEntity(v, e, 0, o.mods);
+    for (const floor of [0.9, 0.95]) {
+      const got = screenEntity(v, e, floor, o.mods);
+      if (got) assert.deepEqual(got, free, `${v} / ${e.id} @ ${floor}`);
+      else if (free) assert.ok(free.score < floor + 1e-4, `${v} / ${e.id} @ ${floor} (own modifiers)`);
+    }
+  }
+  let compared = 0, hits = 0;
+  for (const q of queries) {
+    for (const mods of modsList) {
+      for (const e of snap.entities) {
+        const free = screenEntity(q, e, 0, mods);
+        for (const floor of [0.8, 0.9, 0.95]) {
+          const got = screenEntity(q, e, floor, mods);
+          const at = `${q} / ${e.id} @ ${floor}`;
+          // Reported scores are rounded to 4 places and the floor is applied
+          // before rounding, so a score that displays as exactly the floor may
+          // fall either side of it; anywhere else the answer is determined.
+          if (got) { assert.deepEqual(got, free, at); hits++; }
+          else if (free) assert.ok(free.score < floor + 1e-4, at);
+          compared++;
+        }
+      }
+    }
+  }
+  assert.ok(compared > 1000 && hits > 100, `${compared} comparisons, ${hits} hits`);
+});

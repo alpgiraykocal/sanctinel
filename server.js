@@ -45,7 +45,7 @@ const history = require('./lib/history');
 const { createLimiter, clientAddress } = require('./lib/ratelimit');
 const { snapshotStats } = require('./lib/stats');
 const searchIndex = require('./lib/searchindex');
-const { securityHeaders, sendJson, createStaticHandler } = require('./lib/http');
+const { securityHeaders, sendJson, encodeJson, sendEncoded, createStaticHandler } = require('./lib/http');
 
 // ---- config (env-overridable) ----
 const PORT = Number(process.env.PORT) || 3000;
@@ -105,7 +105,7 @@ function startRefresh() {
   }
   refreshBlocked = null;
   loading = true;
-  queryCache.clear();
+  clearQueryCache();
   console.log('Live refresh started in background worker…');
   // Cap the worker heap so the fetch+parse GCs aggressively instead of pushing
   // the container over its memory limit (Render free = 512MB total).
@@ -114,7 +114,7 @@ function startRefresh() {
   });
   w.on('message', (m) => {
     loading = false;
-    if (m.ok) { const c = readCache(); if (c) { snapshot = c.snapshot; queryCache.clear(); warmIndex(); console.log(`Live snapshot ready: ${m.count} entities (pub ${m.publicationId}) in ${(m.ms / 1000).toFixed(0)}s`); } }
+    if (m.ok) { const c = readCache(); if (c) { snapshot = c.snapshot; clearQueryCache(); warmIndex(); console.log(`Live snapshot ready: ${m.count} entities (pub ${m.publicationId}) in ${(m.ms / 1000).toFixed(0)}s`); } }
     else console.warn(`Live refresh failed: ${m.error}. Keeping current snapshot.`);
     w.terminate();
   });
@@ -184,8 +184,25 @@ function meta() {
 // The snapshot is immutable and only changes on a refresh, which clears this
 // cache, so a longer TTL cannot serve stale results — and repeat traffic on the
 // same handful of names is most of the load.
-const queryCache = new Map(); // key -> { t, payload }
-const QCACHE_TTL = 10 * 60 * 1000, QCACHE_MAX = 500;
+//
+// Entries are the encoded response (lib/http encodeJson), not the payload
+// objects: a 200-row result is ~50KB gzipped against several hundred KB as live
+// objects, and a byte budget rather than an entry count keeps a run of broad
+// queries ("Bank", "Muhammad") from filling the heap of a 512MB instance.
+const queryCache = new Map(); // key -> { t, enc }
+const QCACHE_TTL = 10 * 60 * 1000, QCACHE_MAX = 500, QCACHE_MAX_BYTES = 16 * 1048576;
+let queryCacheBytes = 0;
+function cacheQuery(key, enc) {
+  const old = queryCache.get(key);
+  if (old) { queryCacheBytes -= old.enc.bytes; queryCache.delete(key); }
+  queryCache.set(key, { t: Date.now(), enc });
+  queryCacheBytes += enc.bytes;
+  while (queryCache.size > QCACHE_MAX || queryCacheBytes > QCACHE_MAX_BYTES) {
+    const [k, v] = queryCache.entries().next().value;
+    queryCache.delete(k); queryCacheBytes -= v.enc.bytes;
+  }
+}
+function clearQueryCache() { queryCache.clear(); queryCacheBytes = 0; }
 
 // Candidate index, rebuilt whenever the snapshot object changes.
 let index = null, indexedSnapshot = null;
@@ -211,7 +228,34 @@ const INDEX_WARM_DELAY_MS = 4000;
 function warmIndex() {
   setTimeout(() => {
     try { ensureIndex(); } catch (e) { console.warn('index warm-up failed:', e.message); }
+    warmDerived(snapshot);
   }, INDEX_WARM_DELAY_MS).unref();
+}
+
+/*
+ * Build the per-snapshot structures every search result reads — the ownership
+ * graph and clusters, the cross-listing groups — and the insights aggregate,
+ * one per turn of the event loop, right after the snapshot is ready.
+ *
+ * Each is built lazily on first use anyway and kept for the snapshot's life, so
+ * warming changes when the work happens, never how much is held. Left lazy, it
+ * all landed on the first search of a cold instance, which took ~1.4s against
+ * ~0.15s for the next one.
+ */
+async function warmDerived(snap) {
+  const first = snap.entities.length ? snap.entities[0].id : null;
+  if (first == null) return;
+  const steps = [
+    () => ownershipSummary(snap.entities, first),
+    () => ownershipCluster(snap.entities, first),
+    () => crossListing(snap.entities, first),
+    () => snapshotStats(snap),
+  ];
+  for (const step of steps) {
+    await new Promise((r) => setImmediate(r));
+    if (snapshot !== snap) return; // superseded by a refresh
+    try { step(); } catch (e) { console.warn('warm-up step failed:', e.message); }
+  }
 }
 
 /*
@@ -456,7 +500,18 @@ function rankResults(a, b) {
   return String(a.id).localeCompare(String(b.id));
 }
 
-function search(params) {
+// The search response, encoded once and served from the cache on a repeat.
+function searchEncoded(params) {
+  const parsed = searchParams(params);
+  if (!parsed.q) return encodeJson(search(parsed));
+  const cached = queryCache.get(parsed.key);
+  if (cached && Date.now() - cached.t < QCACHE_TTL) return cached.enc;
+  const enc = encodeJson(search(parsed));
+  cacheQuery(parsed.key, enc);
+  return enc;
+}
+
+function searchParams(params) {
   const q = (params.get('q') || '').trim().slice(0, MAX_Q);
   const listFilter = (params.get('list') || '').slice(0, MAX_FIELD);
   const programFilter = (params.get('program') || '').slice(0, MAX_FIELD);
@@ -470,12 +525,12 @@ function search(params) {
   const yob = /^\d{4}$/.test(params.get('yob') || '') ? params.get('yob') : '';
   const country = (params.get('country') || '').trim().slice(0, MAX_FIELD);
   const mods = (yob || country) ? { yob, country } : null;
-
-  if (!q) return { query: q, threshold, count: 0, results: [], snapshot: meta() };
-
   const key = `${snapshot.publicationId}|${q}|${listFilter}|${programFilter}|${authorityFilter}|${threshold}|${yob}|${country}`;
-  const cached = queryCache.get(key);
-  if (cached && Date.now() - cached.t < QCACHE_TTL) return cached.payload;
+  return { q, listFilter, programFilter, authorityFilter, threshold, mods, key };
+}
+
+function search({ q, listFilter, programFilter, authorityFilter, threshold, mods }) {
+  if (!q) return { query: q, threshold, count: 0, results: [], snapshot: meta() };
 
   // At the default threshold the candidate index is recall-safe: every channel
   // that can reach 0.95 is reproducible from it (see the invariant in
@@ -535,9 +590,6 @@ function search(params) {
     topScore, topScoreTies,
     results: results.slice(0, MAX_RESULTS), snapshot: meta(),
   };
-
-  queryCache.set(key, { t: Date.now(), payload });
-  if (queryCache.size > QCACHE_MAX) queryCache.delete(queryCache.keys().next().value);
   return payload;
 }
 
@@ -592,7 +644,7 @@ function handle(req, res) {
       if (!readOnly) return sendJson(res, 405, { error: 'method not allowed' });
       const sr = searchLimiter.check(ip);
       if (!sr.ok) return sendJson(res, 429, { error: 'search rate limit exceeded' }, { 'Retry-After': String(sr.retryAfter) });
-      return sendJson(res, 200, search(url.searchParams), null, req);
+      return sendEncoded(res, 200, searchEncoded(url.searchParams), null, req);
     }
 
     /*
@@ -809,6 +861,7 @@ server.listen(PORT, HOST, () => {
     console.log(`Search index built: ${snapshot.count} entities in ${Date.now() - t}ms`);
     booting = false;
     console.log(`Ready: ${snapshot.source} (${snapshot.count} entities)`);
+    warmDerived(snapshot);
     const stale = !cached || cached.ageMs > TTL_MS;
     if (stale) startRefresh();
     else console.log(`Cache fresh (${(cached.ageMs / 3600000).toFixed(1)}h old) — no refresh needed.`);
