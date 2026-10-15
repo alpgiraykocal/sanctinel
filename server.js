@@ -32,7 +32,6 @@
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
-const zlib = require('zlib');
 const { Worker } = require('worker_threads');
 const { refreshFeasibility } = require('./lib/memory');
 const { screenEntity } = require('./lib/matcher');
@@ -46,6 +45,7 @@ const history = require('./lib/history');
 const { createLimiter, clientAddress } = require('./lib/ratelimit');
 const { snapshotStats } = require('./lib/stats');
 const searchIndex = require('./lib/searchindex');
+const { securityHeaders, sendJson, createStaticHandler } = require('./lib/http');
 
 // ---- config (env-overridable) ----
 const PORT = Number(process.env.PORT) || 3000;
@@ -123,48 +123,8 @@ function startRefresh() {
 }
 
 // ---- helpers ----
-const MIME = { '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8', '.js': 'application/javascript; charset=utf-8', '.json': 'application/json; charset=utf-8', '.svg': 'image/svg+xml', '.txt': 'text/plain; charset=utf-8', '.ico': 'image/x-icon', '.woff2': 'font/woff2' };
-
-function securityHeaders() {
-  return {
-    // No third-party origins at all. The fonts used to come from
-    // fonts.googleapis.com / fonts.gstatic.com, which handed Google the IP and
-    // User-Agent of everyone who opened a sanctions-screening tool. They are
-    // served from public/fonts/ now, so the policy has no external host left to
-    // allow — and anything that tries to add one fails loudly instead of
-    // quietly phoning home.
-    'Content-Security-Policy':
-      "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; " +
-      "font-src 'self'; img-src 'self' data:; connect-src 'self'; object-src 'none'; " +
-      "base-uri 'none'; form-action 'none'; frame-ancestors 'none'",
-    'X-Content-Type-Options': 'nosniff',
-    'X-Frame-Options': 'DENY',
-    'Referrer-Policy': 'no-referrer',
-    'Permissions-Policy': 'geolocation=(), microphone=(), camera=(), interest-cohort=()',
-    'Cross-Origin-Opener-Policy': 'same-origin',
-  };
-}
-
 function clientIp(req) {
   return clientAddress(req, { trustProxy: TRUST_PROXY, hops: TRUST_PROXY_HOPS });
-}
-
-// JSON responses are gzipped when the client accepts it and the body is worth
-// compressing — /api/stats alone is ~96KB of highly repetitive JSON, and it is
-// fetched on every insights page load.
-function sendJson(res, code, obj, extra, req) {
-  let body = Buffer.from(JSON.stringify(obj));
-  const headers = Object.assign(
-    { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' },
-    securityHeaders(), extra || {},
-  );
-  if (req && body.length > 1024 && /\bgzip\b/.test(req.headers['accept-encoding'] || '')) {
-    body = zlib.gzipSync(body);
-    headers['Content-Encoding'] = 'gzip';
-    headers['Vary'] = 'Accept-Encoding';
-  }
-  res.writeHead(code, headers);
-  res.end(body);
 }
 
 /*
@@ -581,34 +541,8 @@ function search(params) {
   return payload;
 }
 
-// ---- static (path-traversal safe + cache headers + optional gzip) ----
-function serveStatic(req, res, pathname) {
-  let rel = pathname;
-  if (rel === '/') rel = '/index.html';
-  if (rel.includes('\0')) { res.writeHead(400, securityHeaders()); return res.end('Bad request'); }
-  const filePath = path.resolve(PUBLIC_DIR, '.' + path.posix.normalize(rel));
-  if (filePath !== PUBLIC_DIR && !filePath.startsWith(PUBLIC_DIR + path.sep)) {
-    res.writeHead(403, securityHeaders()); return res.end('Forbidden');
-  }
-  fs.readFile(filePath, (err, data) => {
-    if (err) { res.writeHead(404, Object.assign({ 'Content-Type': 'text/plain' }, securityHeaders())); return res.end('Not found'); }
-    const ext = path.extname(filePath);
-    // HTML/CSS/JS revalidate each load (unhashed filenames → avoid stale-after-deploy);
-    // static assets (icons/text) may be cached.
-    // Font files never change under a given name (family-weight-subset), so
-    // they can be cached hard; markup and code must revalidate every load.
-    const cache = ['.html', '.css', '.js'].includes(ext) ? 'no-cache'
-      : ext === '.woff2' ? 'public, max-age=31536000, immutable'
-      : 'public, max-age=86400';
-    const headers = Object.assign({ 'Content-Type': MIME[ext] || 'application/octet-stream', 'Cache-Control': cache }, securityHeaders());
-    const enc = req.headers['accept-encoding'] || '';
-    if (/\bgzip\b/.test(enc) && /text|javascript|json|svg/.test(headers['Content-Type']) && data.length > 1024) {
-      headers['Content-Encoding'] = 'gzip'; headers['Vary'] = 'Accept-Encoding';
-      res.writeHead(200, headers); return res.end(zlib.gzipSync(data));
-    }
-    res.writeHead(200, headers); res.end(data);
-  });
-}
+// ---- static (path-traversal safe, cached, gzip) — see lib/http ----
+const serveStatic = createStaticHandler(PUBLIC_DIR);
 
 // ---- request router ----
 function handle(req, res) {

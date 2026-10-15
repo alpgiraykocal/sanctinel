@@ -126,3 +126,15 @@ test('history endpoint pages and filters', async () => {
   for (const r of removed.rows) assert.equal(r.kind, 'removed');
   assert.equal((await get('/api/history?limit=99999')).status, 200);
 });
+
+test('static files: gzip when accepted, identical bytes on repeat, directories are not served', async () => {
+  const a = await fetch(BASE + '/styles.css', { headers: { 'Accept-Encoding': 'gzip' } });
+  assert.equal(a.status, 200);
+  assert.equal(a.headers.get('content-encoding'), 'gzip');
+  const b = await fetch(BASE + '/styles.css');
+  assert.equal((await a.text()).length, (await b.text()).length);
+  assert.equal((await get('/fonts')).status, 404);
+  assert.equal((await get('/fonts/')).status, 404);
+  const h = await fetch(BASE + '/app.js', { method: 'HEAD' });
+  assert.equal(h.status, 200);
+});

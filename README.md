@@ -939,6 +939,7 @@ sanctions compliance.
 | `scripts/quality-report.js` | Prints that profile and the gate verdict without a rebuild |
 | `scripts/check-deployment.js` | Is the deployed instance up and screening live, complete, current data |
 | `scripts/check-syntax.js` | Parses every shipped script, browser ones included |
+| `lib/http.js` | Security headers, JSON responses, cached path-traversal-safe static serving |
 | `test/` | `npm test` — unit and HTTP tests on node:test |
 | `.github/scripts/issue.sh` | Keeps one open alarm issue per label; used by the data and monitor workflows |
 | `scripts/verify-recall.js` | Proves the prefilter returns what a full scan would, non-Latin scripts included |
