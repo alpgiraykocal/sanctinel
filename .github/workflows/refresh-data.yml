@@ -44,6 +44,10 @@ jobs:
           # The 11:00 pass exists only to recover a degraded snapshot; it stops
           # before fetching anything when coverage is already complete.
           ONLY_IF_DEGRADED: ${{ github.event.schedule == '0 11 * * *' && '1' || '' }}
+          # Optional: a token registered on the Commission's FSF application.
+          # Without it the public token is used, with a catalogue fallback —
+          # see lib/sources/eu.js.
+          EU_FSF_TOKEN: ${{ secrets.EU_FSF_TOKEN }}
         run: |
           set +e
           # Teed to a file so a failure can quote the build's own verdict.

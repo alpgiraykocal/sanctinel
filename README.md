@@ -58,6 +58,7 @@ Environment variables:
 | `SANCTIONS_SEARCH_CONTACT` | *(unset)* | mailbox put in the outgoing `User-Agent`. OFAC asks data consumers to identify themselves; set this to an address you read, so a publisher can reach you instead of silently throttling |
 | `ALLOW_AUTHORITY_DROP` | *(unset)* | build-cache escape hatch: publish a snapshot even if it lost an authority. Only for an authority that is genuinely retired — see "Coverage guard" below |
 | `ALLOW_QUALITY_DROP` | *(unset)* | build-cache escape hatch: publish even if a measured field regressed. Only for a field a publisher genuinely stopped providing — see "Field-level quality gate" below |
+| `EU_FSF_TOKEN` | *(unset)* | a token registered on the Commission's FSF application. The EU list is otherwise fetched with the public token the Commission prints in its own download links, which it can rotate; when every token is refused, the current URL is discovered from the dataset's data.europa.eu record (Commission host only). Any fallback ends the nightly build red. Set it as a repository secret for the workflow |
 | `MEMORY_LIMIT_MB` | *(detected)* | override the container memory ceiling used to decide whether a runtime refresh fits. Read from cgroups when available; set this on a platform that hides them — see "Runtime refresh and the memory ceiling" below |
 
 ### Cold start and refresh recovery
