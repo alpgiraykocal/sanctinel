@@ -77,6 +77,31 @@ function stat(value, label, sub) {
     sub ? `<span class="stat-sub">${esc(sub)}</span>` : ''}</div>`;
 }
 
+/*
+ * Per-authority status of the build this page describes: when each
+ * authority's data was retrieved, and whether it was fetched fresh or carried
+ * forward from an earlier build because its source was down. A carried-forward
+ * authority contributes no changes that night — not because nothing changed,
+ * but because nothing was compared.
+ */
+function renderSources(m) {
+  if (!m || !m.isLive) return;
+  const fresh = m.authorityFreshness || {};
+  const stale = new Set(m.staleAuthorities || []);
+  const failed = new Map();
+  for (const f of m.sourceFailures || []) for (const a of f.authorities || []) failed.set(a, f.partial ? 'partly carried forward' : 'carried forward');
+  const order = ['OFAC', 'EU', 'UN', 'UK', 'BIS', 'State'];
+  const auths = [...new Set([...(m.authorities || []), ...Object.keys(fresh)])]
+    .sort((a, b) => (order.indexOf(a) + 99) % 99 - (order.indexOf(b) + 99) % 99 || a.localeCompare(b));
+  if (!auths.length) return;
+  const when = (iso) => { const t = Date.parse(iso); return t ? new Date(t).toLocaleDateString(undefined, { month: 'short', day: 'numeric', timeZone: 'UTC' }) : '—'; };
+  $('rebuildSources').innerHTML = '<span class="ctl-label">Sources</span> ' + auths.map((a) => {
+    const state = failed.get(a) || (stale.has(a) ? 'stale' : 'fresh');
+    return `<span class="src-chip ${state === 'fresh' ? 'ok' : 'warn'}" title="${esc(a)}: ${esc(state)}, retrieved ${esc(fresh[a] || 'unknown')}">${esc(a)} <span>${esc(state === 'fresh' ? when(fresh[a]) : state)}</span></span>`;
+  }).join('');
+  $('rebuildSources').hidden = false;
+}
+
 function render(d) {
   DATA = d;
   const from = d.from || {}, to = d.to || {};
@@ -249,6 +274,7 @@ $('cExport').addEventListener('click', exportCsv);
   try {
     const { body: d } = await window.SS.getJson('api/changes');
     window.SS.renderCoverage(d.snapshot);
+    renderSources(d.snapshot);
     if (d.unavailable) {
       $('changesProvenance').textContent = '';
       $('changesUnavailable').innerHTML =

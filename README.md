@@ -250,6 +250,12 @@ a vanished ownership graph, an unparseable date format, country fields replaced 
 internal codes, and an ordinary day of churn. The first five block or alarm; the ordinary
 day passes clean.
 
+The same profile is on the Insights page, under **Data quality & sources**. That card also shows:
+
+- each source's status and retrieval date;
+- the source annotations: flagged documents, values marked false, lapsed BIS denials;
+- the cross-listing totals.
+
 ```bash
 node scripts/quality-report.js
 ```

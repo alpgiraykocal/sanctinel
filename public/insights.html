@@ -118,21 +118,37 @@
       </section>
 
       <section class="card pane card-comp" tabindex="0" aria-labelledby="hComp">
-        <h2 id="hComp">Composition</h2>
+        <h2 id="hComp">Composition &amp; jurisdictions</h2>
         <h3>Party type</h3>
         <div id="typeBars" class="bar-chart"></div>
         <h3>Operative restriction</h3>
+        <p class="card-note">The restriction the listing imposes. Lapsed BIS denial orders are counted separately as “(expired)”: they are still published, but they no longer deny anything.</p>
         <div id="measureBars" class="bar-chart"></div>
         <h3>Largest lists</h3>
         <div id="listBars" class="bar-chart"></div>
-      </section>
-
-      <section class="card pane card-prog" tabindex="0" aria-labelledby="hProg">
-        <h2 id="hProg">Programs &amp; jurisdictions</h2>
         <h3>Top programs / regimes</h3>
         <div id="progBars" class="bar-chart"></div>
         <h3>Top countries <span class="h3-note">(nationality, else address)</span></h3>
         <div id="countryBars" class="bar-chart"></div>
+      </section>
+
+      <section class="card pane card-quality" tabindex="0" aria-labelledby="hQuality">
+        <h2 id="hQuality">Data quality &amp; sources</h2>
+        <p class="card-note">How complete and how current the data behind every search is, measured on this snapshot with the same code the nightly build's quality gate uses. See <a href="about.html#sec-quality">how quality is checked</a>.</p>
+        <h3>Sources in this snapshot</h3>
+        <div id="sourceTable" class="dq-table-wrap"></div>
+        <h3>Field completeness <span class="h3-note">(share of records carrying the field)</span></h3>
+        <div id="fieldTable" class="dq-table-wrap"></div>
+        <h3>Parsing checks</h3>
+        <p class="card-note">These depend on this tool's parsing, not on what a publisher chose to include. A drop means the parser stopped understanding a feed, and the build stops before publishing.</p>
+        <div id="parseStats" class="doc-stats"></div>
+        <h3>What the sources say about their own records</h3>
+        <p class="card-note">Kept on each record as published and shown on its card. A value its publisher marks false is never used as matching evidence.</p>
+        <div id="annotationStats" class="doc-stats"></div>
+        <h3>Cross-listing</h3>
+        <p class="card-note">Records tied to the same real party under another authority. They are linked, never merged: each authority’s record stands on its own.</p>
+        <div id="crossStats" class="doc-stats"></div>
+        <div id="crossBars" class="bar-chart"></div>
       </section>
     </div>
   </main>

@@ -53,19 +53,22 @@
       <div class="dash-title">
         <h1>What changed</h1>
         <p id="changesProvenance" class="snap-provenance">Loading…</p>
+          <p id="rebuildSources" class="rebuild-sources" hidden></p>
         <details class="help-more page-help"><summary>Reading this page</summary>
-          <div class="page-help-body">
-          <p>Parties that entered or left the lists when the snapshot was last rebuilt, and every rebuild before it. This is the rescreening trigger: a party added here may already be in your book, and a party removed here may be one whose funds you are still holding.</p>
-          <ul class="doc-list">
-        <li>The comparison is between <strong>two consecutive snapshot builds</strong>, not between two dates you chose. If a build was skipped, its changes fold into the next one.</li>
-        <li>A party is matched by the authority's own entity id. An authority that reissues a party under a new id will show as one removal plus one addition.</li>
-        <li>A <strong>bulk swing</strong> is one authority adding or removing hundreds of parties in a single rebuild. That is an authority returning to or leaving the snapshot, or reissuing its ids — not a day of designations — so the history hides those rows unless you ask for them.</li>
-        <li>Changes <em>within</em> a record — a new alias, a corrected date of birth, an added address — are not listed here. Only parties entering or leaving the lists are.</li>
-        <li>If an authority is missing from the snapshot entirely, its parties will appear as a mass removal. The banner at the top of the page says when that is the case, and it means the data is incomplete, not that thousands were delisted.</li>
-        <li>None of this is a determination. Verify any specific party against the issuing authority — see <a href="about.html">about &amp; methodology</a>.</li>
-      </ul>
-          </div>
-        </details>
+            <div class="page-help-body">
+              <p>Parties that entered or left the lists when the snapshot was last rebuilt, and every rebuild before it. This is the rescreening trigger: a party added here may already be in your book, and a party removed here may be one whose funds you are still holding.</p>
+              <ul class="doc-list">
+                <li><strong>How often.</strong> The snapshot is rebuilt every night at 23:00 UTC from all six authorities. If a source failed, a recovery run retries it at 11:00 UTC. The comparison is between <strong>two consecutive builds</strong>, not two dates you choose. If a build was skipped, its changes fold into the next one.</li>
+                <li><strong>Matching across builds.</strong> A party is matched by the authority's own entity id. An authority that reissues a party under a new id shows as one removal plus one addition.</li>
+                <li><strong>Source status.</strong> The line under the title shows, for each authority, when its data was retrieved. If a source was down, its records are <strong>carried forward</strong> from the last good build. A carried-forward authority shows no changes for that night: nothing was compared, so nothing changed. That is different from it having published nothing new.</li>
+                <li><strong>Bulk swings.</strong> A bulk swing is one authority adding or removing 500 or more parties in a single rebuild. That is an authority returning to or leaving the snapshot, or reissuing its ids, not a day of designations. The history hides those rows unless you ask for them.</li>
+                <li><strong>Expired BIS denials are not removals.</strong> A BIS Denied Persons order whose end date has passed is still published, so it does not appear here as a removal. Its record card and search result say the order has expired.</li>
+                <li><strong>Changes within a record are not listed.</strong> A new alias, a corrected date of birth, an added address, or detail a parser improvement newly reads from the feed: none of these appear here. Only parties entering or leaving the lists do.</li>
+                <li><strong>A missing authority.</strong> If an authority is missing from the snapshot entirely, its parties would appear as a mass removal. The banner at the top of the page says when that is the case, and it means the data is incomplete, not that thousands were delisted.</li>
+                <li>None of this is a determination. Verify any specific party against the issuing authority. See <a href="about.html#sec-pipeline">how the data is built</a>.</li>
+              </ul>
+            </div>
+          </details>
       </div>
       <div id="changesUnavailable" class="no-hits" hidden></div>
       <section class="doc-stats" id="changesHeadline" aria-label="Change totals" hidden></section>

@@ -117,8 +117,84 @@ function renderRecent(reset) {
   $('moreBtn').hidden = shown >= rows.length;
 }
 
+const pctOf = (v) => (v == null ? '—' : `${(v * 100).toFixed(v > 0 && v < 0.1 ? 1 : 0)}%`);
+// Three bands, so a column of percentages reads at a glance; the number is
+// always printed, the band only tints it.
+const band = (v) => (v == null ? '' : v >= 0.75 ? 'dq-hi' : v >= 0.35 ? 'dq-mid' : 'dq-lo');
+
+const AUTH_ORDER = ['OFAC', 'EU', 'UN', 'UK', 'BIS', 'State'];
+const byAuthOrder = (a, b) => {
+  const ia = AUTH_ORDER.indexOf(a), ib = AUTH_ORDER.indexOf(b);
+  return (ia === -1 ? 99 : ia) - (ib === -1 ? 99 : ib) || a.localeCompare(b);
+};
+
+function renderQuality(dq, totals) {
+  if (!dq) { $('sourceTable').innerHTML = '<p class="chart-empty">Not available for this snapshot.</p>'; return; }
+
+  // Sources: one row per upstream feed, as the last build found it.
+  const freshness = dq.authorityFreshness || {};
+  // aria-label rather than an sr-only <caption>: the caption is absolutely
+  // positioned, escapes the card's scroll container and makes the page scroll.
+  $('sourceTable').innerHTML = (dq.sources || []).length ? `<table class="dq-table" aria-label="Upstream sources in this snapshot">
+    <thead><tr><th scope="col">Source</th><th scope="col">Records</th><th scope="col">Status</th><th scope="col">Retrieved</th></tr></thead>
+    <tbody>${dq.sources.map((src) => {
+      const status = !src.ok ? (src.carriedForward ? `Carried forward${src.asOf ? ` from ${fmtDate(src.asOf)}` : ''}` : 'Failed')
+        : (src.failedLists || []).length ? `Fresh, ${src.failedLists.length} list(s) carried forward`
+          : (src.qualityCarriedForward || []).length ? `Fresh, ${src.qualityCarriedForward.join(', ')} carried forward` : 'Fresh';
+      const when = (src.authorities || []).map((a) => freshness[a]).filter(Boolean).sort()[0];
+      return `<tr><th scope="row">${esc(src.label)}<span class="dq-sub">${esc((src.authorities || []).join(' · '))}</span></th>
+        <td class="num">${num(src.count)}</td>
+        <td><span class="dq-status ${src.ok && !(src.failedLists || []).length ? 'ok' : 'warn'}">${esc(status)}</span></td>
+        <td class="nowrap">${esc(when ? new Date(when).toLocaleDateString(undefined, { month: 'short', day: 'numeric', timeZone: 'UTC' }) : '—')}</td></tr>`;
+    }).join('')}</tbody></table>` : '<p class="chart-empty">No source record in this snapshot.</p>';
+
+  // Field completeness: the quality gate's own profile.
+  const auths = Object.keys(dq.fields.authorities || {}).sort(byAuthOrder);
+  // Short headers so six columns fit a third of the screen; the full name is
+  // the header's title and its accessible name.
+  const cols = [['aliasRate', 'Alias', 'Records with at least one alias'], ['addressRate', 'Addr.', 'Records with an address'],
+    ['addressDetailRate', 'Street', 'Addresses that say more than their country'], ['identifierRate', 'ID', 'Records with a screening identifier'],
+    ['birthDateRate', 'DOB', 'Records with a birth date that parses'], ['nationalityRate', 'Nat.', 'Records with a nationality or citizenship']];
+  $('fieldTable').innerHTML = `<table class="dq-table dq-grid" aria-label="Share of each authority's records that carry each field">
+    <thead><tr><th scope="col">Authority</th>${cols.map(([, l, full]) => `<th scope="col" title="${esc(full)}"><abbr title="${esc(full)}">${esc(l)}</abbr></th>`).join('')}</tr></thead>
+    <tbody>${auths.map((a) => {
+      const r = dq.fields.authorities[a];
+      return `<tr><th scope="row">${esc(a)}<span class="dq-sub">${num(r.count)}</span></th>${cols.map(([k]) => `<td class="num ${band(r[k])}">${pctOf(r[k])}</td>`).join('')}</tr>`;
+    }).join('')}</tbody></table>
+    <p class="chart-note">Alias, address, identifier, birth date and nationality: share of records carrying the field. Street: share of addresses that say more than their country. Low figures for the State Department lists reflect what they publish, not a parsing fault.</p>`;
+
+  const d = dq.fields.derived || {};
+  $('parseStats').innerHTML =
+    stat(pctOf(d.datePublishedIsoRate), 'listing dates in ISO form', 'floor 99%') +
+    stat(pctOf(d.dobParseRate), 'birth dates parsed', `${num(d.dobValues)} values · floor 95%`) +
+    stat(pctOf(d.countryResolveRate), 'country values resolved', `${num(d.countryValues)} values · floor 95%`) +
+    stat(pctOf(d.identifierUnclassifiedRate), 'identifier types unclassified', `${num(d.identifiers)} identifiers · ceiling 25%`);
+
+  // Annotations, summed across authorities.
+  const sum = { documents: 0, dated: 0, flagged: 0, refuted: 0, reported: 0, lapsed: 0, native: 0 };
+  for (const a of Object.values(dq.annotations || {})) {
+    sum.documents += a.documents; sum.dated += a.documentsDated; sum.refuted += a.refutedValues;
+    sum.reported += a.reportedValues; sum.lapsed += a.lapsedDenials; sum.native += a.nativeNames;
+    for (const n of Object.values(a.documentStatus || {})) sum.flagged += n;
+  }
+  $('annotationStats').innerHTML =
+    stat(num(sum.flagged), 'documents flagged', 'invalid, expired, revoked or false') +
+    stat(num(sum.dated), 'documents with dates', `of ${num(sum.documents)} identity documents`) +
+    stat(num(sum.refuted), 'values marked false', `${num(sum.reported)} more only reported`) +
+    stat(num(sum.lapsed), 'lapsed BIS denial orders', 'kept, marked expired, ranked last') +
+    stat(num(sum.native), 'records with an own-script name', 'searchable in that script');
+
+  const x = dq.crossListing;
+  if (!x) { $('crossStats').innerHTML = '<p class="chart-empty">Not computed for this snapshot.</p>'; return; }
+  $('crossStats').innerHTML =
+    stat(num(x.records), 'records linked', `${num(x.groups)} real parties, ${Math.round((x.records / (totals.entities || 1)) * 100)}% of records`) +
+    stat(num((x.basis || {}).identifier || 0), 'groups on a shared identifier', `${num((x.basis || {})['name+dob'] || 0)} on name + birth year · ${num((x.basis || {})['name+country'] || 0)} on name + country`);
+  $('crossBars').innerHTML = barChart(Object.entries(x.linked || {}).sort((a, b) => byAuthOrder(a[0], b[0])).map(([name, count]) => ({ name, count })), 0, { byAuthority: true });
+}
+
 function render(s) {
   const t = s.totals;
+  renderQuality(s.dataQuality, t);
 
   $('provenance').innerHTML =
     `${s.snapshot.isLive ? 'Live snapshot' : 'Offline sample'}` +

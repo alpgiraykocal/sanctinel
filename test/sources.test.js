@@ -146,3 +146,33 @@ test('an identifier match on a document the source marks invalid says so', () =>
   assert.equal(m.score, 1);
   assert.match(m.explain, /document invalid per the source/);
 });
+
+test('insights report data quality, and count lapsed denials as one restriction', () => {
+  const { finalizeSnapshot } = require('../lib/ingest');
+  const { snapshotStats } = require('../lib/stats');
+  const base = { list: 'BIS Denied Persons List', lists: ['BIS Denied Persons List'], authority: 'BIS', type: 'Listed party', programs: [], legalAuthorities: [], addresses: [], identifiers: [], relationships: [] };
+  const dpl = (id, end) => Object.assign({}, base, {
+    id, name: `PARTY ${id}`, names: [{ name: `PARTY ${id}`, primary: true }], sanctionsTypes: ['Denial of export privileges'],
+    attributes: [{ group: 'Program', label: 'End date', value: end }], idDocuments: [],
+  });
+  const ofac = {
+    id: '9', authority: 'OFAC', list: 'SDN List', lists: ['SDN List'], type: 'Individual', name: 'X', names: [{ name: 'X', primary: true }],
+    programs: [], sanctionsTypes: ['Block'], legalAuthorities: [], addresses: [], identifiers: [], relationships: [],
+    attributes: [{ group: 'Identity', label: 'Birthdate', value: '1970', status: 'false', note: 'marked false by OFAC' }],
+    idDocuments: [{ type: 'Passport', number: 'A1', issuingCountry: '', issueDate: '2001-01-01', expirationDate: '', status: 'invalid', note: '' }],
+  };
+  const snap = finalizeSnapshot([dpl('BIS-1', '2001-01-01'), dpl('BIS-2', '2002-02-02'), dpl('BIS-3', '2099-01-01'), ofac], {
+    publicationId: 't', isLive: true, sources: [{ label: 'X', authorities: ['OFAC'], ok: true, count: 1 }],
+  });
+  const s = snapshotStats(snap);
+  const measures = Object.fromEntries(s.byMeasure.map((m) => [m.name, m.count]));
+  assert.equal(measures['Denial of export privileges (expired)'], 2);
+  assert.equal(measures['Denial of export privileges'], 1);
+  const dq = s.dataQuality;
+  assert.equal(dq.annotations.BIS.lapsedDenials, 2);
+  assert.equal(dq.annotations.OFAC.refutedValues, 1);
+  assert.deepEqual(dq.annotations.OFAC.documentStatus, { invalid: 1 });
+  assert.equal(dq.annotations.OFAC.documentsDated, 1);
+  assert.equal(dq.sources[0].ok, true);
+  assert.ok(dq.fields.authorities.BIS && dq.fields.derived);
+});
