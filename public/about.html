@@ -164,17 +164,21 @@
           <li>Chinese, Japanese and Korean are matched as characters;</li>
           <li>legal-form and descriptor words are recognised across languages (GmbH, OOO, ТОВ, Sh.p.k., Sdn Bhd…).</li>
         </ul>
+        <p>A person's name and an organisation's are read differently. For a company, descriptor words are dropped (“Trading”, “Group”, “SA”). For an individual, only name particles (al-, el-, de, da, la…) and lone initials are. Many short descriptor words are also common parts of personal names: SA, MA, YU, HAN, SOE, ONG. Dropping them turned “Soe Win” into just “Win”, which matched every listed “… Win”. A party of unknown kind is read both ways.</p>
         <p>Each pair of words is then scored by an ensemble, and the best signal wins:</p>
         <ul class="doc-list">
           <li><strong>Jaro-Winkler</strong>: typos and shared prefixes.</li>
           <li><strong>Damerau-Levenshtein</strong>: edit distance, counting an adjacent swap as one edit. Confusable characters (0/O, 1/L) cost half.</li>
           <li><strong>Sørensen-Dice and trigram Jaccard</strong>: character overlap, robust to insertions and reordering.</li>
           <li><strong>Metaphone</strong>: sound-alike spellings (Mohammed and Muhammad, Philip and Filip).</li>
-          <li><strong>Transliteration folding</strong>: romanization variants (Kadyrov and Kadirov, Yousef and Yusuf).</li>
+          <li><strong>Transliteration folding</strong>: romanization variants (Kadyrov and Kadirov, Yousef and Yusuf), including the German, French and Swedish forms the EU publishes (Tschernow, Tchernov, Setjin for Sechin).</li>
           <li><strong>Acronyms and initials</strong>: “CML” matches Caspian Maritime Logistics, and “J.” matches John.</li>
           <li><strong>Rarity weighting</strong>: a match on a rare surname counts far more than one on “Company” or “Mohammed”.</li>
           <li><strong>Homoglyph defence</strong>: Cyrillic look-alike letters inside a Latin word are folded back, so “Gazprоm” screens like “Gazprom”.</li>
-          <li><strong>Misspelled descriptors</strong>: a query word one edit from a legal form (“Tradng”, “Limted”) is also scored without that word.</li>
+          <li><strong>Misspelled descriptors</strong>: a query word one edit from a legal form (“Tradng”, “Limted”) is also scored without that word. A query word one edit from a word that is normalized (“Tehcnology” for Technology) is read as that word.</li>
+          <li><strong>One-keystroke typos</strong>: one wrong, missing or extra letter in a word of six or more letters (“Mohnen” for Mohsen), or two adjacent letters swapped (“Zhnag” for Zhang), is scored as a near-match. The first letter must be the same.</li>
+          <li><strong>Arabic particles and honorifics</strong>: al- and el- are the same article, attached or not (“Alghabra”, “al-Ghabra”). Abd, Abdel and Abdoul are read as Abdul. Haji, Sheikh, Mullah, Maulavi, and military ranks before a person's name, are read as titles.</li>
+          <li><strong>Word spacing</strong>: words written together or apart match (“Abdulrahman” and “Abdul Rahman”, “Alek sandr”). They score just below the name as written.</li>
         </ul>
         <p>Words are paired one-to-one regardless of order, so “Mohammed Ali” matches “Ali Mohammed”. A one-word query that exactly matches one word of a longer name scores 0.96: above the default threshold, below a full-name match. Each result shows which words matched, and by which method.</p>
         <h3>Threshold and completeness</h3>

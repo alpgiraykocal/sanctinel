@@ -155,3 +155,56 @@ test('floor pruning returns exactly the floor-free hits above the floor', () => 
   }
   assert.ok(compared > 1000 && hits > 100, `${compared} comparisons, ${hits} hits`);
 });
+
+// ---- matcher improvements measured with scripts/eval-matching.js ----------
+const { matchName, tokenSim, queryVariants } = require('../lib/matcher');
+const person = (name) => ({ id: 'p', type: 'Individual', name, names: [{ name, primary: true }] });
+const org = (name) => ({ id: 'o', type: 'Entity', name, names: [{ name, primary: true }] });
+const score = (q, rec) => { const m = matchName(q, rec, 0, null); return m ? m.score : 0; };
+
+test('a person\'s name keeps the short words an organisation name would drop', () => {
+  // SOE, YU, HAN are organisation descriptors in rigour's tables and common
+  // syllables of Burmese and Chinese names.
+  assert.deepEqual(tokens('Soe Win', true), ['SOE', 'WIN']);
+  assert.deepEqual(tokens('Soe Win'), ['WIN']);
+  assert.deepEqual(tokens('Ahmad al-Hassan de la Cruz', true), ['AHMAD', 'HASSAN', 'CRUZ']);
+  assert.ok(score('Soe Win', person('Aung Win')) < 0.8, 'one shared word is not the same person');
+  assert.ok(score('Zhang Yu', person('Zhang Wei')) < 0.8);
+  assert.equal(score('Soe Win', person('Soe Win')), 1);
+});
+
+test('one-keystroke typos and adjacent swaps are near-matches', () => {
+  assert.equal(tokenSim('MOHNEN', 'MOHSEN'), 0.95);
+  // Short swaps stay under 0.95 alone: they share no trigram for the index.
+  const swap = tokenSim('NEAV', 'NEVA');
+  assert.ok(swap >= 0.94 && swap < 0.95, String(swap));
+  assert.ok(score('SHAFA\'I Mohnen', person('SHAFA\'I, Mohsen')) >= 0.95);
+  assert.ok(score('ZHNAG Yu', person('ZHANG, Yu')) >= 0.95);
+  // A different first letter is a different word, not a typo.
+  assert.ok(tokenSim('KARIMOV', 'MARIMOV') < 0.95);
+});
+
+test('Arabic articles and particles match however they are written', () => {
+  assert.equal(score('EL-FREIJ, Fahd Jassem', person('AL-FREIJ, Fahd Jassem')), 1);
+  assert.ok(score('Mohammed ALGHABRA', person('Mohammed AL GHABRA')) >= 0.97);
+  assert.ok(score('Sundus Abd EL-Ghafur', person('Sundus Abdul Ghafur')) >= 0.99);
+  assert.equal(score('Haji Khaled NASRI', person('Khaled NASRI')), 1);
+  assert.equal(score('General Ali Hassan Majid', person('Ali Hassan MAJID')), 1);
+});
+
+test('words run together or split apart still match', () => {
+  assert.ok(score('ERMAKOV Alek sandr', person('ERMAKOV, Aleksandr')) >= 0.99);
+  assert.ok(score('Abdulrahman Ali', person('Abdul Rahman Ali')) >= 0.99);
+  // …but below the name exactly as written.
+  assert.ok(score('Abdulrahman Ali', person('Abdul Rahman Ali')) < 1);
+});
+
+test('a typo in a word that canonicalization rewrites is read as that word', () => {
+  assert.ok(queryVariants('ANWEN TEHCNOLOGY CO. LTD.').some((v) => v.join(' ') === 'ANWEN TECH'));
+  assert.equal(score('ANWEN TEHCNOLOGY CO. LTD.', org('ANWEN TECHNOLOGY CO., LTD.')), 1);
+});
+
+test('explanations never show the canonical form rigour gives PUTIN', () => {
+  const m = matchName('Vladimir Putin', person('Vladimir Puttin'), 0, null);
+  assert.ok(!/KHUYLO/.test(m.explain), m.explain);
+});
