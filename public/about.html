@@ -181,6 +181,27 @@
           <li><strong>Word spacing</strong>: words written together or apart match (“Abdulrahman” and “Abdul Rahman”, “Alek sandr”). They score just below the name as written.</li>
         </ul>
         <p>Words are paired one-to-one regardless of order, so “Mohammed Ali” matches “Ali Mohammed”. A one-word query that exactly matches one word of a longer name scores 0.96: above the default threshold, below a full-name match. Each result shows which words matched, and by which method.</p>
+        <h3>How well it works, measured</h3>
+        <p><code>scripts/eval-matching.js</code> measures the matcher against the list itself: 1,640 queries whose correct answer is known, plus 150 invented names that should find no one. It counts how often the right party is among the hits at the 0.95 default. Before and after the latest matching changes:</p>
+        <div class="dq-table-wrap">
+          <table class="doc-table" aria-label="Matching benchmark, before and after">
+            <thead><tr><th scope="col">Query</th><th scope="col">Before</th><th scope="col">After</th></tr></thead>
+            <tbody>
+              <tr><th scope="row">Another spelling the publisher lists (held out)</th><td>88.0%</td><td>91.3%</td></tr>
+              <tr><th scope="row">Another authority's spelling of the same party</th><td>96.0%</td><td>95.3%</td></tr>
+              <tr><th scope="row">One typo</th><td>89.9%</td><td>95.9%</td></tr>
+              <tr><th scope="row">Two typos</th><td>84.5%</td><td>88.0%</td></tr>
+              <tr><th scope="row">Words run together or split</th><td>38.7%</td><td>79.3%</td></tr>
+              <tr><th scope="row">Romanization variant</th><td>93.3%</td><td>98.7%</td></tr>
+              <tr><th scope="row">Arabic particle written another way</th><td>66.7%</td><td>98.7%</td></tr>
+              <tr><th scope="row">Given name as an initial</th><td>94.0%</td><td>99.3%</td></tr>
+              <tr><th scope="row">Title or legal form added</th><td>78.0%</td><td>100.0%</td></tr>
+              <tr><th scope="row">Name order reversed / middle name dropped</th><td>100% / 99.3%</td><td>99.3% / 99.3%</td></tr>
+              <tr><th scope="row"><strong>All queries</strong></th><td><strong>84.4%</strong></td><td><strong>95.1%</strong></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>The right party ranks first in 90.1% of queries, up from 79.3%. Invented names raise 2.05 hits each on average, up from 1.93: most of the extra hits are names that really are spelling variants of the query (Abdel and Abdul). Speed and memory are unchanged.</p>
         <h3>Threshold and completeness</h3>
         <ul class="doc-list">
           <li><strong>Threshold.</strong> The default threshold is <strong>0.95</strong>. At and above it, search uses a candidate index proven to return every party a full scan would; a CI check verifies this on every change to the matcher.</li>
