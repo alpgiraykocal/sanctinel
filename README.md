@@ -564,7 +564,17 @@ type and low-quality flag). Token similarity is **multi-algorithm** — the max 
 - **multilingual legal-form stripping** + **script-aware normalization** (below),
 - **transliteration folding** (Kadyrov↔Kadirov, Phillip↔Filip — gated so lossy folds
   can't match unrelated tokens),
-- **initial/abbreviation** (J ↔ John).
+- **initial/abbreviation** (J ↔ John),
+- **one-keystroke typos**: one wrong, missing or extra letter in a word of 6+ letters, or
+  an adjacent swap (Mohnen↔Mohsen, Zhnag↔Zhang), same first letter,
+- **attached Arabic article** (Alghabra↔al-Ghabra; el- and al- are one article; Abd,
+  Abdel, Abdoul read as Abdul; Haji, Sheikh, Mullah… and military ranks are titles).
+
+A person's name and an organisation's are **read differently** (`nameKinds`): rigour's
+descriptor list (SA, MA, YU, HAN, SOE, ONG…) is stripped from organisation names only,
+because those words are also common syllables of Asian and Arabic personal names — "Soe
+Win" used to be read as "Win". Words **run together or split** (Abdulrahman↔Abdul
+Rahman) are re-aligned when the word counts differ, scoring 0.99 of the aligned score.
 
 Tokens are assigned **greedily 1:1** (no token reused, order-independent), with a
 whole-string channel and **acronym/initialism** matching (CML ↔ Caspian Maritime
