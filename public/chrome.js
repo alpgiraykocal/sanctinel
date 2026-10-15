@@ -120,6 +120,18 @@ window.SS = (function () {
         'Anything designated since then is not screened here. ' +
         `<span class="coverage-why">(${esc(blocked.reason)})</span>`
       );
+    } else if (ageHours != null && ageHours >= 36) {
+      /*
+       * Old for any other reason — most often the daily build refusing to
+       * publish. Without this the whole snapshot could go a fortnight stale with
+       * nothing on screen, since the per-authority line above only names a
+       * source that lags the rest of the snapshot. 36h, not 24h: a daily build
+       * plus a deploy routinely puts a healthy snapshot just past a day.
+       */
+      parts.push(
+        `<strong>This snapshot is ${esc(String(ageHours))} hours old.</strong> ` +
+        'The daily rebuild has not published since then, so anything designated in the meantime is not screened here.'
+      );
     }
 
     if (!parts.length) { bar.hidden = true; return; }

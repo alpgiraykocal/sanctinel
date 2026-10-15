@@ -182,15 +182,24 @@ function missingAuthorities() {
  * Authorities whose data is materially older than the snapshot itself, because
  * their source was down when it was built. A day's tolerance: the pipeline
  * republishes daily and a few hours of lag is the normal state.
+ *
+ * Measured against the snapshot's own retrieval time, not against now. Against
+ * now, a snapshot that is simply old — the daily build blocked, say — listed
+ * every authority here, and the banner told the reader each of those sources
+ * had been unreachable when none of them had. An old snapshot is reported on
+ * its own, through snapshotAgeHours. ageHours stays relative to now, because
+ * that is how old the data the reader is screening against actually is.
  */
 const STALE_AUTHORITY_HOURS = 24;
 function staleAuthorities() {
   const freshness = snapshot.authorityFreshness || {};
+  const built = Date.parse(snapshot.retrievedAt);
   const out = [];
   for (const [authority, asOf] of Object.entries(freshness)) {
-    if (!asOf) continue;
-    const hours = (Date.now() - Date.parse(asOf)) / 36e5;
-    if (hours >= STALE_AUTHORITY_HOURS) out.push({ authority, asOf, ageHours: Math.round(hours) });
+    const at = Date.parse(asOf);
+    if (!Number.isFinite(at)) continue;
+    const lag = Number.isFinite(built) ? (built - at) / 36e5 : (Date.now() - at) / 36e5;
+    if (lag >= STALE_AUTHORITY_HOURS) out.push({ authority, asOf, ageHours: Math.round((Date.now() - at) / 36e5) });
   }
   return out.sort((a, b) => b.ageHours - a.ageHours);
 }
