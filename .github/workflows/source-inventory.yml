@@ -1,0 +1,39 @@
+name: Source inventory
+
+# Prints every field each upstream source publishes (scripts/source-inventory.js)
+# and what the parsers extract from the live feeds (scripts/parse-check.js), so
+# the parsers can be checked against the feeds themselves. Read-only: no commit,
+# no release, no issue. Runs when either script changes, or on demand.
+on:
+  push:
+    paths:
+      - "scripts/source-inventory.js"
+      - "scripts/parse-check.js"
+      - ".github/workflows/source-inventory.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  inventory:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: "22"
+      - name: Inventory every source
+        run: node --max-old-space-size=4096 scripts/source-inventory.js
+
+  parse-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: "22"
+      - name: Build from the live feeds in memory and report
+        run: node --max-old-space-size=4096 scripts/parse-check.js

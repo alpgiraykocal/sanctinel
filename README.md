@@ -260,6 +260,59 @@ parser change move any field" should be one command, not a fetch of every upstre
 reviewed change; using it to silence a finding disables the alarm rather than answering
 it.
 
+### Record hygiene on read
+
+`lib/normalize.js` runs over every record as the snapshot loads. The data on disk stays
+exactly what each authority published; normalization fixes defects without rewriting
+what a publisher said. Labels, spellings and country names stay as published. It fixes:
+
+- **Dates.** Listing dates become `yyyy-mm-dd`. UK dates are day-first and U.S. dates
+  month-first; UN dates lose their zone suffix.
+- **Formatting.** Doubled and non-breaking spaces and bidi control marks are removed, and
+  so is the CSL's leading and trailing punctuation (`Co., Ltd.,`).
+- **Exact repeats.** Repeated addresses, attributes, identifiers and aliases are dropped.
+  Distinct published spellings of a name are kept.
+- **UK "Other Information".** OFSI's labelled fields become attributes, and the
+  identifiers among them become searchable: company registration numbers, IMO numbers,
+  email addresses. The UN references they carry let cross-listing link a UK listing to
+  the UN listing it implements.
+- **Entity type.** A CSL "Listed party" whose name carries a legal form or organisation
+  word becomes an Entity. Nothing else is guessed.
+- **Numbered values.** `(1) MM611523 (2) EE947317` becomes one identifier per number, so
+  each one matches on its own.
+- **Name scripts.** Each name is labelled with the script it is actually written in.
+- **Lapsed denials.** A BIS Denied Persons order whose end date has passed is marked
+  expired, both on the record and in its sanctions type. Search ranks it below live
+  restrictions, and the card says the order has lapsed. Such records are not deleted.
+
+### What the source said about its own data
+
+Sources grade their own fields, and those grades are kept on the record:
+
+- OFAC grades features Confirmed, Reported or False, and flags documents `isValid=false`.
+- The EU flags documents known false, revoked, lost or expired.
+- The UN and UK note expired documents.
+
+A value its publisher marks false stays on the record, with that marking. It is never
+used as evidence by the year-of-birth and country modifiers or by cross-listing.
+
+A document the source marks invalid or expired still matches, because it is often the
+one the party actually uses. The match explanation names its status.
+
+### Checking the parsers against the feeds
+
+`scripts/source-inventory.js` lists every element path, attribute and column the five
+feeds publish, with record counts, sample values and the value sets of small
+enumerations. It runs in the read-only `Source inventory` workflow. A parser only reads
+what it asks for, so this is how a dropped field gets noticed. It is how the missing
+OFAC address lines, EU contact details, document dates and UN original-script names
+were found.
+
+It is idempotent, and its effect is visible in `scripts/quality-report.js`. The report
+includes `addressDetailRate`: the share of addresses that say more than their country.
+That rate exists because OFAC's parser read the wrong element and reduced every OFAC
+address to its country, while every other number stayed green.
+
 Example behind Caddy:
 
 ```

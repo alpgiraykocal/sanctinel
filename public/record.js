@@ -88,8 +88,19 @@ window.SSRecord = (function () {
    * display label: non-SDN lists always come paired with the Consolidated List,
    * and it is the specific one that names the prohibition.
    */
+  // The date a restriction lapsed (an expired BIS denial order), or ''. Read
+  // from the record so the permalink page and the result card agree.
+  function expiredOf(r) {
+    if (r.expired) return r.expired;
+    const s = (r.attributes || []).find((a) => a.label === 'Denial order status');
+    const m = s && String(s.value).match(/^Expired (\d{4}-\d{2}-\d{2})/);
+    return m ? m[1] : '';
+  }
+
   function determinationHint(r) {
     const l = listsOf(r).join(' | ');
+    const lapsed = expiredOf(r);
+    if (lapsed) return { label: 'Denial order expired', text: `BIS Denied Persons List: this denial order <strong>expired on ${esc(shortDate(lapsed))}</strong>. The listing no longer denies export privileges by itself — confirm with BIS that no later order applies, and check the party against the other lists before relying on that.` };
     // U.S. export-control lists: the obligation is a licence requirement or
     // loss of export privileges — NOT an asset freeze. Never blend these with
     // the financial-sanctions doctrine below.
@@ -205,6 +216,7 @@ window.SSRecord = (function () {
       <div class="rc-tags">
         <span class="tag tag-auth auth-${esc((r.authority || 'OFAC').toLowerCase())}">${esc(r.authority || 'OFAC')}</span>
         ${listsOf(r).map((l) => `<span class="tag tag-list">${esc(l)}</span>`).join('')}
+        ${expiredOf(r) ? `<span class="tag tag-expired" title="Denial order expired ${esc(expiredOf(r))}">Expired</span>` : ''}
         ${(r.sanctionsTypes || []).map((t) => `<span class="tag tag-type">${esc(t)}</span>`).join('')}
         ${d ? `<span class="tag tag-own" title="${esc(d.distinctBlockedOwners)} blocked owner${d.distinctBlockedOwners === 1 ? '' : 's'} in the ownership chain">50% Rule · ${d.distinctBlockedOwners}${d.aggregationCandidate ? ' · aggregate' : ''}</span>` : ''}
         ${crossTag(r)}
@@ -224,14 +236,15 @@ window.SSRecord = (function () {
     const aliasHtml = aliases.length
       ? `<ul class="name-list">${aliases.map((a) => `<li><span class="alias-type">${esc(a.type)}</span> ${esc(a.name)}${a.native ? ` <span class="native">${esc(a.native)}</span>` : ''}${a.lowQuality ? ' <span class="lowq">low-quality</span>' : ''}</li>`).join('')}</ul>`
       : '<em>none</em>';
+    const note = (n) => (n ? ` <span class="src-note">${esc(n)}</span>` : '');
     const addrHtml = (r.addresses || []).length
-      ? `<ul>${r.addresses.map((a) => `<li>${esc(a.full || a)}</li>`).join('')}</ul>` : '<em>—</em>';
+      ? `<ul>${r.addresses.map((a) => `<li>${esc(a.full || a)}${note(a.note)}</li>`).join('')}</ul>` : '<em>—</em>';
 
     const groupsHtml = attrGroups(r.attributes).map((g) => `
       <div class="attr-group">
         <h4 class="attr-group-title">${esc(g.group)}</h4>
         <dl class="attr-grid">
-          ${g.rows.map((row) => `<div class="detail-row"><dt>${esc(row.label)}</dt><dd>${esc(row.value)}</dd></div>`).join('')}
+          ${g.rows.map((row) => `<div class="detail-row${row.status === 'false' ? ' refuted' : ''}"><dt>${esc(row.label)}</dt><dd>${esc(row.value)}${note(row.note)}</dd></div>`).join('')}
         </dl>
       </div>`).join('');
 
@@ -240,9 +253,9 @@ window.SSRecord = (function () {
         <h4 class="attr-group-title">Identity Documents</h4>
         <div class="doc-table">
           ${r.idDocuments.map((d) => `<div class="doc-row">
-            <span class="doc-type">${esc(d.type)}</span>
+            <span class="doc-type">${esc(d.type)}${d.status ? ` <span class="doc-status">${esc(d.status)}</span>` : ''}</span>
             <span class="doc-num">${esc(d.number || '—')}</span>
-            <span class="doc-meta">${[d.issuingCountry && `issued by ${esc(d.issuingCountry)}`, d.issueDate && `issued ${esc(d.issueDate)}`, d.expirationDate && `expires ${esc(d.expirationDate)}`].filter(Boolean).join(' · ') || ''}</span>
+            <span class="doc-meta">${[d.issuingCountry && `issued by ${esc(d.issuingCountry)}`, d.issueDate && `issued ${esc(d.issueDate)}`, d.expirationDate && `expires ${esc(d.expirationDate)}`, d.note && esc(d.note)].filter(Boolean).join(' · ') || ''}</span>
           </div>`).join('')}
         </div>
       </div>` : '';
@@ -256,7 +269,7 @@ window.SSRecord = (function () {
       </div>` : '';
 
     const idsHtml = (r.identifiers || []).length
-      ? `<div class="rc-tags ids">${r.identifiers.map((id) => `<span class="tag tag-id"><span class="id-type">${esc(id.type)}</span> ${esc(id.value)}</span>`).join('')}</div>`
+      ? `<div class="rc-tags ids">${r.identifiers.map((id) => `<span class="tag tag-id"${id.status ? ` title="Document ${esc(id.status)} per the source"` : ''}><span class="id-type">${esc(id.type)}</span> ${esc(id.value)}${id.status ? ` <span class="doc-status">${esc(id.status)}</span>` : ''}</span>`).join('')}</div>`
       : '';
 
     return `
@@ -294,7 +307,7 @@ window.SSRecord = (function () {
 
   return {
     GROUP_ORDER, AUTHORITY_SOURCE,
-    listsOf, shortDate, identityFacts, attrGroups, determinationHint,
+    listsOf, shortDate, identityFacts, attrGroups, determinationHint, expiredOf,
     derivativeHtml, crossListedHtml, crossTag, factsHtml, tagsHtml, detailHtml, permalink,
   };
 })();
