@@ -116,3 +116,13 @@ test('below-the-line returns a cumulative curve from the async scan', async () =
   for (let i = 1; i < j.steps.length; i++) assert.ok(j.steps[i].count <= j.steps[i - 1].count, 'counts fall as the threshold rises');
   assert.ok(j.steps[0].count >= 1);
 });
+
+test('history endpoint pages and filters', async () => {
+  const j = await (await get('/api/history?limit=5&bulk=0')).json();
+  assert.ok(j.summary && j.summary.builds >= 1);
+  assert.ok(j.rows.length <= 5);
+  for (const r of j.rows) assert.equal(r.bulk, false);
+  const removed = await (await get('/api/history?kind=removed&limit=3')).json();
+  for (const r of removed.rows) assert.equal(r.kind, 'removed');
+  assert.equal((await get('/api/history?limit=99999')).status, 200);
+});

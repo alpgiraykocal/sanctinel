@@ -8,6 +8,8 @@ cache/*
 !cache/snapshot/
 cache/snapshot/*.tmp
 !cache/changes.json
+# Every build's changes.json, appended — see lib/history.
+!cache/history.ndjson
 # The field-level quality profile of the published build. Committed because the
 # gate compares against what was actually published, not against a local run.
 !cache/quality.json

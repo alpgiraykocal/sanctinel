@@ -35,6 +35,7 @@ const path = require('path');
 const zlib = require('zlib');
 const { buildLiveSnapshot, assertAuthorityCoverage, replaceAuthorities, readRawSnapshot, writeSnapshotDir, EXPECTED_AUTHORITIES, CACHE_GZ_PATH, SNAPSHOT_DIR } = require('../lib/ingest');
 const quality = require('../lib/quality');
+const { appendHistory } = require('../lib/history');
 
 const CHANGES_PATH = path.join(path.dirname(CACHE_GZ_PATH), 'changes.json');
 const QUALITY_PATH = path.join(path.dirname(CACHE_GZ_PATH), 'quality.json');
@@ -260,6 +261,8 @@ function computeChanges(prev, next) {
     const changes = computeChanges(prev, s);
     fs.writeFileSync(CHANGES_PATH, JSON.stringify(changes));
     console.log(`changes vs pub ${changes.from.publicationId}: +${changes.addedCount} added, -${changes.removedCount} removed`);
+    // changes.json is overwritten by the next build; the history keeps it.
+    if (appendHistory(changes)) console.log('appended to cache/history.ndjson');
   } else {
     console.log('no previous snapshot — skipping the delta (nothing to compare against)');
   }

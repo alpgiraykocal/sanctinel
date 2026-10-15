@@ -312,6 +312,26 @@ Offline / fictional-demo mode (no network):
 node server.js --demo
 ```
 
+## Change history
+
+`cache/changes.json` holds only the last rebuild's additions and removals, and
+the next rebuild overwrites it — so a day later, *when was this party
+delisted?* had no answer. A delisting is what lets a firm release frozen funds,
+and its date is what an audit asks for.
+
+`cache/history.ndjson` keeps every rebuild's delta: append-only, one line per
+build, committed with the snapshot. It was backfilled from every committed
+`changes.json` since 2026-08-01 (`scripts/backfill-history.js`, which needs only
+a blobless clone). `GET /api/history?kind=&authority=&q=&bulk=&offset=&limit=`
+serves it newest first, and the *What changed* page has a searchable,
+exportable History section under the latest delta.
+
+A rebuild in which one authority adds or removes 500+ parties at once is
+flagged as a **bulk swing** and hidden by default: that is an authority
+returning to the snapshot after an outage (2,577 BIS rows on 2026-08-02) or
+reissuing its ids (State, ~800 out and 801 in on 2026-09-03), not a day of
+designations.
+
 ## How the snapshot is stored
 
 `cache/snapshot/` holds one newline-delimited JSON file per authority — one
@@ -923,6 +943,7 @@ sanctions compliance.
 | `scripts/verify-recall.js` | Proves the prefilter returns what a full scan would, non-Latin scripts included |
 | `cache/snapshot/` | The committed snapshot: one NDJSON file per authority plus `meta.json` |
 | `cache/changes.json` | What the last rebuild added and removed; written beside the snapshot |
+| `cache/history.ndjson` · `lib/history.js` | Every rebuild's additions and removals, appended; served by `/api/history` |
 | `cache/quality.json` | Field fill rates the last published build measured; the next build's baseline |
 | `public/record.js` | How a listed party renders — shared by the results and the permalink page so they cannot disagree |
 | `public/chrome.js` | Shared chrome: missing-authority banner, keyboard shortcuts |

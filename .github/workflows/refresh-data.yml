@@ -63,7 +63,7 @@ jobs:
           # against the numbers that were actually published.
           # -A on the directory so a shard for a vanished authority is removed.
           git add -A cache/snapshot
-          git add cache/changes.json cache/quality.json
+          git add cache/changes.json cache/quality.json cache/history.ndjson
           if git diff --cached --quiet; then
             echo "No data change."
           else

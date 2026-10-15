@@ -16,6 +16,7 @@
  *   GET  /api/entity?id=                 one party by id (permalink target)
  *   GET  /api/below-the-line?q=&threshold=   hit counts per threshold + the marginal hits
  *   GET  /api/changes                    parties added/removed by the last rebuild
+ *   GET  /api/history?kind=&authority=&q=&bulk=&offset=&limit=   every rebuild's changes, newest first
  *   POST /api/refresh                    trigger a background live refresh (admin-gated)
  *
  * Public-facing hardening: security headers, per-IP rate limiting, input caps,
@@ -41,6 +42,7 @@ const { profile: ownershipProfile, summary: ownershipSummary, clusterOf: ownersh
 const { crossListing } = require('./lib/crosslist');
 // Written by scripts/build-cache.js when it replaces the snapshot.
 const CHANGES_PATH = path.join(__dirname, 'cache', 'changes.json');
+const history = require('./lib/history');
 const { createLimiter, clientAddress } = require('./lib/ratelimit');
 const { snapshotStats } = require('./lib/stats');
 const searchIndex = require('./lib/searchindex');
@@ -715,6 +717,27 @@ function handle(req, res) {
       } catch {
         return sendJson(res, 200, { unavailable: true, snapshot: meta() }, null, req);
       }
+    }
+
+    /*
+     * Every build's additions and removals, newest first — so "when was this
+     * party delisted?" is still answerable after the next build overwrites
+     * changes.json. See lib/history.
+     */
+    if (p === '/api/history') {
+      if (!readOnly) return sendJson(res, 405, { error: 'method not allowed' });
+      const sp = url.searchParams;
+      const kind = ['added', 'removed'].includes(sp.get('kind')) ? sp.get('kind') : '';
+      const builds = history.readHistory();
+      const out = history.events(builds, {
+        kind,
+        authority: (sp.get('authority') || '').slice(0, MAX_FIELD),
+        q: (sp.get('q') || '').slice(0, MAX_Q),
+        bulk: sp.get('bulk') !== '0',
+        offset: Math.max(0, Math.min(1e6, parseInt(sp.get('offset'), 10) || 0)),
+        limit: Math.max(1, Math.min(500, parseInt(sp.get('limit'), 10) || 100)),
+      });
+      return sendJson(res, 200, Object.assign({ summary: history.summary(builds), bulkThreshold: history.BULK_THRESHOLD }, out, { snapshot: meta() }), null, req);
     }
 
     // Full scan by design; shares the tighter search rate limit.
