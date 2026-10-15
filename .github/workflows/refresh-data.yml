@@ -11,6 +11,14 @@ on:
     # seconds and commits nothing.
     - cron: '0 11 * * *'
   workflow_dispatch:        # manual run button
+    inputs:
+      allow_quality_drop:
+        description: >-
+          Accept a field-level quality regression for this one run (ALLOW_QUALITY_DROP).
+          Only for a change the publisher genuinely made, after reviewing the alarm issue —
+          the new numbers become the baseline the next build is compared against.
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -48,6 +56,8 @@ jobs:
           # Without it the public token is used, with a catalogue fallback —
           # see lib/sources/eu.js.
           EU_FSF_TOKEN: ${{ secrets.EU_FSF_TOKEN }}
+          # Set only by a manual run with the box ticked; never by the schedule.
+          ALLOW_QUALITY_DROP: ${{ github.event_name == 'workflow_dispatch' && inputs.allow_quality_drop && '1' || '' }}
         run: |
           set +e
           # Teed to a file so a failure can quote the build's own verdict.
