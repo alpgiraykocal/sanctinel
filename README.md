@@ -311,6 +311,31 @@ Offline / fictional-demo mode (no network):
 node server.js --demo
 ```
 
+## Tests
+
+```bash
+npm test             # unit + HTTP tests, < 1s, no network (node:test, zero dependencies)
+npm run check        # syntax-check every shipped script, browser ones included
+npm run test:recall  # the slow one: fast path == full scan over the real snapshot
+```
+
+`npm test` runs `test/*.test.js`: the CSL label mapping, the quality gate and
+its per-authority carry-forward, OFAC list carry-forward against a stubbed
+network, staleness, client-IP trust, the matcher on the fictional demo data,
+and an end-to-end pass over a real `server.js --demo` process (endpoints,
+security headers, path traversal, rate limiting). Each fix from the October
+2026 QA pass has a test that fails when the fix is reverted.
+
+CI ([`test.yml`](.github/workflows/test.yml)) runs the syntax check, the tests
+and `quality-report.js` on every push to `main` and every pull request, on
+Node 20 and 22. The recall check ([`recall.yml`](.github/workflows/recall.yml))
+runs only when the scorer, the index or their data change.
+
+One test is marked `todo`, deliberately: a misspelled descriptor word
+("Tradng" for "Trading") is not stripped like the correctly spelled one, and
+drags an exact name under the threshold. It is a known recall gap, listed in
+every run, not hidden.
+
 ## iPhone app
 
 > **Not on this branch yet.** The app, its conformance workflow and

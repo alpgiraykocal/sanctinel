@@ -1,0 +1,31 @@
+name: Tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: ["20", "22"]
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: ${{ matrix.node-version }}
+      # Browser scripts are loaded by nothing the tests require, so a syntax
+      # error there would pass every test and break a page.
+      - name: Syntax-check every shipped script
+        run: npm run check
+      - name: Unit and HTTP tests
+        run: npm test
+      # The committed snapshot against the committed baseline: a parser change
+      # that empties a field shows up here, before the nightly build trips on it.
+      - name: Field-level quality of the bundled snapshot
+        run: node scripts/quality-report.js

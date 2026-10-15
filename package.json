@@ -1,10 +1,13 @@
 {
   "name": "sanctinel",
   "version": "1.0.0",
-  "description": "Sanctions Search — sanctions & export-control screening with ownership intelligence (OFAC, EU, UN, UK, BIS, State) — zero-dependency Node.js",
+  "description": "Sanctions Search \u2014 sanctions & export-control screening with ownership intelligence (OFAC, EU, UN, UK, BIS, State) \u2014 zero-dependency Node.js",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "test": "node --test test/*.test.js",
+    "test:recall": "node scripts/verify-recall.js 20",
+    "check": "node scripts/check-syntax.js"
   },
   "engines": {
     "node": ">=18"

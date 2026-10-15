@@ -279,6 +279,14 @@ function computeChanges(prev, next) {
   // A below-floor finding that is not a regression ships for the same reason a
   // standing coverage gap does — the other fields are fresh and withholding them
   // helps nobody — but the run still ends red so it cannot become the new normal.
+  // A format change the parser survived (an unrecognised CSL list label) still
+  // needs a person: the next one may not be survivable.
+  for (const src of s.sources || []) {
+    if (!src.warnings || !src.warnings.length) continue;
+    console.error(`\nSOURCE WARNING: ${src.label}:\n  ${src.warnings.join('\n  ')}`);
+    process.exitCode = 3;
+  }
+
   // An OFAC list that failed on its own is carried forward inside the OFAC
   // source, which still reads ok — it needs its own alarm or it is silent.
   for (const src of s.sources || []) {

@@ -35,13 +35,13 @@ const zlib = require('zlib');
 const { Worker } = require('worker_threads');
 const { refreshFeasibility } = require('./lib/memory');
 const { screenEntity } = require('./lib/matcher');
-const { finalizeSnapshot, readCache, EXPECTED_AUTHORITIES } = require('./lib/ingest');
+const { finalizeSnapshot, readCache, staleAuthorities: staleAuthoritiesOf, EXPECTED_AUTHORITIES } = require('./lib/ingest');
 const { egoNetwork } = require('./lib/graph');
 const { profile: ownershipProfile, summary: ownershipSummary, clusterOf: ownershipCluster } = require('./lib/ownership');
 const { crossListing } = require('./lib/crosslist');
 // Written by scripts/build-cache.js when it replaces the snapshot.
 const CHANGES_PATH = path.join(__dirname, 'cache', 'changes.json');
-const { createLimiter } = require('./lib/ratelimit');
+const { createLimiter, clientAddress } = require('./lib/ratelimit');
 const { snapshotStats } = require('./lib/stats');
 const searchIndex = require('./lib/searchindex');
 
@@ -143,25 +143,8 @@ function securityHeaders() {
   };
 }
 
-/*
- * The client address, for rate limiting.
- *
- * Read from the RIGHT of X-Forwarded-For. Each proxy appends the address it
- * received the connection from, so the trustworthy entries are the last ones;
- * the first is whatever the client chose to send. Taking the first meant any
- * client could put a fresh random address in the header on every request,
- * get a fresh rate-limit bucket each time — the limits simply did not apply —
- * and grow the limiter's map without bound while doing it.
- */
 function clientIp(req) {
-  if (TRUST_PROXY) {
-    const xf = req.headers['x-forwarded-for'];
-    if (xf) {
-      const hops = String(xf).split(',').map((x) => x.trim()).filter(Boolean);
-      if (hops.length) return hops[Math.max(0, hops.length - TRUST_PROXY_HOPS)];
-    }
-  }
-  return req.socket.remoteAddress || '?';
+  return clientAddress(req, { trustProxy: TRUST_PROXY, hops: TRUST_PROXY_HOPS });
 }
 
 // JSON responses are gzipped when the client accepts it and the body is worth
@@ -198,30 +181,9 @@ function missingAuthorities() {
   return EXPECTED_AUTHORITIES.filter((a) => !have.has(a));
 }
 
-/*
- * Authorities whose data is materially older than the snapshot itself, because
- * their source was down when it was built. A day's tolerance: the pipeline
- * republishes daily and a few hours of lag is the normal state.
- *
- * Measured against the snapshot's own retrieval time, not against now. Against
- * now, a snapshot that is simply old — the daily build blocked, say — listed
- * every authority here, and the banner told the reader each of those sources
- * had been unreachable when none of them had. An old snapshot is reported on
- * its own, through snapshotAgeHours. ageHours stays relative to now, because
- * that is how old the data the reader is screening against actually is.
- */
-const STALE_AUTHORITY_HOURS = 24;
+// Authorities lagging the snapshot itself; see lib/ingest.
 function staleAuthorities() {
-  const freshness = snapshot.authorityFreshness || {};
-  const built = Date.parse(snapshot.retrievedAt);
-  const out = [];
-  for (const [authority, asOf] of Object.entries(freshness)) {
-    const at = Date.parse(asOf);
-    if (!Number.isFinite(at)) continue;
-    const lag = Number.isFinite(built) ? (built - at) / 36e5 : (Date.now() - at) / 36e5;
-    if (lag >= STALE_AUTHORITY_HOURS) out.push({ authority, asOf, ageHours: Math.round((Date.now() - at) / 36e5) });
-  }
-  return out.sort((a, b) => b.ageHours - a.ageHours);
+  return staleAuthoritiesOf(snapshot);
 }
 
 function meta() {
