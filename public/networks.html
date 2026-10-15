@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Relationship Networks — Sanctions Search</title>
+  <meta name="description" content="The networks formed by the relationships OFAC publishes between listed parties — ownership, agency, support, leadership and family — ranked and drawn, from cartels and shipping fleets to state conglomerates." />
+  <meta name="referrer" content="no-referrer" />
+  <meta name="robots" content="index, nofollow" />
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <script src="theme.js"></script>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="app page-networks">
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header">
+    <a class="brand" href="./" aria-label="Sanctions Search home">
+      <span class="brand-logo" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="34" height="34">
+          <rect width="24" height="24" rx="7" fill="url(#lg)"/>
+          <defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3B82F6"/><stop offset="1" stop-color="#4F46E5"/></linearGradient></defs>
+          <path fill="#fff" d="M12 4 6 6.6v4.6c0 3.5 2.5 6 6 7.1 3.5-1.1 6-3.6 6-7.1V6.6L12 4Zm0 1.9 4.3 1.85V11.2c0 2.7-1.8 4.7-4.3 5.6-2.5-.9-4.3-2.9-4.3-5.6V7.75L12 5.9Z"/>
+          <path fill="#fff" d="m11 12.6-1.4-1.4-1.1 1.1 2.5 2.5 4-4-1.1-1.1L11 12.6Z"/>
+        </svg>
+      </span>
+      <span class="wordmark">
+        <span class="brand-name">Sanctions Search</span>
+        <span class="brand-tag">Sanctions screening &amp; ownership intelligence</span>
+      </span>
+    </a>
+    <nav class="site-nav" aria-label="Main">
+      <a href="./" class="nav-item"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M10 3a7 7 0 0 1 5.6 11.2l4.6 4.6-1.4 1.4-4.6-4.6A7 7 0 1 1 10 3Zm0 2a5 5 0 1 0 0 10 5 5 0 0 0 0-10Z"/></svg><span>Screen</span></a>
+      <a href="networks.html" class="nav-item" aria-current="page"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M6 2.5a3 3 0 1 1 0 6 3 3 0 0 1 0-6Zm12 0a3 3 0 1 1 0 6 3 3 0 0 1 0-6Zm-6 13a3 3 0 1 1 0 6 3 3 0 0 1 0-6ZM8.1 7.9l3.4 7.2-1.8.8-3.4-7.2 1.8-.8Zm7.8 0 1.8.8-3.4 7.2-1.8-.8 3.4-7.2ZM9 4.6h6v1.8H9V4.6Z"/></svg><span>Networks</span></a>
+      <a href="changes.html" class="nav-item"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 1 1 0 20 10 10 0 0 1 0-20Zm0 2a8 8 0 1 0 0 16 8 8 0 0 0 0-16Zm1 3v4.6l3.2 3.2-1.4 1.4L11 12.4V7h2Z"/></svg><span>What changed</span></a>
+      <a href="insights.html" class="nav-item"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M4 20V10h3v10H4Zm6.5 0V4h3v16h-3ZM17 20v-7h3v7h-3Z"/></svg><span>Insights</span></a>
+      <a href="about.html" class="nav-item"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 1 1 0 20 10 10 0 0 1 0-20Zm0 2a8 8 0 1 0 0 16 8 8 0 0 0 0-16Zm1 6v7h-2v-7h2Zm0-3v2h-2V7h2Z"/></svg><span>About</span></a>
+    </nav>
+    <div class="header-right">
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle dark mode" title="Toggle dark mode">
+        <svg class="sun" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10Zm0-5v3m0 14v3M4.2 4.2l2.1 2.1m11.4 11.4 2.1 2.1M2 12h3m14 0h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/></svg>
+        <svg class="moon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- Missing-authority alarm, rendered by chrome.js. Present on every page:
+       a count on this page is wrong in the same way a search result is. -->
+  <div class="coverage-bar" id="coverageBar" role="alert" hidden>
+    <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M12 2 1 21h22L12 2Zm1 15h-2v-2h2v2Zm0-4h-2V9h2v4Z"/></svg>
+    <details class="bar-details"><summary id="coverageSummary"></summary><p id="coverageText"></p></details>
+  </div>
+
+  <main id="main" class="dash dash-networks">
+    <div class="dash-top">
+      <div class="dash-title">
+        <h1>Relationship networks</h1>
+        <p id="provenance" class="snap-provenance">Loading networks…</p>
+        <details class="help-more page-help"><summary>How networks are formed — and what they are not</summary>
+          <div class="page-help-body">
+          <p>OFAC publishes links between the parties it lists: who owns or controls whom, who acts for, supports or leads whom, and who is family of whom. Followed across the whole list, those links form networks. This page lists them and draws each one.</p>
+          <ul class="doc-list">
+            <li><strong>A network</strong> is a group of listed parties joined by published links, directly or through each other. Pairs (two parties and one link) are counted but not listed.</li>
+            <li><strong>One group is too large to read</strong>: about 2,700 parties around Iran, Hizballah and their facilitators, chained together by “providing support to” links. It is divided into communities that are far more densely linked inside than to each other (the Louvain method). Each community is listed as a network of its own, and the links to its neighbouring communities are shown.</li>
+            <li><strong>Each network is named after its hub</strong>: the most strongly linked party in it. Ownership links count double, because ownership is what the 50 Percent Rule reaches.</li>
+            <li><strong>Sorting.</strong> Largest; most ownership links (where derivative blocking is most likely); most members also listed by the EU, UN or UK; or most recent designation.</li>
+            <li>Only OFAC publishes relationships, so the networks are OFAC's. A member's cross-listings by other authorities are shown on it.</li>
+            <li>A network shows that an authority linked these parties, not that they act together today. It is a display and triage aid, not a determination. See <a href="about.html#sec-ownership">how relationships are used</a>.</li>
+          </ul>
+          </div>
+        </details>
+      </div>
+      <div id="loadError" class="no-hits" hidden>Networks unavailable — the snapshot could not be read.</div>
+      <section class="doc-stats" id="headline" aria-label="Network totals"></section>
+    </div>
+
+    <div class="net-cols">
+      <section class="card pane net-list-pane" tabindex="-1" aria-labelledby="netListTitle">
+        <div class="card-sticky">
+          <h2 id="netListTitle">Networks <span class="h3-note" id="netCount"></span></h2>
+          <div class="net-controls">
+            <label class="field">
+              <span class="field-label">Find</span>
+              <input id="netFind" type="search" placeholder="Name or program" autocomplete="off" />
+            </label>
+            <label class="field">
+              <span class="field-label">Sort by</span>
+              <select id="netSort">
+                <option value="size">Largest</option>
+                <option value="ownership">Most ownership links</option>
+                <option value="cross">Most also listed elsewhere</option>
+                <option value="newest">Most recent designation</option>
+              </select>
+            </label>
+          </div>
+        </div>
+        <ol id="netList" class="net-list" aria-label="Networks"></ol>
+        <button id="netMore" class="btn-ghost more-btn" type="button" hidden>Show more</button>
+      </section>
+
+      <section class="card net-view" aria-labelledby="netTitle">
+        <div class="net-head">
+          <h2 id="netTitle">Select a network</h2>
+          <p id="netSub" class="card-note"></p>
+          <div id="netFacts" class="net-facts"></div>
+        </div>
+        <div class="net-stage">
+          <canvas id="netCanvas" role="img" aria-label="Network drawing"></canvas>
+          <div id="netTip" class="net-tip" hidden></div>
+          <div class="net-legend" id="netLegend" aria-hidden="true"></div>
+          <div class="net-zoom">
+            <button type="button" class="btn-ghost" id="netZoomIn" aria-label="Zoom in">+</button>
+            <button type="button" class="btn-ghost" id="netZoomOut" aria-label="Zoom out">−</button>
+            <button type="button" class="btn-ghost" id="netFit" aria-label="Fit to view">Fit</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="card pane net-members-pane" tabindex="-1" aria-labelledby="netMembersTitle">
+        <div class="card-sticky">
+          <h2 id="netMembersTitle">Members <span class="h3-note" id="netMembersNote"></span></h2>
+          <p class="card-note">Most strongly linked first. Select one to find it in the drawing; open it to see the record.</p>
+        </div>
+        <ol id="netMembers" class="net-members"></ol>
+        <div id="netNeighbours"></div>
+      </section>
+    </div>
+  </main>
+
+  <nav class="tabbar" aria-label="Main">
+    <a href="./" class="nav-item"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M10 3a7 7 0 0 1 5.6 11.2l4.6 4.6-1.4 1.4-4.6-4.6A7 7 0 1 1 10 3Zm0 2a5 5 0 1 0 0 10 5 5 0 0 0 0-10Z"/></svg><span>Screen</span></a>
+      <a href="networks.html" class="nav-item" aria-current="page"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M6 2.5a3 3 0 1 1 0 6 3 3 0 0 1 0-6Zm12 0a3 3 0 1 1 0 6 3 3 0 0 1 0-6Zm-6 13a3 3 0 1 1 0 6 3 3 0 0 1 0-6ZM8.1 7.9l3.4 7.2-1.8.8-3.4-7.2 1.8-.8Zm7.8 0 1.8.8-3.4 7.2-1.8-.8 3.4-7.2ZM9 4.6h6v1.8H9V4.6Z"/></svg><span>Networks</span></a>
+    <a href="changes.html" class="nav-item"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 1 1 0 20 10 10 0 0 1 0-20Zm0 2a8 8 0 1 0 0 16 8 8 0 0 0 0-16Zm1 3v4.6l3.2 3.2-1.4 1.4L11 12.4V7h2Z"/></svg><span>What changed</span></a>
+    <a href="insights.html" class="nav-item"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M4 20V10h3v10H4Zm6.5 0V4h3v16h-3ZM17 20v-7h3v7h-3Z"/></svg><span>Insights</span></a>
+    <a href="about.html" class="nav-item"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 1 1 0 20 10 10 0 0 1 0-20Zm0 2a8 8 0 1 0 0 16 8 8 0 0 0 0-16Zm1 6v7h-2v-7h2Zm0-3v2h-2V7h2Z"/></svg><span>About</span></a>
+  </nav>
+
+  <script src="chrome.js"></script>
+  <script src="networks.js"></script>
+</body>
+</html>

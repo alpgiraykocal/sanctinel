@@ -30,7 +30,7 @@ const ROOT = path.join(__dirname, '..', '..');
 const PORT = 33000 + Math.floor(Math.random() * 2000);
 const BASE = `http://127.0.0.1:${PORT}`;
 const PAYLOAD = (where) => `<img src=x class=XSS data-f="${where}">`;
-const PAGES = ['/', '/?q=NORTHERN%20STAR%20TRADING', '/entity.html?id=90002', '/insights.html', '/changes.html', '/about.html'];
+const PAGES = ['/', '/?q=NORTHERN%20STAR%20TRADING', '/entity.html?id=90002', '/insights.html', '/changes.html', '/about.html', '/networks.html'];
 
 let proc, browser, cacheDir;
 
@@ -216,4 +216,24 @@ test('no WCAG 2 AA violations on any page, light or dark', { skip: skip || (!axe
       await ctx.close();
     }
   }
+});
+
+test('the networks page lists a network, draws it and lists its members', { skip }, async () => {
+  const { page, ctx, errors } = await open('/networks.html');
+  await page.waitForSelector('.net-member-btn');
+  assert.ok(await page.$$eval('#netList .net-item', (els) => els.length) >= 1);
+  const members = await page.$$eval('.net-member-btn', (els) => els.length);
+  assert.ok(members >= 3, `${members} members listed`);
+  // Something was drawn: the canvas is not blank.
+  const inked = await page.$eval('#netCanvas', (cv) => {
+    const d = cv.getContext('2d').getImageData(0, 0, cv.width, cv.height).data;
+    let n = 0; for (let i = 3; i < d.length; i += 4) if (d[i]) n++;
+    return n;
+  });
+  assert.ok(inked > 100, `canvas inked pixels: ${inked}`);
+  const btn = page.locator('.net-member-btn').first();
+  await btn.click();
+  assert.equal(await btn.getAttribute('aria-pressed'), 'true');
+  assert.deepEqual(errors, []);
+  await ctx.close();
 });

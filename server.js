@@ -12,6 +12,8 @@
  *   GET  /api/stats                      list composition, designation timeline, recent additions
  *   GET  /api/search?q=&authority=&list=&program=&threshold=&yob=&country=  screening
  *   GET  /api/graph/ego-network?id=&depth=   relationship ego-network
+ *   GET  /api/networks                   every relationship network, largest first
+ *   GET  /api/network?id=                one network: members and links
  *   GET  /api/ownership?id=              50% Rule: chains to a blocked owner
  *   GET  /api/entity?id=                 one party by id (permalink target)
  *   GET  /api/below-the-line?q=&threshold=   hit counts per threshold + the marginal hits
@@ -39,6 +41,7 @@ const { finalizeSnapshot, readCache, staleAuthorities: staleAuthoritiesOf, EXPEC
 // Written by scripts/build-cache.js when it replaces the snapshot.
 const CHANGES_PATH = path.join(CACHE_DIR, 'changes.json');
 const { egoNetwork } = require('./lib/graph');
+const { networkList, networkDetail, networkOf } = require('./lib/networks');
 const { profile: ownershipProfile, summary: ownershipSummary, clusterOf: ownershipCluster } = require('./lib/ownership');
 const { crossListing } = require('./lib/crosslist');
 const history = require('./lib/history');
@@ -251,6 +254,7 @@ async function warmDerived(snap) {
     () => ownershipCluster(snap.entities, first),
     () => crossListing(snap.entities, first),
     () => snapshotStats(snap),
+    () => networkList(snap.entities),
   ];
   for (const step of steps) {
     await new Promise((r) => setImmediate(r));
@@ -676,6 +680,8 @@ function handle(req, res) {
           // On the entity itself, not beside it, because the permalink page
           // renders the record through the same builder the result card uses.
           crossListed: crossListing(snapshot.entities, e.id),
+          // The relationship network this party belongs to, if any (lib/networks).
+          network: networkOf(snapshot.entities, e.id),
         }),
         ownership: ownershipProfile(snapshot.entities, e.id),
         snapshot: meta(),
@@ -771,6 +777,26 @@ function handle(req, res) {
       if (!g) return sendJson(res, 404, { error: 'entity not found in snapshot' });
       g.snapshot = meta();
       return sendJson(res, 200, g, null, req);
+    }
+
+    /*
+     * The networks the published relationships form (lib/networks): the list,
+     * and one network with every member and link. Both are computed once per
+     * snapshot; these are lookups.
+     */
+    if (p === '/api/networks') {
+      if (!readOnly) return sendJson(res, 405, { error: 'method not allowed' });
+      return sendJson(res, 200, Object.assign(networkList(snapshot.entities), { snapshot: meta() }), null, req);
+    }
+
+    if (p === '/api/network') {
+      if (!readOnly) return sendJson(res, 405, { error: 'method not allowed' });
+      const id = (url.searchParams.get('id') || '').slice(0, 48);
+      if (!/^[\w:.-]+$/.test(id)) return sendJson(res, 400, { error: 'invalid id' });
+      const n = networkDetail(snapshot.entities, id);
+      if (!n) return sendJson(res, 404, { error: 'network not found in this snapshot' });
+      n.snapshot = meta();
+      return sendJson(res, 200, n, null, req);
     }
 
     if (p === '/api/refresh') {
