@@ -54,9 +54,12 @@ Environment variables:
 | `CACHE_TTL_MS` | `43200000` (12h) | background refresh when the cache is older than this |
 | `RATE_MAX` / `SEARCH_RATE_MAX` | `120` / `30` per min | per-IP limits |
 | `TRUST_PROXY` | `true` | read client IP from `X-Forwarded-For` (set `false` if not behind a proxy) |
+| `TRUST_PROXY_HOPS` | `1` | how many proxies append to `X-Forwarded-For`; the client IP is read that many entries from the right. `1` for Render alone, `2` with Cloudflare (proxied DNS or the path Worker) in front of Render. The leftmost entry is client-controlled and is never trusted |
 | `SANCTIONS_SEARCH_CONTACT` | *(unset)* | mailbox put in the outgoing `User-Agent`. OFAC asks data consumers to identify themselves; set this to an address you read, so a publisher can reach you instead of silently throttling |
 | `ALLOW_AUTHORITY_DROP` | *(unset)* | build-cache escape hatch: publish a snapshot even if it lost an authority. Only for an authority that is genuinely retired — see "Coverage guard" below |
 | `ALLOW_QUALITY_DROP` | *(unset)* | build-cache escape hatch: publish even if a measured field regressed. Only for a field a publisher genuinely stopped providing — see "Field-level quality gate" below |
+| `EU_FSF_TOKEN` | *(unset)* | a token registered on the Commission's FSF application. The EU list is otherwise fetched with the public token the Commission prints in its own download links, which it can rotate; when every token is refused, the current URL is discovered from the dataset's data.europa.eu record (Commission host only). Any fallback ends the nightly build red. Set it as a repository secret for the workflow |
+| `SANCTIONS_CACHE_DIR` | `./cache` | where the snapshot, `changes.json` and `history.ndjson` are read from and written to |
 | `MEMORY_LIMIT_MB` | *(detected)* | override the container memory ceiling used to decide whether a runtime refresh fits. Read from cgroups when available; set this on a platform that hides them — see "Runtime refresh and the memory ceiling" below |
 
 ### Cold start and refresh recovery
@@ -298,7 +301,8 @@ node server.js
 ```
 
 Then open http://localhost:3000. **Live by default** — the server boots instantly from
-the on-disk cache (`cache/snapshot.json`) when present, and refreshes in the background
+the on-disk cache (the committed `cache/snapshot/`, or `cache/snapshot.json` from a
+runtime refresh, whichever is newer) when present, and refreshes in the background
 (worker thread) when the cache is missing or older than 12h, so a restart shows real
 data immediately instead of waiting ~2 min for the parse. A blue pulsing dot + "loading
 live…" shows while a refresh runs; the UI polls and swaps in the fresh snapshot with no
@@ -310,11 +314,120 @@ Offline / fictional-demo mode (no network):
 node server.js --demo
 ```
 
+## Change history
+
+`cache/changes.json` holds only the last rebuild's additions and removals, and
+the next rebuild overwrites it — so a day later, *when was this party
+delisted?* had no answer. A delisting is what lets a firm release frozen funds,
+and its date is what an audit asks for.
+
+`cache/history.ndjson` keeps every rebuild's delta: append-only, one line per
+build, committed with the snapshot. It was backfilled from every committed
+`changes.json` since 2026-08-01 (`scripts/backfill-history.js`, which needs only
+a blobless clone). `GET /api/history?kind=&authority=&q=&bulk=&offset=&limit=`
+serves it newest first, and the *What changed* page has a searchable,
+exportable History section under the latest delta.
+
+A rebuild in which one authority adds or removes 500+ parties at once is
+flagged as a **bulk swing** and hidden by default: that is an authority
+returning to the snapshot after an outage (2,577 BIS rows on 2026-08-02) or
+reissuing its ids (State, ~800 out and 801 in on 2026-09-03), not a day of
+designations.
+
+## How the snapshot is stored
+
+`cache/snapshot/` holds one newline-delimited JSON file per authority — one
+party per line, sorted by id — plus `meta.json`, which records the shard list
+and the party count so a cut-short file fails loudly on read instead of
+loading as a smaller list.
+
+It used to be one committed `cache/snapshot.json.gz`. Git cannot delta-compress
+a gzip stream — a one-line change rewrites all of it — so every nightly commit
+added another ~5.3MB to the history permanently. Measured over twelve real
+consecutive snapshots:
+
+| Stored as | Packed `.git` after 12 days | Growth per day |
+|---|---|---|
+| `snapshot.json.gz` | 64.4 MB | ~5.3 MB |
+| `snapshot/*.ndjson` | 5.9 MB | tens of KB |
+
+It also loads faster and lighter (1.8s / 248MB peak RSS against 2.3s / 272MB
+here), and a data commit's diff now shows which parties were added, removed or
+changed. History already committed keeps its old blobs; rewriting it would
+need a force-push to `main`, which is a call for the owner.
+
+The build still writes `cache/snapshot.json.gz` for anything that wants one
+download, and the workflow publishes it — with `changes.json` and
+`quality.json` — as assets on the `data-latest` release.
+
+## Tests
+
+```bash
+npm test             # unit + HTTP tests, < 1s, no network (node:test, zero dependencies)
+npm run check        # syntax-check every shipped script, browser ones included
+npm run test:recall  # the slow one: fast path == full scan over the real snapshot
+npm run test:ui      # browser tests; needs: npm install --no-save playwright axe-core
+```
+
+`test:ui` serves a temporary snapshot built from the demo data with an HTML
+payload planted in every text field (`SANCTIONS_CACHE_DIR` points the server
+at it), then checks in Chromium that the payload never becomes markup, that no
+page scrolls sideways at 320–390px, that the theme toggle survives blocked
+storage, that shared links restore what they say, that the graph and change
+history work, and that axe-core finds no WCAG 2 AA violations on any page in
+either theme. It runs as its own CI job; the browser is installed there with
+`--no-save`, so the app keeps its zero dependencies.
+
+`npm test` runs `test/*.test.js`: the CSL label mapping, the quality gate and
+its per-authority carry-forward, OFAC list carry-forward against a stubbed
+network, staleness, client-IP trust, the matcher on the fictional demo data,
+and an end-to-end pass over a real `server.js --demo` process (endpoints,
+security headers, path traversal, rate limiting). Each fix from the October
+2026 QA pass has a test that fails when the fix is reverted.
+
+CI ([`test.yml`](.github/workflows/test.yml)) runs the syntax check, the tests
+and `quality-report.js` on every push to `main` and every pull request, on
+Node 20 and 22. The recall check ([`recall.yml`](.github/workflows/recall.yml))
+runs only when the scorer, the index or their data change.
+
+A misspelled descriptor word ("Tradng" for "Trading") used to stay in the
+query as a token nothing could match and drag an exact name under the
+threshold. The matcher now also scores a query without a token that is one
+edit from a descriptor **and appears in no listed name** — so USAMA, ANSAR or
+ZVEZDA, real name tokens one edit from a descriptor, are never dropped (with
+that check, none of the 105,411 listed names triggers the variant). Scores can
+only go up, and `verify-recall.js` has a `descriptor` query family proving the
+index still returns every such hit.
+
+## Alarms
+
+A red workflow run notifies nobody who is not watching the Actions tab; the
+nightly build went red for thirteen days in October 2026 before anyone looked.
+So alarms are issues:
+
+- **`data-refresh`** — opened (or commented on) by
+  [`refresh-data.yml`](.github/workflows/refresh-data.yml) whenever a run ends
+  red, quoting the build's own findings; closed by the next clean run.
+- **`site-monitor`** — [`monitor.yml`](.github/workflows/monitor.yml) checks
+  the deployed instance every six hours with `scripts/check-deployment.js`: is
+  it up, is it serving live data, is any authority missing, is the snapshot
+  older than 36h. Set the repository variable `DEPLOY_URL` to enable it.
+
+Watch the repository (or just issues) to be told.
+
 ## iPhone app
+
+> **Not on this branch yet.** The app, its conformance workflow and
+> `scripts/gen-conformance-fixtures.js` live on the
+> [`ios-app`](../../tree/ios-app) branch, which has not been merged. Until it
+> is, nothing on `main` checks the Swift port against the JS scorer — a scorer
+> change here is not caught by any iOS build.
 
 `ios/` holds a native SwiftUI app that screens **entirely on the device** — no
 server, no query leaving the phone, works with no network at all. It downloads
-`cache/snapshot.json.gz` (the same file the GitHub Action rebuilds nightly),
+`cache/snapshot.json.gz` (the same file the GitHub Action rebuilds nightly —
+now published as an asset on the `data-latest` release instead of committed,
+so the app's download URL has to move with it when the branch is merged),
 builds its own search index on the device, and does the rest locally.
 
 ```bash
@@ -476,7 +589,7 @@ on each — and on a 512MB container that is the difference between booting and 
 OOM-killed. The scorer instead derives a record's kinds once and memoizes them for the
 life of the snapshot, so records that are never scored cost nothing; statistics and the
 quality gate call `lib/vocab` directly and run once per snapshot. It also keeps
-`cache/snapshot.json.gz` exactly what the authorities published, with this layer's
+the committed snapshot exactly what the authorities published, with this layer's
 opinions correctable by shipping code rather than by a rebuild.
 
 Both derivations are frozen in the iOS conformance fixture over the **real inventory** —
@@ -839,8 +952,15 @@ sanctions compliance.
 | `lib/quality.js` | Field-level quality profile and the gate that blocks a build which emptied one |
 | `lib/memory.js` | The container's real memory ceiling, and whether a runtime refresh fits under it |
 | `scripts/quality-report.js` | Prints that profile and the gate verdict without a rebuild |
+| `scripts/check-deployment.js` | Is the deployed instance up and screening live, complete, current data |
+| `scripts/check-syntax.js` | Parses every shipped script, browser ones included |
+| `lib/http.js` | Security headers, JSON responses, cached path-traversal-safe static serving |
+| `test/` | `npm test` — unit and HTTP tests on node:test |
+| `.github/scripts/issue.sh` | Keeps one open alarm issue per label; used by the data and monitor workflows |
 | `scripts/verify-recall.js` | Proves the prefilter returns what a full scan would, non-Latin scripts included |
+| `cache/snapshot/` | The committed snapshot: one NDJSON file per authority plus `meta.json` |
 | `cache/changes.json` | What the last rebuild added and removed; written beside the snapshot |
+| `cache/history.ndjson` · `lib/history.js` | Every rebuild's additions and removals, appended; served by `/api/history` |
 | `cache/quality.json` | Field fill rates the last published build measured; the next build's baseline |
 | `public/record.js` | How a listed party renders — shared by the results and the permalink page so they cannot disagree |
 | `public/chrome.js` | Shared chrome: missing-authority banner, keyboard shortcuts |
@@ -848,6 +968,6 @@ sanctions compliance.
 | `public/changes.html` · `changes.js` | What changed between snapshot builds |
 | `public/fonts/` | Self-hosted IBM Plex (SIL OFL 1.1) — no third-party font requests |
 | `public/` | Frontend (HTML / CSS / JS) |
-| `ios/` | Native SwiftUI iPhone app; screens on-device via `ios/SanctinelCore`, a Swift port of `lib/` |
-| `scripts/gen-conformance-fixtures.js` | Freezes the JS scorer's output so the Swift port can be proved identical |
+| `ios/` *(ios-app branch)* | Native SwiftUI iPhone app; screens on-device via `ios/SanctinelCore`, a Swift port of `lib/` |
+| `scripts/gen-conformance-fixtures.js` *(ios-app branch)* | Freezes the JS scorer's output so the Swift port can be proved identical |
 | `sample-data/` | Fictional offline demo dataset |

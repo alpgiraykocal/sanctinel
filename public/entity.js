@@ -50,7 +50,7 @@ function render(data) {
       <button id="jsonBtn" class="btn-ghost" type="button">Copy JSON</button>
     </div>
 
-    <div class="entity-detail">${R.detailHtml(r)}</div>
+    <div class="entity-detail">${R.detailHtml(r).replace(/<(\/?)h4\b/g, '<$1h2')}</div>
 
     <p class="entity-provenance">${esc(provenanceLine(m))}</p>
     <p class="entity-foot">

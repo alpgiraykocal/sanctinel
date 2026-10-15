@@ -1,10 +1,15 @@
-# Runtime snapshot cache — plain JSON stays local; the gzipped snapshot and the
-# delta beside it are committed (built daily by the refresh-data GitHub Action).
+# Runtime snapshot cache — plain JSON and the .gz stay local; the snapshot is
+# committed as per-authority NDJSON in cache/snapshot/ (git delta-compresses
+# sorted lines; it cannot delta-compress a gzip stream — see lib/ingest), and
+# the .gz is published as a release asset by the refresh-data GitHub Action.
 # changes.json has to ship with the snapshot: it records what the rebuild added
 # and removed, and a removal cannot be recomputed from the snapshot afterwards.
 cache/*
-!cache/snapshot.json.gz
+!cache/snapshot/
+cache/snapshot/*.tmp
 !cache/changes.json
+# Every build's changes.json, appended — see lib/history.
+!cache/history.ndjson
 # The field-level quality profile of the published build. Committed because the
 # gate compares against what was actually published, not against a local run.
 !cache/quality.json

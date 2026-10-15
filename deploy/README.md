@@ -110,9 +110,12 @@ Full; Full (strict) also works once its certificate is issued) — on *Flexible*
 Cloudflare talks to Render over plain HTTP, Render redirects to HTTPS, and you
 get a redirect loop.
 
-Nothing in the app needs changing either way: `server.js` reads the client IP
-from `X-Forwarded-For` for its per-IP rate limiting, which both Render and
-Cloudflare set correctly.
+`server.js` reads the client IP from `X-Forwarded-For` for its per-IP rate
+limiting, counting from the right — one entry per proxy that appends to it. On
+Render alone that is the default (`TRUST_PROXY_HOPS=1`). If you switch the
+record to **Proxied**, Cloudflare and Render both append, so set
+`TRUST_PROXY_HOPS=2` in the Render environment, or every visitor behind one
+Cloudflare edge shares one rate-limit bucket.
 
 ---
 
@@ -139,7 +142,9 @@ domain root and under any prefix.
 The Worker handles two things that are easy to miss: it redirects `/sanctinel`
 to `/sanctinel/` (without the trailing slash the browser resolves relative URLs
 one level too high) and forwards `CF-Connecting-IP` as `X-Forwarded-For` so
-per-IP rate limiting still sees individual visitors rather than one.
+per-IP rate limiting still sees individual visitors rather than one. Render
+appends the Worker's own address after it, so set `TRUST_PROXY_HOPS=2` in the
+Render environment for this setup.
 
 Test it locally before touching DNS:
 

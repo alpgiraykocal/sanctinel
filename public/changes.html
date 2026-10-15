@@ -77,11 +77,43 @@
       <button id="removedMore" class="btn-ghost more-btn" type="button" hidden>Show more</button>
     </section>
 
+    <section id="historySection" aria-labelledby="historyTitle" hidden>
+      <h2 id="historyTitle">History <span class="h3-note" id="historyNote"></span></h2>
+      <p>Every rebuild's additions and removals, newest first — so the date a party came off a list is still here after the next rebuild. <span id="historySpan"></span></p>
+      <div class="changes-controls">
+        <label class="field">
+          <span class="field-label">Change</span>
+          <select id="hKind">
+            <option value="">Added and removed</option>
+            <option value="added">Added</option>
+            <option value="removed">Removed</option>
+          </select>
+        </label>
+        <label class="field">
+          <span class="field-label">Authority</span>
+          <select id="hAuthority"><option value="">All authorities</option></select>
+        </label>
+        <label class="field">
+          <span class="field-label">Find</span>
+          <input id="hText" type="search" placeholder="Name, list or id" autocomplete="off" />
+        </label>
+        <label class="field field-check">
+          <input id="hBulk" type="checkbox" checked />
+          <span>Hide bulk swings</span>
+        </label>
+        <button class="btn-ghost" id="hExport" type="button">Export CSV</button>
+      </div>
+      <p class="h-bulk-note" id="hBulkNote" hidden></p>
+      <div id="historyList" class="changes-list" aria-live="polite"></div>
+      <button id="historyMore" class="btn-ghost more-btn" type="button" hidden>Show more</button>
+    </section>
+
     <section>
       <h2>Reading this page</h2>
       <ul class="doc-list">
         <li>The comparison is between <strong>two consecutive snapshot builds</strong>, not between two dates you chose. If a build was skipped, its changes fold into the next one.</li>
         <li>A party is matched by the authority's own entity id. An authority that reissues a party under a new id will show as one removal plus one addition.</li>
+        <li>A <strong>bulk swing</strong> is one authority adding or removing hundreds of parties in a single rebuild. That is an authority returning to or leaving the snapshot, or reissuing its ids — not a day of designations — so the history hides those rows unless you ask for them.</li>
         <li>Changes <em>within</em> a record — a new alias, a corrected date of birth, an added address — are not listed here. Only parties entering or leaving the lists are.</li>
         <li>If an authority is missing from the snapshot entirely, its parties will appear as a mass removal. The banner at the top of the page says when that is the case, and it means the data is incomplete, not that thousands were delisted.</li>
         <li>None of this is a determination. Verify any specific party against the issuing authority — see <a href="about.html">about &amp; methodology</a>.</li>

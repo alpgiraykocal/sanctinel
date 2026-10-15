@@ -3,17 +3,18 @@ name: Refresh OFAC data
 on:
   schedule:
     - cron: '0 23 * * *'   # 23:00 UTC = 01:00 Stockholm (CEST); 00:00 in winter (CET)
-    # Recovery pass. The coverage guard refuses to publish a snapshot that lost
-    # an authority, so a few hours of upstream downtime — the EU list served
-    # HTTP 500 for most of 2026-08-01 — froze every OTHER authority for a full
-    # day as well. This run exits immediately when the published snapshot
-    # already has full coverage (ONLY_IF_DEGRADED), so on a normal day it costs
+    # Recovery pass. When a source was down or failed validation at 23:00, its
+    # authority was published with carried-forward records — or, before that
+    # existed, every authority was frozen for the day. This run retries; it
+    # exits immediately when the published snapshot is complete and nothing in
+    # it was carried forward (ONLY_IF_DEGRADED), so on a normal day it costs
     # seconds and commits nothing.
     - cron: '0 11 * * *'
   workflow_dispatch:        # manual run button
 
 permissions:
   contents: write
+  issues: write   # open / close the data-refresh alarm issue
 
 jobs:
   refresh:
@@ -28,27 +29,35 @@ jobs:
       # Exit codes:
       #   0  clean build, full authority coverage
       #   3  published, but an alarm is standing: an authority is still missing,
-      #      or a measured field is below its floor. Both predate this build.
-      #      The snapshot IS written and must be committed — the other data is
-      #      fresh — so the failure is deferred to the last step, after commit.
+      #      a source or OFAC list was carried forward from the last good build,
+      #      an authority failed the field-level gate and kept its previous
+      #      records, or a measured field is below its floor. The snapshot IS
+      #      written and must be committed — the other data is fresh — so the
+      #      failure is deferred to the last step, after commit.
       #   1  build failed, a source regressed since the last good snapshot, or a
-      #      field regressed against the published one (a parser breaking looks
-      #      exactly like that: same entity count, empty field). Nothing was
-      #      written; the previous, more complete snapshot stands.
+      #      GLOBAL measure (date parsing, country resolution) regressed — which
+      #      carrying one authority forward cannot fix. Nothing was written; the
+      #      previous, more complete snapshot stands.
       - name: Build fresh snapshot from OFAC SLS
         id: build
         env:
           # The 11:00 pass exists only to recover a degraded snapshot; it stops
           # before fetching anything when coverage is already complete.
           ONLY_IF_DEGRADED: ${{ github.event.schedule == '0 11 * * *' && '1' || '' }}
+          # Optional: a token registered on the Commission's FSF application.
+          # Without it the public token is used, with a catalogue fallback —
+          # see lib/sources/eu.js.
+          EU_FSF_TOKEN: ${{ secrets.EU_FSF_TOKEN }}
         run: |
           set +e
-          node scripts/build-cache.js
-          code=$?
+          # Teed to a file so a failure can quote the build's own verdict.
+          node scripts/build-cache.js 2>&1 | tee build.log
+          code=${PIPESTATUS[0]}
           echo "code=$code" >> "$GITHUB_OUTPUT"
           if [ "$code" -ne 0 ] && [ "$code" -ne 3 ]; then exit "$code"; fi
 
       - name: Commit and push if changed
+        id: commit
         run: |
           git config user.name "ofac-data-bot"
           git config user.email "actions@github.com"
@@ -56,13 +65,30 @@ jobs:
           # from the snapshot alone once the previous one is gone. The quality
           # profile ships too, because a field regression is only visible
           # against the numbers that were actually published.
-          git add cache/snapshot.json.gz cache/changes.json cache/quality.json
+          # -A on the directory so a shard for a vanished authority is removed.
+          git add -A cache/snapshot
+          git add cache/changes.json cache/quality.json cache/history.ndjson
           if git diff --cached --quiet; then
             echo "No data change."
           else
             git commit -m "data: refresh OFAC snapshot ($(date -u +%Y-%m-%d))"
             git push
+            echo "changed=1" >> "$GITHUB_OUTPUT"
           fi
+
+      # One download for anything that wants the whole snapshot at once. A
+      # release asset rather than a commit: a gzip stream cannot be delta-
+      # compressed, so committing it daily grew the history ~5MB a day.
+      - name: Publish the snapshot as a release asset
+        if: steps.commit.outputs.changed == '1'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          gh release view data-latest >/dev/null 2>&1 || gh release create data-latest \
+            --title "Latest data snapshot" --latest=false \
+            --notes "Rebuilt nightly by the refresh-data workflow. snapshot.json.gz is the whole snapshot; the same data is committed as cache/snapshot/."
+          gh release upload data-latest cache/snapshot.json.gz cache/changes.json cache/quality.json --clobber
 
       # Runs last so the data still lands. A red run is the point: a screening
       # list that covers less than it claims is a false-negative source, and
@@ -70,5 +96,44 @@ jobs:
       - name: Fail if an alarm is standing
         if: steps.build.outputs.code == '3'
         run: |
-          echo "::error::Snapshot published with a standing alarm — an authority is missing, or a measured field is below its floor. See the build log."
+          echo "::error::Snapshot published with a standing alarm — an authority is missing or carried forward, or a measured field is below its floor. See the build log."
           exit 1
+
+      # A red run is only an alarm if someone hears it. Open one issue (or add
+      # to the open one) with the build's own findings, and close it the first
+      # time a run comes back clean. See .github/scripts/issue.sh.
+      - name: Open or update the alarm issue
+        if: failure()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          CODE: ${{ steps.build.outputs.code }}
+        run: |
+          {
+            echo "The data refresh run ended red (build exit code \`${CODE:-none}\`): $RUN_URL"
+            echo
+            case "$CODE" in
+              3) echo "The snapshot **was published**, but with a standing alarm — some data is carried forward or incomplete." ;;
+              1) echo "The snapshot **was not published**. The site keeps serving the previous one, and every authority in it is ageing." ;;
+              *) echo "The run failed before or after the build; see the log." ;;
+            esac
+            echo
+            echo '```'
+            if [ -f build.log ]; then
+              grep -E 'REGRESSION|BELOW FLOOR|ALARM|STALE|WARNING|CARRY-FORWARD|unrecognised|refused|failed|FAIL ' build.log | head -40 || true
+            else
+              echo "(no build log)"
+            fi
+            echo '```'
+          } > issue-body.md
+          .github/scripts/issue.sh open data-refresh "Data refresh is failing" issue-body.md
+
+      - name: Close the alarm issue on a clean run
+        if: success() && steps.build.outputs.code == '0'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          .github/scripts/issue.sh close data-refresh "Clean run: $RUN_URL"

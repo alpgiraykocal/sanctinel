@@ -102,7 +102,7 @@ window.SS = (function () {
     if (stale.length) {
       parts.push(
         `<strong>${stale.map((x) => `${esc(x.authority)} data is ${esc(String(x.ageHours))}h old`).join(', ')}.</strong> ` +
-        `That source was unreachable when this snapshot was built, so its last good records were kept. ` +
+        `${stale.length > 1 ? 'Those sources' : 'That source'} could not be refreshed when this snapshot was built — unreachable, or its new data failed validation — so the last good records were kept. ` +
         `Anything ${stale.length > 1 ? 'those authorities have' : 'that authority has'} designated since is not screened here.`
       );
     }
@@ -119,6 +119,18 @@ window.SS = (function () {
         `<strong>This snapshot is ${esc(String(ageHours))} hours old and is not refreshing on this instance.</strong> ` +
         'Anything designated since then is not screened here. ' +
         `<span class="coverage-why">(${esc(blocked.reason)})</span>`
+      );
+    } else if (ageHours != null && ageHours >= 36) {
+      /*
+       * Old for any other reason — most often the daily build refusing to
+       * publish. Without this the whole snapshot could go a fortnight stale with
+       * nothing on screen, since the per-authority line above only names a
+       * source that lags the rest of the snapshot. 36h, not 24h: a daily build
+       * plus a deploy routinely puts a healthy snapshot just past a day.
+       */
+      parts.push(
+        `<strong>This snapshot is ${esc(String(ageHours))} hours old.</strong> ` +
+        'The daily rebuild has not published since then, so anything designated in the meantime is not screened here.'
       );
     }
 

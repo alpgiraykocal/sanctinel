@@ -14,6 +14,8 @@
  *   acronym   — initials of multi-token names ("CCC" for China Communications
  *               Construction Company), which share no trigram with the name
  *   verbatim  — names copied exactly, incl. aliases
+ *   descriptor — a typo in a legal-form / descriptor word ("TRADNG"), which
+ *               the matcher scores as a second query variant without it
  *   native    — names in their own script (Cyrillic, Arabic, Hebrew, Greek,
  *               Han, kana, hangul), pasted as published. These are the ones the
  *               other families cannot reach: every query above is filtered
@@ -26,7 +28,7 @@
  */
 
 const { readCache } = require('../lib/ingest');
-const { screenEntity, tokens, searchableNames, hasNonLatinScript } = require('../lib/matcher');
+const { screenEntity, tokens, normalize, searchableNames, hasNonLatinScript } = require('../lib/matcher');
 const searchIndex = require('../lib/searchindex');
 
 const THRESHOLD = 0.95; // the default; below it server.js full-scans anyway
@@ -66,6 +68,19 @@ function buildQueries(entities) {
     const names = (e.names && e.names.length) ? e.names : [{ name: e.name }];
     const n = cleanName(pick(names).name);
     if (n.length >= 4) qs.push({ kind: 'verbatim', q: n });
+  }
+  // A typo in a descriptor word ("TRADNG LLC"), which the matcher scores as a
+  // second query variant without that word. The index must take the union of
+  // both variants' candidates, or these hits exist only on a full scan.
+  for (let i = 0; i < SAMPLE * 40 && qs.filter((x) => x.kind === 'descriptor').length < SAMPLE / 3; i++) {
+    const e = pick(entities);
+    const raw = normalize(e.name).split(' ');
+    const kept = new Set(tokens(e.name));
+    const descIdx = raw.map((t, j) => (t.length >= 6 && !kept.has(t) ? j : -1)).filter((j) => j >= 0);
+    if (!descIdx.length || kept.size < 1) continue;
+    const j = pick(descIdx);
+    raw[j] = raw[j].slice(0, 2) + raw[j].slice(3); // drop the third letter
+    qs.push({ kind: 'descriptor', q: raw.join(' ') });
   }
   // Own-script names, pasted verbatim — deliberately NOT run through cleanName.
   const native = [];

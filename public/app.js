@@ -280,6 +280,7 @@ function render(data) {
   summary.innerHTML = total
     ? `<strong>${total.toLocaleString()}</strong> potential match${total === 1 ? '' : 'es'} for <strong>“${esc(data.query)}”</strong> <span class="summary-sub">· screened against ${(data.snapshot.count || 0).toLocaleString()} listed parties at threshold ${data.threshold}</span>${
         truncated ? `<span class="truncation-note">Showing the ${shown.toLocaleString()} highest-scoring — narrow the query or raise the threshold to see the rest.</span>` : ''}${
+        shortQueryNote(data.query)}${
         tieNote(data)}`
     : '';
 
@@ -517,16 +518,58 @@ function syncUrl(q) {
   history.replaceState(null, '', qs ? '?' + qs : location.pathname);
 }
 
+/*
+ * A one- or two-letter Latin query matches initials and the letters of dotted
+ * legal forms ("S.A.", "C.A.") — "a" returns dozens of parties at 0.96 — and
+ * nothing in the score says those hits are noise. Han, kana and hangul names
+ * are legitimately that short, so only Latin letters and digits count.
+ */
+function shortQueryNote(q) {
+  const compact = String(q || '').replace(/[\s.,'’\-]/g, '');
+  if (!/^[A-Za-z0-9]{1,2}$/.test(compact)) return '';
+  return `<span class="truncation-note">A ${compact.length}-character query matches initials and the letters of abbreviated legal forms (S.A., C.A.), so most of these hits are noise. Type more of the name unless the party's name really is this short.</span>`;
+}
+
+/*
+ * A shared link can name a list, programme or authority this snapshot no
+ * longer has — a list renamed by its publisher, an authority missing today.
+ * The select silently fell back to "All", so the link quietly screened more
+ * widely than it says. Say so instead.
+ */
+function noteDroppedFilters(p) {
+  const dropped = [];
+  for (const [key, label] of [['authority', 'authority'], ['list', 'list'], ['program', 'programme']]) {
+    const want = p.get(key);
+    if (want && $(key).value !== want) dropped.push(`${label} “${esc(want)}”`);
+  }
+  const note = $('urlNote');
+  if (!note) return;
+  note.hidden = !dropped.length;
+  note.innerHTML = dropped.length
+    ? `This link asked for ${dropped.join(' and ')}, which ${dropped.length > 1 ? 'are' : 'is'} not in the current snapshot — showing results without ${dropped.length > 1 ? 'those filters' : 'that filter'}.`
+    : '';
+}
+
 function initFromUrl() {
   const p = new URLSearchParams(location.search);
-  if (p.get('threshold')) { $('threshold').value = p.get('threshold'); $('threshOut').textContent = parseFloat(p.get('threshold')).toFixed(2); }
+  // The label shows what the slider actually holds. A range input clamps an
+  // out-of-range value and moves an unparseable one to its midpoint, so echoing
+  // the raw parameter displayed 0.50 or NaN over a slider set to something else.
+  const t = Number(p.get('threshold'));
+  if (p.get('threshold') && Number.isFinite(t)) $('threshold').value = String(t);
+  $('threshOut').textContent = parseFloat($('threshold').value).toFixed(2);
   if (p.get('authority')) $('authority').value = p.get('authority');
   if (p.get('list')) $('list').value = p.get('list');
   if (p.get('program')) $('program').value = p.get('program');
   if (p.get('yob')) $('yob').value = p.get('yob');
   if (p.get('country')) $('country').value = p.get('country');
+  noteDroppedFilters(p);
   if (p.get('q')) { $('q').value = p.get('q'); runSearch(); }
 }
+
+// The dropped-filter note describes the link as opened; once the filters are
+// touched it no longer describes anything.
+for (const id of ['authority', 'list', 'program']) $(id).addEventListener('change', () => { $('urlNote').hidden = true; });
 
 $('searchForm').addEventListener('submit', runSearch);
 $('q').addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); runSearch(); } });

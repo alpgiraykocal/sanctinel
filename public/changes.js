@@ -119,6 +119,97 @@ function exportCsv() {
   document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(u);
 }
 
+/*
+ * History: every rebuild's changes, from /api/history (see lib/history). The
+ * server filters and pages; this keeps the current filter, appends pages, and
+ * groups consecutive rows by rebuild date.
+ */
+const H_PAGE = 100;
+const hState = { offset: 0, total: 0, rows: [], seq: 0 };
+
+function historyQuery(offset, limit) {
+  const p = new URLSearchParams({ offset: String(offset), limit: String(limit) });
+  if ($('hKind').value) p.set('kind', $('hKind').value);
+  if ($('hAuthority').value) p.set('authority', $('hAuthority').value);
+  if ($('hText').value.trim()) p.set('q', $('hText').value.trim());
+  if ($('hBulk').checked) p.set('bulk', '0');
+  return 'api/history?' + p.toString();
+}
+
+function historyRow(r) {
+  const added = r.kind === 'added';
+  const name = added ? `<a href="${permalink(r.id)}">${esc(r.name)}</a>` : esc(r.name);
+  const meta = [r.authority, r.list, r.type].filter(Boolean).map(esc).join(' · ');
+  return `<div class="chg-row">
+      <span class="chg-name"><span class="h-kind h-${added ? 'added' : 'removed'}">${added ? 'Added' : 'Removed'}</span> ${name}${r.bulk ? ' <span class="chg-gone">bulk swing</span>' : ''}</span>
+      <span class="chg-meta">${meta}${r.datePublished ? ` · listed ${esc(r.datePublished)}` : ''} · id ${esc(r.id)}</span>
+    </div>`;
+}
+
+function renderHistory() {
+  let html = '';
+  let day = '';
+  for (const r of hState.rows) {
+    const d = (r.at || '').slice(0, 10);
+    if (d !== day) { day = d; html += `<h3 class="h-day">${esc(d || 'undated')}</h3>`; }
+    html += historyRow(r);
+  }
+  $('historyList').innerHTML = html || '<p class="chart-empty">No changes match these filters.</p>';
+  $('historyNote').textContent = hState.total ? `(showing ${hState.rows.length} of ${hState.total.toLocaleString()})` : '(none)';
+  $('historyMore').hidden = hState.rows.length >= hState.total;
+}
+
+async function loadHistory(reset) {
+  const seq = ++hState.seq;
+  if (reset) { hState.offset = 0; hState.rows = []; }
+  const { body } = await window.SS.getJson(historyQuery(hState.offset, H_PAGE));
+  if (seq !== hState.seq) return; // a newer filter change already superseded this
+  hState.total = body.total;
+  hState.rows = hState.rows.concat(body.rows);
+  hState.offset = hState.rows.length;
+  if (reset && body.summary) {
+    const s = body.summary;
+    const cur = $('hAuthority').value;
+    $('hAuthority').innerHTML = '<option value="">All authorities</option>' +
+      s.authorities.map((a) => `<option value="${esc(a)}"${a === cur ? ' selected' : ''}>${esc(a)}</option>`).join('');
+    $('historySpan').textContent = s.builds
+      ? `${s.builds} rebuilds since ${new Date(s.since).toLocaleDateString()}.${s.truncatedBuilds ? ` ${s.truncatedBuilds} rebuild${s.truncatedBuilds > 1 ? 's' : ''} listed only the first 3,000 changes per side.` : ''}`
+      : 'Nothing recorded yet — the first entry is written by the next rebuild.';
+    $('hBulkNote').hidden = !$('hBulk').checked;
+    $('hBulkNote').textContent = `Hiding rows from rebuilds where one authority added or removed ${body.bulkThreshold}+ parties at once.`;
+  }
+  renderHistory();
+  $('historySection').hidden = false;
+}
+
+async function exportHistory() {
+  const all = [];
+  for (let off = 0; off < 20000; off += 500) {
+    const { body } = await window.SS.getJson(historyQuery(off, 500));
+    all.push(...body.rows);
+    if (all.length >= body.total || !body.rows.length) break;
+  }
+  const cell = (v) => `"${String(v == null ? '' : v).replace(/"/g, '""')}"`;
+  const rows = [['Rebuild', 'Change', 'Name', 'Authority', 'List', 'Type', 'Entity ID', 'Date published', 'Bulk swing', 'From publication', 'To publication']];
+  for (const r of all) rows.push([r.at, r.kind, r.name, r.authority, r.list, r.type, r.id, r.datePublished || '', r.bulk ? 'yes' : '', r.fromPublication, r.toPublication]);
+  rows.push([], ['Exported', new Date().toISOString()], ['Note', 'A removal is not self-executing — confirm the delisting with the issuing authority before releasing anything.']);
+  const csv = '\ufeff' + rows.map((r) => r.map(cell).join(',')).join('\r\n');
+  const u = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' }));
+  const a = document.createElement('a');
+  a.href = u; a.download = `sanctions-search-history-${new Date().toISOString().slice(0, 10)}.csv`;
+  document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(u);
+}
+
+let hTimer = null;
+const reloadHistory = () => loadHistory(true).catch(() => {});
+$('hKind').addEventListener('change', reloadHistory);
+$('hAuthority').addEventListener('change', reloadHistory);
+$('hBulk').addEventListener('change', reloadHistory);
+$('hText').addEventListener('input', () => { clearTimeout(hTimer); hTimer = setTimeout(reloadHistory, 250); });
+$('historyMore').addEventListener('click', () => loadHistory(false).catch(() => {}));
+$('hExport').addEventListener('click', () => exportHistory().catch(() => {}));
+reloadHistory();
+
 $('cAuthority').addEventListener('change', () => renderAll(true));
 $('cText').addEventListener('input', () => renderAll(true));
 $('addedMore').addEventListener('click', () => renderList('added', false));

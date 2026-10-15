@@ -56,12 +56,13 @@
     <p id="coverageText"></p>
   </div>
 
-  <div class="notice-bar" role="note">
+  <aside class="notice-bar" aria-label="Disclaimer">
     <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M11 7h2v2h-2V7Zm0 4h2v6h-2v-6Zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2Zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8Z"/></svg>
     <p><strong>Screening intelligence, not legal advice.</strong> Hits are leads to verify, not determinations. Confirm against the issuing authority — <a href="https://sanctionssearch.ofac.treas.gov" rel="noreferrer noopener" target="_blank">OFAC</a>, <a href="https://webgate.ec.europa.eu/fsd/fsf" rel="noreferrer noopener" target="_blank">EU</a>, <a href="https://www.un.org/securitycouncil/content/un-sc-consolidated-list" rel="noreferrer noopener" target="_blank">UN</a> or <a href="https://www.gov.uk/government/publications/financial-sanctions-consolidated-list-of-targets" rel="noreferrer noopener" target="_blank">UK OFSI</a>, <a href="https://www.bis.gov/regulations/ear/744" rel="noreferrer noopener" target="_blank">BIS</a> or <a href="https://www.pmddtc.state.gov" rel="noreferrer noopener" target="_blank">DDTC</a> — before any compliance decision. Export-control listings carry licence obligations, not asset freezes. Your queries are never stored.</p>
-  </div>
+  </aside>
 
   <main id="main" class="layout">
+    <h1 class="sr-only">Sanctions and export-control screening</h1>
     <section class="search-panel" aria-label="Screening query">
       <form id="searchForm" autocomplete="off">
         <label class="field">
@@ -119,8 +120,10 @@
     </section>
 
     <section class="results" aria-label="Screening results" aria-live="polite">
+      <h2 class="sr-only">Results</h2>
       <div class="results-head">
         <div id="resultSummary" class="result-summary" hidden></div>
+        <p id="urlNote" class="url-note" role="status" hidden></p>
         <div class="results-actions">
           <label class="sort-field" id="sortWrap" hidden>
             <span class="sr-only">Sort results</span>
