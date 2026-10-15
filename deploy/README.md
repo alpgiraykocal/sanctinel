@@ -4,7 +4,7 @@ Two ways, depending on the URL you want:
 
 | Goal | How | Effort |
 |---|---|---|
-| `sanctinel.yourdomain.com` | CNAME + Render custom domain | ~10 min, no code |
+| `sanctions.yourdomain.com` | CNAME + Render custom domain | ~10 min, no code |
 | `yourdomain.com/sanctinel` | Cloudflare Worker reverse proxy | more moving parts |
 
 A **subdomain** is a hostname, and hostnames are exactly what DNS resolves — so
@@ -14,7 +14,7 @@ specifically need the path; the path recipe is in [the appendix](#appendix-servi
 
 ---
 
-# Subdomain: `sanctinel.yourdomain.com`
+# Subdomain: `sanctions.yourdomain.com`
 
 You will touch two dashboards. Do them in this order — Render needs to see the
 DNS record before it can issue a certificate.
@@ -29,7 +29,7 @@ DNS record before it can issue a certificate.
    append `/settings` to that URL directly.
 3. Scroll to the **Custom Domains** section. It sits well down a long page; use
    ⌘F / Ctrl+F for "Custom Domains" rather than hunting for it.
-4. Click **+ Add Custom Domain**, type `sanctinel.yourdomain.com` → **Save**.
+4. Click **+ Add Custom Domain**, type `sanctions.yourdomain.com` → **Save**.
 5. Render now shows the domain as **unverified** along with the DNS record it
    expects — a **CNAME** pointing at your service's `onrender.com` hostname.
    **Copy that value exactly as Render displays it.** Do not assume it; use
@@ -44,8 +44,8 @@ Leave this tab open — you come back to it in step 3.
 2. Left sidebar → **DNS** → **Records** → **Add record**.
 3. Fill it in:
    - **Type**: `CNAME`
-   - **Name**: `sanctinel` — just the label, not the full domain. Cloudflare
-     appends the rest, so this becomes `sanctinel.yourdomain.com`.
+   - **Name**: `sanctions` — just the label, not the full domain. Cloudflare
+     appends the rest, so this becomes `sanctions.yourdomain.com`.
    - **Target**: the value Render gave you in step 1
      (e.g. `sanctinel.onrender.com`)
    - **Proxy status**: click the cloud so it is **grey — "DNS only"**
@@ -74,17 +74,17 @@ Leave this tab open — you come back to it in step 3.
 From a terminal:
 
 ```bash
-dig +short sanctinel.yourdomain.com
+dig +short sanctions.yourdomain.com
 ```
 Expect to see your `onrender.com` hostname (and the IPs behind it).
 
 ```bash
-curl -sI https://sanctinel.yourdomain.com | head -1
-curl -s https://sanctinel.yourdomain.com/healthz
+curl -sI https://sanctions.yourdomain.com | head -1
+curl -s https://sanctions.yourdomain.com/healthz
 ```
 Expect `HTTP/2 200` and `{"status":"ok",...}`.
 
-Then open `https://sanctinel.yourdomain.com` in a browser and confirm:
+Then open `https://sanctions.yourdomain.com` in a browser and confirm:
 - the padlock is there and there is no certificate warning
 - the page is **styled** (CSS loaded)
 - the status pill reads **Live**
@@ -98,7 +98,7 @@ Then open `https://sanctinel.yourdomain.com` in a browser and confirm:
 | `ERR_TOO_MANY_REDIRECTS` | Cloudflare SSL mode is *Flexible* | **SSL/TLS → Overview → Full** |
 | No **Custom Domains** section | on the account settings page, or on Overview | it is on the *service's* Settings page — `dashboard.render.com/web/srv-…/settings` |
 | Certificate warning | cert not issued yet | wait; re-check Render's Custom Domains panel |
-| `dig` returns nothing | record not saved, or wrong name | Name must be just `sanctinel`, not the full domain |
+| `dig` returns nothing | record not saved, or wrong name | Name must be just `sanctions`, not the full domain |
 | 30–60s first load | Render free instance was asleep | expected on the free plan; a paid instance does not sleep |
 
 ## Optional: turn Cloudflare's proxy on later
