@@ -36,12 +36,12 @@ const pct = (v) => `${(v * 100).toFixed(1)}%`;
 
 console.log(`snapshot: publication ${now.publicationId || 'unknown'}, ${now.count} parties, retrieved ${now.retrievedAt || 'unknown'}\n`);
 
-const cols = ['count', 'aliasRate', 'addressRate', 'identifierRate', 'birthDateRate', 'nationalityRate', 'relationshipEdges'];
+const cols = ['count', 'aliasRate', 'addressRate', 'addressDetailRate', 'identifierRate', 'birthDateRate', 'nationalityRate', 'relationshipEdges'];
 console.log(['authority'.padEnd(10), ...cols.map((c) => c.padStart(19))].join(''));
 for (const [name, a] of Object.entries(now.authorities)) {
   const cells = cols.map((c) => {
     const v = a[c];
-    return (c.endsWith('Rate') ? pct(v) : String(v)).padStart(19);
+    return (v === undefined ? '—' : c.endsWith('Rate') ? pct(v) : String(v)).padStart(19);
   });
   console.log([name.padEnd(10), ...cells].join(''));
 }
