@@ -1,43 +1,47 @@
 {
- "generatedAt": "2026-10-15T15:54:26.797Z",
- "publicationId": "1050",
- "retrievedAt": "2026-10-15T15:54:25.969Z",
- "count": 38410,
+ "generatedAt": "2026-10-15T17:41:02.885Z",
+ "publicationId": "1054",
+ "retrievedAt": "2026-10-15T17:41:00.952Z",
+ "count": 38437,
  "authorities": {
   "OFAC": {
-   "count": 19818,
-   "aliasRate": 0.5200322938742558,
+   "count": 19845,
+   "aliasRate": 0.5197782816830436,
    "addressRate": 1,
-   "identifierRate": 0.7369563023513978,
-   "birthDateRate": 0.3804117468967605,
-   "nationalityRate": 0.3098698153194066,
-   "relationshipEdges": 9381
+   "identifierRate": 0.7373141849332325,
+   "birthDateRate": 0.3807004283194759,
+   "nationalityRate": 0.3102544721592341,
+   "addressDetailRate": 0.7151060588304231,
+   "relationshipEdges": 9393
   },
   "EU": {
    "count": 6234,
    "aliasRate": 0.8812961180622393,
    "addressRate": 0.32354828360603144,
-   "identifierRate": 0.32001924927815206,
-   "birthDateRate": 0.6004170676932948,
+   "identifierRate": 0.3448829002245749,
+   "birthDateRate": 0.6065126724414501,
    "nationalityRate": 0.42829643888354185,
+   "addressDetailRate": 0.8990403071017274,
    "relationshipEdges": 0
   },
   "UN": {
    "count": 1010,
-   "aliasRate": 0.7089108910891089,
+   "aliasRate": 0.7079207920792079,
    "addressRate": 0.5485148514851486,
    "identifierRate": 0.29504950495049503,
    "birthDateRate": 0.6762376237623763,
-   "nationalityRate": 0.6277227722772277,
+   "nationalityRate": 0.6267326732673267,
+   "addressDetailRate": 0.7132442284325637,
    "relationshipEdges": 0
   },
   "UK": {
    "count": 5135,
    "aliasRate": 0.5248296007789679,
    "addressRate": 0.5624148003894839,
-   "identifierRate": 0.14741966893865627,
+   "identifierRate": 0.27497565725413825,
    "birthDateRate": 0.6296007789678676,
    "nationalityRate": 0.5322297955209347,
+   "addressDetailRate": 0.8411242603550296,
    "relationshipEdges": 0
   },
   "State": {
@@ -47,6 +51,7 @@
    "identifierRate": 0,
    "birthDateRate": 0,
    "nationalityRate": 0,
+   "addressDetailRate": 0,
    "relationshipEdges": 0
   },
   "BIS": {
@@ -56,17 +61,19 @@
    "identifierRate": 0.0001884303749764462,
    "birthDateRate": 0,
    "nationalityRate": 0,
+   "addressDetailRate": 0.9953130231001004,
    "relationshipEdges": 0
   }
  },
  "derived": {
-  "dobParseRate": 0.999941197224509,
-  "countryResolveRate": 0.9995888238403853,
+  "datePublishedIsoRate": 1,
+  "dobParseRate": 0.9997043519394513,
+  "countryResolveRate": 0.999901933864198,
   "attributeUnclassifiedRate": 0,
-  "identifierUnclassifiedRate": 0.050473186119873815,
-  "dobValues": 17006,
-  "countryValues": 51073,
-  "attributes": 105490,
-  "identifiers": 31066
+  "identifierUnclassifiedRate": 0.03950451958486776,
+  "dobValues": 16912,
+  "countryValues": 50986,
+  "attributes": 140910,
+  "identifiers": 32857
  }
 }
