@@ -11,6 +11,8 @@
 const $ = (id) => document.getElementById(id);
 const esc = (s) => String(s == null ? '' : s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 const num = (n) => (n || 0).toLocaleString();
+// 5,930 -> "5.9k" for chart labels, where the full figure sits in the tooltip.
+const compact = (n) => (n >= 1e4 ? `${Math.round(n / 1e3)}k` : n >= 1e3 ? `${(n / 1e3).toFixed(1).replace(/\.0$/, '')}k` : String(n || 0));
 
 // Designation dates are calendar dates, not instants. Formatting them in the
 // viewer's local zone renders a 2026-07-24 designation as "Jul 23, 2026" for
@@ -59,8 +61,9 @@ function colChart(rows, labelFn, everyN) {
   return rows.map((r, i) => {
     const label = esc(labelFn(r.label));
     const show = (rows.length - 1 - i) % step === 0;
-    return `<div class="col" title="${label}: ${num(r.count)} designations">
-      <span class="col-bar" style="height:${Math.max(2, (r.count / max) * 100)}%"><em>${num(r.count)}</em></span>
+    // Value labels only on labelled columns (and on hover) so they never collide.
+    return `<div class="col${show ? ' on' : ''}" title="${label}: ${num(r.count)} designations">
+      <span class="col-bar" style="height:${Math.max(2, (r.count / max) * 100)}%"><em>${compact(r.count)}</em></span>
       <span class="col-lbl">${show ? label : ''}</span>
     </div>`;
   }).join('');
