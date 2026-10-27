@@ -1,7 +1,7 @@
 {
- "generatedAt": "2026-10-26T00:52:58.670Z",
+ "generatedAt": "2026-10-27T01:44:15.391Z",
  "publicationId": "1075",
- "retrievedAt": "2026-10-26T00:52:57.142Z",
+ "retrievedAt": "2026-10-27T01:44:13.860Z",
  "count": 38488,
  "authorities": {
   "OFAC": {
@@ -26,12 +26,12 @@
   },
   "UN": {
    "count": 1007,
-   "aliasRate": 0.7070506454816285,
+   "aliasRate": 0.7080436941410129,
    "addressRate": 0.5471698113207547,
    "identifierRate": 0.2939424031777557,
    "birthDateRate": 0.6752730883813307,
    "nationalityRate": 0.6256206554121152,
-   "addressDetailRate": 0.7146341463414634,
+   "addressDetailRate": 0.7134146341463414,
    "relationshipEdges": 0
   },
   "UK": {

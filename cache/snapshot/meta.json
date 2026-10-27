@@ -33,9 +33,11 @@
    "authorities": [
     "UK"
    ],
-   "ok": true,
+   "ok": false,
    "count": 5135,
-   "error": ""
+   "error": "HTTP 409 for https://ofsistorage.blob.core.windows.net/publishlive/2022format/ConList.csv",
+   "carriedForward": true,
+   "asOf": "2026-10-26T00:52:57.142Z"
   },
   {
    "label": "U.S. export-control (BIS + State)",
@@ -100,15 +102,15 @@
    "date": "2026-09-29T13:10:41.348061"
   }
  ],
- "retrievedAt": "2026-10-26T00:52:57.142Z",
+ "retrievedAt": "2026-10-27T01:44:13.860Z",
  "isLive": true,
  "authorityFreshness": {
-  "OFAC": "2026-10-26T00:52:57.142Z",
-  "EU": "2026-10-26T00:52:57.142Z",
-  "UN": "2026-10-26T00:52:57.142Z",
+  "OFAC": "2026-10-27T01:44:13.860Z",
+  "EU": "2026-10-27T01:44:13.860Z",
+  "UN": "2026-10-27T01:44:13.860Z",
   "UK": "2026-10-26T00:52:57.142Z",
-  "BIS": "2026-10-26T00:52:57.142Z",
-  "State": "2026-10-26T00:52:57.142Z"
+  "BIS": "2026-10-27T01:44:13.860Z",
+  "State": "2026-10-27T01:44:13.860Z"
  },
  "shards": [
   "BIS",
