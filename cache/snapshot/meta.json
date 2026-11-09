@@ -15,11 +15,9 @@
    "authorities": [
     "EU"
    ],
-   "ok": false,
+   "ok": true,
    "count": 6269,
-   "error": "HTTP 500 for https://webgate.ec.europa.eu/fsd/fsf/public/files/xmlFullSanctionsList_1_1/content?token=dG9rZW4tMjAxNw",
-   "carriedForward": true,
-   "asOf": "2026-11-07T02:28:19.796Z"
+   "error": ""
   },
   {
    "label": "UN Security Council",
@@ -52,9 +50,13 @@
    "error": ""
   }
  ],
- "publicationId": "1101",
- "publishedDate": "2026-11-06T14:33:11.261111",
+ "publicationId": "1105",
+ "publishedDate": "2026-11-09T14:36:11.107489",
  "publications": [
+  {
+   "id": 1105,
+   "date": "2026-11-09T14:36:11.107489"
+  },
   {
    "id": 1101,
    "date": "2026-11-06T14:33:11.261111"
@@ -98,21 +100,17 @@
   {
    "id": 1047,
    "date": "2026-10-08T12:47:27.494075"
-  },
-  {
-   "id": 1046,
-   "date": "2026-10-05T15:35:06.425187"
   }
  ],
- "retrievedAt": "2026-11-09T02:14:22.643Z",
+ "retrievedAt": "2026-11-09T21:18:18.360Z",
  "isLive": true,
  "authorityFreshness": {
-  "OFAC": "2026-11-09T02:14:22.643Z",
-  "EU": "2026-11-07T02:28:19.796Z",
-  "UN": "2026-11-09T02:14:22.643Z",
+  "OFAC": "2026-11-09T21:18:18.360Z",
+  "EU": "2026-11-09T21:18:18.360Z",
+  "UN": "2026-11-09T21:18:18.360Z",
   "UK": "2026-10-26T00:52:57.142Z",
-  "BIS": "2026-11-09T02:14:22.643Z",
-  "State": "2026-11-09T02:14:22.643Z"
+  "BIS": "2026-11-09T21:18:18.360Z",
+  "State": "2026-11-09T21:18:18.360Z"
  },
  "shards": [
   "BIS",
