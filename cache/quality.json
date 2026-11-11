@@ -1,7 +1,7 @@
 {
- "generatedAt": "2026-11-10T18:30:13.906Z",
+ "generatedAt": "2026-11-11T02:24:50.265Z",
  "publicationId": "1105",
- "retrievedAt": "2026-11-10T18:30:12.092Z",
+ "retrievedAt": "2026-11-11T02:24:48.252Z",
  "count": 38580,
  "authorities": {
   "OFAC": {
@@ -73,7 +73,7 @@
   "identifierUnclassifiedRate": 0.039430746918056564,
   "dobValues": 16966,
   "countryValues": 51171,
-  "attributes": 142646,
+  "attributes": 142647,
   "identifiers": 33096
  }
 }
