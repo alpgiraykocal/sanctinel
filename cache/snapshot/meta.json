@@ -15,9 +15,11 @@
    "authorities": [
     "EU"
    ],
-   "ok": true,
+   "ok": false,
    "count": 6269,
-   "error": ""
+   "error": "EU: only 0 records parsed",
+   "carriedForward": true,
+   "asOf": "2026-11-17T19:37:52.618Z"
   },
   {
    "label": "UN Security Council",
@@ -102,15 +104,15 @@
    "date": "2026-10-09T10:01:28.033102"
   }
  ],
- "retrievedAt": "2026-11-17T19:37:52.618Z",
+ "retrievedAt": "2026-11-18T03:57:59.701Z",
  "isLive": true,
  "authorityFreshness": {
-  "OFAC": "2026-11-17T19:37:52.618Z",
+  "OFAC": "2026-11-18T03:57:59.701Z",
   "EU": "2026-11-17T19:37:52.618Z",
-  "UN": "2026-11-17T19:37:52.618Z",
+  "UN": "2026-11-18T03:57:59.701Z",
   "UK": "2026-10-26T00:52:57.142Z",
-  "BIS": "2026-11-17T19:37:52.618Z",
-  "State": "2026-11-17T19:37:52.618Z"
+  "BIS": "2026-11-18T03:57:59.701Z",
+  "State": "2026-11-18T03:57:59.701Z"
  },
  "shards": [
   "BIS",
