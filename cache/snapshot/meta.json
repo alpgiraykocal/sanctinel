@@ -15,11 +15,9 @@
    "authorities": [
     "EU"
    ],
-   "ok": false,
+   "ok": true,
    "count": 6303,
-   "error": "HTTP 500 for https://webgate.ec.europa.eu/fsd/fsf/public/files/xmlFullSanctionsList_1_1/content?token=dG9rZW4tMjAxNw",
-   "carriedForward": true,
-   "asOf": "2026-11-23T03:23:23.094Z"
+   "error": ""
   },
   {
    "label": "UN Security Council",
@@ -104,15 +102,15 @@
    "date": "2026-10-19T10:02:09.711541"
   }
  ],
- "retrievedAt": "2026-11-24T06:36:43.665Z",
+ "retrievedAt": "2026-11-24T21:00:16.373Z",
  "isLive": true,
  "authorityFreshness": {
-  "OFAC": "2026-11-24T06:36:43.665Z",
-  "EU": "2026-11-23T03:23:23.094Z",
-  "UN": "2026-11-24T06:36:43.665Z",
+  "OFAC": "2026-11-24T21:00:16.373Z",
+  "EU": "2026-11-24T21:00:16.373Z",
+  "UN": "2026-11-24T21:00:16.373Z",
   "UK": "2026-10-26T00:52:57.142Z",
-  "BIS": "2026-11-24T06:36:43.665Z",
-  "State": "2026-11-24T06:36:43.665Z"
+  "BIS": "2026-11-24T21:00:16.373Z",
+  "State": "2026-11-24T21:00:16.373Z"
  },
  "shards": [
   "BIS",
