@@ -7,8 +7,15 @@
     "OFAC"
    ],
    "ok": true,
-   "count": 20643,
-   "error": ""
+   "count": 20604,
+   "error": "lists failed: SDN List (parsed 0 entities; carried forward 19629)",
+   "failedLists": [
+    {
+     "list": "SDN List",
+     "error": "parsed 0 entities",
+     "carried": 19629
+    }
+   ]
   },
   {
    "label": "EU FSD",
@@ -102,15 +109,15 @@
    "date": "2026-10-19T10:02:09.711541"
   }
  ],
- "retrievedAt": "2026-11-28T04:26:08.102Z",
+ "retrievedAt": "2026-11-28T18:41:38.964Z",
  "isLive": true,
  "authorityFreshness": {
-  "OFAC": "2026-11-28T04:26:08.102Z",
-  "EU": "2026-11-28T04:26:08.102Z",
-  "UN": "2026-11-28T04:26:08.102Z",
+  "OFAC": "2026-11-28T18:41:38.964Z",
+  "EU": "2026-11-28T18:41:38.964Z",
+  "UN": "2026-11-28T18:41:38.964Z",
   "UK": "2026-10-26T00:52:57.142Z",
-  "BIS": "2026-11-28T04:26:08.102Z",
-  "State": "2026-11-28T04:26:08.102Z"
+  "BIS": "2026-11-28T18:41:38.964Z",
+  "State": "2026-11-28T18:41:38.964Z"
  },
  "shards": [
   "BIS",
